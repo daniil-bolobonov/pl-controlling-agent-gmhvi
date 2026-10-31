@@ -68,7 +68,14 @@ class AgentExecutor(A2AAgentExecutor):
         )
         if je_tool is not None:
             async def _je_caller(**kwargs):
-                return await je_tool.arun(kwargs)
+                # LangChain StructuredTool.arun() accepts a dict of tool inputs.
+                # Pass kwargs directly as the tool_input dict — this works for both
+                # StructuredTool (Pydantic-validated) and plain Tool instances.
+                result = await je_tool.arun(tool_input=kwargs)
+                # arun may return a ToolException string on error; log and propagate.
+                if isinstance(result, Exception):
+                    raise result
+                return result
             fetch_tool = _make_fetch_aggregate_tool(_je_caller)
             tools = [*tools, *self.skill_tools, fetch_tool]
         else:

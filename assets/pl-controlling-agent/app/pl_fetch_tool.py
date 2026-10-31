@@ -38,27 +38,58 @@ _FIELDS = (
     "AccountingDocument,FiscalYear,FiscalPeriod"
 )
 
-# $apply expression for server-side aggregation
-_APPLY_EXPR = (
-    "groupby("
-    "(GLAccount,ProfitCenter,FunctionalArea,CostCenter,CompanyCodeCurrency),"
-    "aggregate(AmountInCompanyCodeCurrency with sum)"
-    ")"
-)
+def _build_apply_expr(company_code: str, fiscal_year: str, fiscal_period: str) -> str:
+    """
+    Build an OData v4 $apply expression that embeds the period and GL-range
+    filter INSIDE the pipeline so the filter is applied before groupby.
+
+    OData v4 syntax: $apply=filter(...)/groupby((...),aggregate(...))
+    This ensures the server scopes to exactly the requested period and
+    income-statement accounts before aggregating — $filter alongside $apply
+    may be ignored by some OData v4 implementations.
+    """
+    gl_filter = (
+        f"filter("
+        f"CompanyCode eq '{company_code}' "
+        f"and FiscalYear eq '{fiscal_year}' "
+        f"and FiscalPeriod eq '{fiscal_period}' "
+        f"and GLAccount ge '40000000' and GLAccount le '79999999'"
+        f")"
+    )
+    groupby = (
+        "groupby("
+        "(GLAccount,ProfitCenter,FunctionalArea,CostCenter,CompanyCodeCurrency),"
+        "aggregate(AmountInCompanyCodeCurrency with sum)"
+        ")"
+    )
+    return f"{gl_filter}/{groupby}"
 
 
 # ---------------------------------------------------------------------------
 # Internal fetch helpers — called from the LangChain tool coroutine
 # ---------------------------------------------------------------------------
 
-async def _fetch_with_apply(call_tool_fn, base_params: dict) -> list[dict] | None:
-    """Attempt server-side aggregation via $apply. Returns rows or None on failure."""
-    params = {**base_params, "$apply": _APPLY_EXPR}
+async def _fetch_with_apply(
+    call_tool_fn, company_code: str, fiscal_year: str, fiscal_period: str
+) -> list[dict] | None:
+    """
+    Attempt server-side aggregation via $apply with the filter embedded inside
+    the pipeline (OData v4: filter(...)/groupby(...)) so the period and GL-range
+    scope is guaranteed regardless of whether the server honours a separate $filter.
+    Returns rows on success, None if $apply is rejected or unsupported.
+    """
+    apply_expr = _build_apply_expr(company_code, fiscal_year, fiscal_period)
+    # No separate $filter — the filter is inside $apply to ensure correct scoping.
+    params: dict[str, Any] = {"$apply": apply_expr}
     try:
         raw = await call_tool_fn(**params)
         data = json.loads(raw) if isinstance(raw, str) else raw
-        # Unwrap OData envelope
-        rows = data.get("value") or data.get("d", {}).get("results") or (data if isinstance(data, list) else None)
+        # Unwrap OData envelope — handle both v4 {value:[]} and v2 {d:{results:[]}}
+        rows = (
+            data.get("value")
+            or data.get("d", {}).get("results")
+            or (data if isinstance(data, list) else None)
+        )
         if rows is None:
             logger.warning("$apply response has unexpected shape — falling back to pagination")
             return None
@@ -129,11 +160,12 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
         fiscal_period: str,
         label: str = "",
     ) -> str:
+        # Base params for the pagination fallback path — explicit $filter is safe
+        # here because pagination does NOT use $apply, so $filter is honoured normally.
         base_params: dict[str, Any] = {
             "CompanyCode": company_code,
             "FiscalYear": fiscal_year,
             "FiscalPeriod": fiscal_period,
-            # Filter to income-statement range only
             "$filter": (
                 f"CompanyCode eq '{company_code}' "
                 f"and FiscalYear eq '{fiscal_year}' "
@@ -142,8 +174,10 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
             ),
         }
 
-        # --- Preferred path: server-side $apply ---
-        rows = await _fetch_with_apply(journal_entry_tool_fn, base_params)
+        # --- Preferred path: server-side $apply (filter embedded inside pipeline) ---
+        rows = await _fetch_with_apply(
+            journal_entry_tool_fn, company_code, fiscal_year, fiscal_period
+        )
         preaggregated = rows is not None
 
         if not preaggregated:

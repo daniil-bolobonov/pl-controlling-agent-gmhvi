@@ -114,7 +114,8 @@ def _aggregate(items: list[dict[str, Any]], preaggregated: bool = False) -> dict
             normalized = amt  # costs already positive debits
 
         totals[category] += normalized
-        counts[category] += 1  # rows processed (not raw postings in preaggregated mode)
+        if not preaggregated:
+            counts[category] += 1  # raw posting lines only
 
         if gl_raw not in by_gl:
             by_gl[gl_raw] = {
@@ -122,11 +123,13 @@ def _aggregate(items: list[dict[str, Any]], preaggregated: bool = False) -> dict
                 "category": category,
                 "raw_sum": Decimal("0"),
                 "normalized_sum": Decimal("0"),
-                "posting_count": 0,
+                # In preaggregated mode there is no meaningful posting count per GL row
+                "posting_count": "server-aggregated" if preaggregated else 0,
             }
         by_gl[gl_raw]["raw_sum"] += amt
         by_gl[gl_raw]["normalized_sum"] += normalized
-        by_gl[gl_raw]["posting_count"] += 1
+        if not preaggregated:
+            by_gl[gl_raw]["posting_count"] += 1
 
     # Compute P&L lines
     revenue  = totals["revenue"]
