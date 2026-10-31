@@ -19,7 +19,8 @@ from a2a.utils.errors import ServerError
 from agent import SampleAgent
 from datetime_tool import get_datetime_tool
 from load_skill_resources import get_load_skill_resource_tool
-from pl_aggregation_tool import get_pl_aggregation_tool, get_pl_merge_aggregation_tool
+from pl_aggregation_tool import get_pl_aggregation_tool
+from pl_fetch_tool import _make_fetch_aggregate_tool
 from mcp_providers.agw import get_mcp_tools
 from prompt_injection_detector import wrap_tool
 
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 class AgentExecutor(A2AAgentExecutor):
     def __init__(self):
         self.agent = SampleAgent()
-        self.skill_tools = [get_datetime_tool(), *get_load_skill_resource_tool(), get_pl_aggregation_tool(), get_pl_merge_aggregation_tool()]
+        self.skill_tools = [get_datetime_tool(), *get_load_skill_resource_tool(), get_pl_aggregation_tool()]
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute the agent and stream results back via A2A protocol.
@@ -60,7 +61,19 @@ class AgentExecutor(A2AAgentExecutor):
         except Exception as e:
             logger.error(f"Failed to load tools from Agent Gateway: {e}")
 
-        tools = [*tools, *self.skill_tools]
+        # Build fetch_and_aggregate_pl bound to the real journal entry MCP tool
+        je_tool = next(
+            (t for t in tools if "journalentryitembasic" in t.name.lower() and "list" in t.name.lower()),
+            None,
+        )
+        if je_tool is not None:
+            async def _je_caller(**kwargs):
+                return await je_tool.arun(kwargs)
+            fetch_tool = _make_fetch_aggregate_tool(_je_caller)
+            tools = [*tools, *self.skill_tools, fetch_tool]
+        else:
+            logger.warning("Journal entry MCP tool not found — fetch_and_aggregate_pl unavailable")
+            tools = [*tools, *self.skill_tools]
 
         # Wrap all tools with prompt injection scanning for uniform protection
         tools = [wrap_tool(t) for t in tools]

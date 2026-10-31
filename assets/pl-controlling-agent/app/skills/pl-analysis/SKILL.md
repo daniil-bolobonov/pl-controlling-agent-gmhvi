@@ -32,11 +32,9 @@ Cite every figure as: amount [GL xxxxxxxx, N postings] using posting_counts from
 After every fetch, state how many lines were returned. If fewer than expected, warn: 'Only N postings retrieved -- data may be incomplete.'
 A figure not traceable to an aggregate_pl_journal_entries result must not be displayed.
 
-## Phased Execution
-Execute in 3 confirmed phases -- never jump ahead:
-- Phase 1 -- Revenue (40000000-49999999): fetch, normalize, show totals with citations, wait for user confirmation.
-- Phase 2 -- COGS + Overhead (50000000-69999999): fetch, normalize, show totals with citations, wait for user confirmation.
-- Phase 3 -- Other Op + EBIT + full report: only after both phases confirmed.
+## Execution Model
+Fetch is atomic -- fetch_and_aggregate_pl retrieves and aggregates all periods in one coordinated set of calls.
+Do not split fetch across multiple user turns. Deliver the complete report in one response.
 
 ## Steps (execute sequentially)
 
@@ -46,40 +44,28 @@ Execute in 3 confirmed phases -- never jump ahead:
 **2 -- Confirm P&L Account Structure**
 Call `list_a_glaccountinchartofaccounts` filtered by CompanyCode. Keep only accounts in range 40000000-79999999. Discard everything else. If no accounts are found in this range, ask the user: "No P&L accounts found in range 40000000-79999999 -- please confirm the GL account ranges for your chart of accounts."
 
-**3 -- Retrieve Journal Entry Items (full population via pagination)**
+**3 -- Fetch and Aggregate (single atomic step)**
+Call `fetch_and_aggregate_pl` with CompanyCode, FiscalYear, FiscalPeriod, and a label.
+Do this once for each period needed (current, prior month, prior year).
+NEVER call the journal entry API directly -- fetch_and_aggregate_pl owns the full pipeline:
+- It tries $apply server-side aggregation first (one call, complete totals, no pagination).
+- If $apply is rejected it runs a $skip/$top=500 pagination loop until exhausted.
+- It passes all data to the deterministic aggregator and returns verified pl_lines.
 
-Preferred path -- server-side aggregation (use this first):
-Call `list_a_journalentryitembasic_for_api_journalentryitembasic_srv` with:
-- Filters: CompanyCode, FiscalYear, FiscalPeriod, GLAccount range 40000000-79999999
-- $apply=groupby((GLAccount,ProfitCenter,FunctionalArea,CostCenter),aggregate(AmountInCompanyCodeCurrency with sum))
-- Fields: GLAccount, AmountInCompanyCodeCurrency, CompanyCodeCurrency, ProfitCenter, FunctionalArea, CostCenter
-This returns one aggregated row per GL/dimension combination -- complete totals without row-level pagination.
+From the result read:
+- pl_lines: revenue, cogs, gm1, overhead, gm2, other_op, ebit (already sign-normalized)
+- materiality_order: GL accounts sorted by |amount| descending -- use this order for all drill-downs
+- posting_counts: include in report citations
+- fetch_strategy: include in report so the controller knows how data was retrieved
+- warnings: include verbatim as WARNING blocks if non-empty
 
-Fallback path -- pagination loop (use if $apply is not supported):
-1. Call with $top=1000, $skip=0. Record page size N.
-2. While N == 1000: call again with $skip += 1000. Collect all pages.
-3. When N < 1000: last page reached -- stop.
-4. Pass ALL pages to `merge_and_aggregate_pl_journal_entries` in one call.
-NEVER use a fixed $top=100 and treat the result as complete. A partial population produces accurate sums of incomplete data -- that is a correctness defect.
-State explicitly: "Fetched P pages, T total postings" before aggregating.
+DO NOT recompute, re-sum, or re-derive any pl_lines value -- use the tool output directly.
 
-Materiality-first ordering:
-After aggregation, sort GL accounts by |normalized_sum| descending.
-Drill-down (Steps 9+) processes accounts in this order -- largest absolute impact first.
-Stop drilling when cumulative explained deviation >= 80% of total EBIT movement (top-down materiality cutoff).
-
-**4 -- Aggregate (MANDATORY -- never skip)**
-Call `aggregate_pl_journal_entries` with ALL journal entry lines just retrieved.
-The tool handles sign normalization and P&L line computation.
-Read pl_lines from the result: revenue, cogs, gm1, overhead, gm2, other_op, ebit.
-Read warnings from the result and include any warnings verbatim in the report.
-Do NOT recompute these values yourself -- use the tool output directly.
-
-**5 -- Read P&L Lines from Tool Result**
-Use the pl_lines values from aggregate_pl_journal_entries:
-- Revenue, COGS, GM1, Overhead, GM2, Other Op, EBIT are already computed and sign-normalized.
-- posting_counts gives the number of lines per category -- cite these in the report.
-- totals_by_gl gives per-GL breakdown for drill-down.
+**4 -- Read P&L Lines from Tool Result**
+Use pl_lines values from fetch_and_aggregate_pl directly:
+- Revenue, COGS, GM1, Overhead, GM2, Other Op, EBIT are computed and sign-normalized.
+- materiality_order drives all subsequent drill-down ordering (Step 9).
+- Stop drilling when cumulative explained deviation >= 80% of total EBIT movement.
 
 **6 -- Sanity Check (on FINAL DISPLAYED figures -- do NOT skip)**
 Run all checks. Deliver the report. For every check that fails, add a visible WARNING block showing exactly which check failed and the conflicting figures. Never suppress warnings.

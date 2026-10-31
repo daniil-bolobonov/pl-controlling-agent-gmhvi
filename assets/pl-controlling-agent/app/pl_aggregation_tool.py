@@ -44,29 +44,36 @@ def _classify(gl: int) -> str | None:
 # ---------------------------------------------------------------------------
 # Core aggregation logic
 # ---------------------------------------------------------------------------
-def _aggregate(items: list[dict[str, Any]]) -> dict[str, Any]:
+def _aggregate(items: list[dict[str, Any]], preaggregated: bool = False) -> dict[str, Any]:
     """
     Aggregate raw SAP journal entry items into P&L totals.
 
     Sign normalization:
-      - Revenue (40xxxxxxx–49xxxxxxx): SAP stores as CREDITS (negative).
+      - Revenue (40xxxxxxx-49xxxxxxx): SAP stores as CREDITS (negative).
         Multiply by -1 so revenue is POSITIVE in P&L presentation.
-      - Costs (50xxxxxxx–79xxxxxxx): SAP stores as DEBITS (positive). Keep as-is.
+      - Costs (50xxxxxxx-79xxxxxxx): SAP stores as DEBITS (positive). Keep as-is.
+
+    preaggregated=True: items come from $apply=groupby(...,aggregate(...)) —
+      each row is already a sum. posting_count is marked 'server-aggregated'
+      and the count increment is skipped (count=1 per row would be misleading).
 
     Returns a dict with:
       - totals_by_category: {revenue, cogs, overhead, other_op} — normalized sums
       - totals_by_gl: {gl_account: {raw_sum, normalized_sum, posting_count, category}}
       - pl_lines: {revenue, cogs, gm1, overhead, gm2, other_op, ebit} — computed
-      - posting_counts: {revenue, cogs, overhead, other_op} — line counts
+      - posting_counts: {revenue, cogs, overhead, other_op} — 'server-aggregated' or int
       - excluded_accounts: [gl accounts outside 40000000-79999999]
       - warnings: [list of warning strings]
-      - line_count_received: total lines passed in
+      - line_count_received: total rows passed in
+      - aggregation_mode: 'server-preaggregated' or 'client-raw-lines'
     """
     totals: dict[str, Decimal] = {k: Decimal("0") for k in _PL_RANGES}
     by_gl: dict[str, dict] = {}
     excluded: list[str] = []
     warnings: list[str] = []
+    # In preaggregated mode counts track distinct GL/dimension rows, not raw postings
     counts: dict[str, int] = {k: 0 for k in _PL_RANGES}
+    aggregation_mode = "server-preaggregated" if preaggregated else "client-raw-lines"
 
     for item in items:
         gl_raw = str(item.get("GLAccount") or item.get("gl_account") or "").strip()
@@ -107,7 +114,7 @@ def _aggregate(items: list[dict[str, Any]]) -> dict[str, Any]:
             normalized = amt  # costs already positive debits
 
         totals[category] += normalized
-        counts[category] += 1
+        counts[category] += 1  # rows processed (not raw postings in preaggregated mode)
 
         if gl_raw not in by_gl:
             by_gl[gl_raw] = {
@@ -181,9 +188,16 @@ def _aggregate(items: list[dict[str, Any]]) -> dict[str, Any]:
             for gl, v in gl_dict.items()
         }
 
+    posting_counts_out: dict[str, Any] = (
+        {k: "server-aggregated" for k in counts}
+        if preaggregated
+        else dict(counts)
+    )
+
     return {
         "line_count_received": len(items),
-        "posting_counts": counts,
+        "aggregation_mode": aggregation_mode,
+        "posting_counts": posting_counts_out,
         "totals_by_category": {k: _fmt(v) for k, v in totals.items()},
         "pl_lines": {
             "revenue":  _fmt(revenue),
@@ -226,45 +240,6 @@ def _run_aggregation(journal_entry_items: list[dict[str, Any]], label: str = "")
     result = _aggregate(journal_entry_items)
     result["label"] = label
     return json.dumps(result, indent=2)
-
-
-class _MergeInput(BaseModel):
-    batches: list[list[dict[str, Any]]] = Field(
-        description=(
-            "List of raw journal entry page results, each page exactly as returned "
-            "by the SAP API. All pages are merged before aggregation so the full "
-            "population is aggregated in one deterministic pass."
-        )
-    )
-    label: str = Field(
-        default="",
-        description="Optional label for traceability, e.g. 'October 2024 all pages'."
-    )
-
-
-def _run_merge_and_aggregate(batches: list[list[dict[str, Any]]], label: str = "") -> str:
-    """Merge multiple pagination pages then aggregate — use when fetching in a loop."""
-    merged = [item for page in batches for item in page]
-    result = _aggregate(merged)
-    result["label"] = label
-    result["pages_merged"] = len(batches)
-    return json.dumps(result, indent=2)
-
-
-def get_pl_merge_aggregation_tool() -> StructuredTool:
-    """Return a tool that merges paginated SAP results then aggregates deterministically."""
-    return StructuredTool(
-        name="merge_and_aggregate_pl_journal_entries",
-        description=(
-            "Merge multiple pages of SAP journal entry results and aggregate into P&L totals. "
-            "Use this when you have fetched multiple pages via $skip/$skiptoken pagination. "
-            "Pass all pages as a list-of-lists — the tool merges them and runs one deterministic "
-            "aggregation pass so no posting is missed or double-counted. "
-            "Same output format as aggregate_pl_journal_entries."
-        ),
-        args_schema=_MergeInput,
-        func=_run_merge_and_aggregate,
-    )
 
 
 def get_pl_aggregation_tool() -> StructuredTool:
