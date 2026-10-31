@@ -1,0 +1,3331 @@
+[
+  {
+    "name": "get_metadata_sap_self",
+    "title": "get_metadata_sap_self",
+    "description": "Get metadata of the OData service with optional filtering to reduce token consumption.\nReturns the metadata in XML format, which can be used to discover available entities and their properties.\nCall this endpoint every time before you call other tools to ensure understanding of the schema.\nBased on the metadata, you can dynamically create an OData request.\n\nUse filtering parameters to get specific metadata sections. Without parameters, this tool returns the complete XML metadata (which might be huge).\nOnly use the specified enum values for the filtering parameters.\n",
+    "odataType": {
+      "metadataRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "batch_for_sap_self",
+    "title": "batch_for_sap_self",
+    "description": "Execute multiple OData operations in a single batch request using the $batch endpoint. This allows you to combine multiple tool calls into one HTTP request, improving efficiency when performing multiple operations.",
+    "odataType": {
+      "batchRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "list_a_costcentertext_2_for_sap_self",
+    "title": "list_A_CostCenterText_2_for_sap_self",
+    "description": "Retrieve a list of entities from the A_CostCenterText_2 collection in the sap_self service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "count"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update_a_costcentertext_2_for_sap_self",
+    "title": "update_A_CostCenterText_2_for_sap_self",
+    "description": "Update an entity in A_CostCenterText_2 EntitySet in the sap_self service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "CostCenterName",
+            "newParameterName": "costcentername"
+          },
+          {
+            "name": "CostCenterDescription",
+            "newParameterName": "costcenterdescription"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_CostCenter",
+            "newParameterName": "costcenter_2"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_a_costcentertext_2_for_sap_self",
+    "title": "delete_A_CostCenterText_2_for_sap_self",
+    "description": "Delete an entity from A_CostCenterText_2 EntitySet in the sap_self service.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "crudOperation": "delete",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_a_costcentertext_2_for_sap_self",
+    "title": "get_A_CostCenterText_2_for_sap_self",
+    "description": "Retrieve a single entity by its key from the A_CostCenterText_2 collection in the sap_self service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_a_costcentertext_2_for_sap_self",
+    "title": "count_A_CostCenterText_2_for_sap_self",
+    "description": "Get the total count of entities in the A_CostCenterText_2 collection in the sap_self service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_a_costcenter_2_for_sap_self",
+    "title": "list_A_CostCenter_2_for_sap_self",
+    "description": "Retrieve a list of entities from the A_CostCenter_2 collection in the sap_self service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "count"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "create_a_costcenter_2_for_sap_self",
+    "title": "create_A_CostCenter_2_for_sap_self",
+    "description": "Create a new instance of the A_CostCenter_2 EntitySet in the sap_self service. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "ValidityStartDate",
+            "newParameterName": "validitystartdate"
+          },
+          {
+            "name": "CostCenterName",
+            "newParameterName": "costcentername"
+          },
+          {
+            "name": "CostCenterDescription",
+            "newParameterName": "costcenterdescription"
+          },
+          {
+            "name": "IsBlkdForPrimaryCostsPosting",
+            "newParameterName": "isblkdforprimarycostsposting"
+          },
+          {
+            "name": "IsBlockedForPlanPrimaryCosts",
+            "newParameterName": "isblockedforplanprimarycosts"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          },
+          {
+            "name": "BusinessArea",
+            "newParameterName": "businessarea"
+          },
+          {
+            "name": "CostCenterCategory",
+            "newParameterName": "costcentercategory"
+          },
+          {
+            "name": "CostCtrResponsiblePersonName",
+            "newParameterName": "costctrresponsiblepersonname"
+          },
+          {
+            "name": "CostCtrResponsibleUser",
+            "newParameterName": "costctrresponsibleuser"
+          },
+          {
+            "name": "CostCenterCurrency",
+            "newParameterName": "costcentercurrency"
+          },
+          {
+            "name": "CostingSheet",
+            "newParameterName": "costingsheet"
+          },
+          {
+            "name": "TaxJurisdiction",
+            "newParameterName": "taxjurisdiction"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "Plant",
+            "newParameterName": "plant"
+          },
+          {
+            "name": "LogicalSystem",
+            "newParameterName": "logicalsystem"
+          },
+          {
+            "name": "CostCenterCreationDate",
+            "newParameterName": "costcentercreationdate"
+          },
+          {
+            "name": "CostCenterCreatedByUser",
+            "newParameterName": "costcentercreatedbyuser"
+          },
+          {
+            "name": "IsBlkdForSecondaryCostsPosting",
+            "newParameterName": "isblkdforsecondarycostsposting"
+          },
+          {
+            "name": "IsBlockedForRevenuePosting",
+            "newParameterName": "isblockedforrevenueposting"
+          },
+          {
+            "name": "IsBlockedForCommitmentPosting",
+            "newParameterName": "isblockedforcommitmentposting"
+          },
+          {
+            "name": "IsBlockedForPlanSecondaryCosts",
+            "newParameterName": "isblockedforplansecondarycosts"
+          },
+          {
+            "name": "IsBlockedForPlanRevenues",
+            "newParameterName": "isblockedforplanrevenues"
+          },
+          {
+            "name": "CostCenterAllocationMethod",
+            "newParameterName": "costcenterallocationmethod"
+          },
+          {
+            "name": "ConsumptionQtyIsRecorded",
+            "newParameterName": "consumptionqtyisrecorded"
+          },
+          {
+            "name": "Department",
+            "newParameterName": "department"
+          },
+          {
+            "name": "Country",
+            "newParameterName": "country"
+          },
+          {
+            "name": "FormOfAddress",
+            "newParameterName": "formofaddress"
+          },
+          {
+            "name": "AddressName",
+            "newParameterName": "addressname"
+          },
+          {
+            "name": "AddressAdditionalName",
+            "newParameterName": "addressadditionalname"
+          },
+          {
+            "name": "CostCenterAddrName3",
+            "newParameterName": "costcenteraddrname3"
+          },
+          {
+            "name": "CostCenterAddrName4",
+            "newParameterName": "costcenteraddrname4"
+          },
+          {
+            "name": "CityName",
+            "newParameterName": "cityname"
+          },
+          {
+            "name": "District",
+            "newParameterName": "district"
+          },
+          {
+            "name": "StreetAddressName",
+            "newParameterName": "streetaddressname"
+          },
+          {
+            "name": "POBox",
+            "newParameterName": "pobox"
+          },
+          {
+            "name": "PostalCode",
+            "newParameterName": "postalcode"
+          },
+          {
+            "name": "POBoxPostalCode",
+            "newParameterName": "poboxpostalcode"
+          },
+          {
+            "name": "Region",
+            "newParameterName": "region"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "TeleboxNumber",
+            "newParameterName": "teleboxnumber"
+          },
+          {
+            "name": "PhoneNumber1",
+            "newParameterName": "phonenumber1"
+          },
+          {
+            "name": "PhoneNumber2",
+            "newParameterName": "phonenumber2"
+          },
+          {
+            "name": "FaxNumber",
+            "newParameterName": "faxnumber"
+          },
+          {
+            "name": "TeletexNumber",
+            "newParameterName": "teletexnumber"
+          },
+          {
+            "name": "TelexNumber",
+            "newParameterName": "telexnumber"
+          },
+          {
+            "name": "DataCommunicationPhoneNumber",
+            "newParameterName": "datacommunicationphonenumber"
+          },
+          {
+            "name": "CostCenterPrinterDestination",
+            "newParameterName": "costcenterprinterdestination"
+          },
+          {
+            "name": "CostCenterStandardHierArea",
+            "newParameterName": "costcenterstandardhierarea"
+          },
+          {
+            "name": "CostCenterFunction",
+            "newParameterName": "costcenterfunction"
+          },
+          {
+            "name": "CostCenterAlternativeFunction",
+            "newParameterName": "costcenteralternativefunction"
+          },
+          {
+            "name": "FunctionalArea",
+            "newParameterName": "functionalarea"
+          },
+          {
+            "name": "ActyIndepFormulaPlanningTmpl",
+            "newParameterName": "actyindepformulaplanningtmpl"
+          },
+          {
+            "name": "ActyDepdntFormulaPlanningTmpl",
+            "newParameterName": "actydepdntformulaplanningtmpl"
+          },
+          {
+            "name": "ActyIndependentAllocationTmpl",
+            "newParameterName": "actyindependentallocationtmpl"
+          },
+          {
+            "name": "ActyDependentAllocationTmpl",
+            "newParameterName": "actydependentallocationtmpl"
+          },
+          {
+            "name": "ActlIndepStatisticalKeyFigures",
+            "newParameterName": "actlindepstatisticalkeyfigures"
+          },
+          {
+            "name": "ActlDepStatisticalKeyFigures",
+            "newParameterName": "actldepstatisticalkeyfigures"
+          },
+          {
+            "name": "JointVenture",
+            "newParameterName": "jointventure"
+          },
+          {
+            "name": "JointVentureRecoveryCode",
+            "newParameterName": "jointventurerecoverycode"
+          },
+          {
+            "name": "JointVentureEquityType",
+            "newParameterName": "jointventureequitytype"
+          },
+          {
+            "name": "JointVentureObjectType",
+            "newParameterName": "jointventureobjecttype"
+          },
+          {
+            "name": "JointVentureClass",
+            "newParameterName": "jointventureclass"
+          },
+          {
+            "name": "JointVentureSubClass",
+            "newParameterName": "jointventuresubclass"
+          },
+          {
+            "name": "BudgetCarryingCostCenter",
+            "newParameterName": "budgetcarryingcostcenter"
+          },
+          {
+            "name": "AvailabilityControlProfile",
+            "newParameterName": "availabilitycontrolprofile"
+          },
+          {
+            "name": "AvailabilityControlIsActive",
+            "newParameterName": "availabilitycontrolisactive"
+          },
+          {
+            "name": "Fund",
+            "newParameterName": "fund"
+          },
+          {
+            "name": "GrantID",
+            "newParameterName": "grantid"
+          },
+          {
+            "name": "FundIsFixAssigned",
+            "newParameterName": "fundisfixassigned"
+          },
+          {
+            "name": "GrantIDIsFixAssigned",
+            "newParameterName": "grantidisfixassigned"
+          },
+          {
+            "name": "FunctionalAreaIsFixAssigned",
+            "newParameterName": "functionalareaisfixassigned"
+          },
+          {
+            "name": "CostCenterIsBudgetCarrying",
+            "newParameterName": "costcenterisbudgetcarrying"
+          },
+          {
+            "name": "CostCenterCreationTime",
+            "newParameterName": "costcentercreationtime"
+          },
+          {
+            "name": "CostCenterLastChangedByUser",
+            "newParameterName": "costcenterlastchangedbyuser"
+          },
+          {
+            "name": "CostCenterLastChangedOnDate",
+            "newParameterName": "costcenterlastchangedondate"
+          },
+          {
+            "name": "CostCenterLastChangedAtTime",
+            "newParameterName": "costcenterlastchangedattime"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_CostCenterText",
+            "newParameterName": "costcentertext"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "odata-entityid"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "update_a_costcenter_2_for_sap_self",
+    "title": "update_A_CostCenter_2_for_sap_self",
+    "description": "Update an entity in A_CostCenter_2 EntitySet in the sap_self service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "ValidityStartDate",
+            "newParameterName": "validitystartdate"
+          },
+          {
+            "name": "CostCenterName",
+            "newParameterName": "costcentername"
+          },
+          {
+            "name": "CostCenterDescription",
+            "newParameterName": "costcenterdescription"
+          },
+          {
+            "name": "IsBlkdForPrimaryCostsPosting",
+            "newParameterName": "isblkdforprimarycostsposting"
+          },
+          {
+            "name": "IsBlockedForPlanPrimaryCosts",
+            "newParameterName": "isblockedforplanprimarycosts"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          },
+          {
+            "name": "BusinessArea",
+            "newParameterName": "businessarea"
+          },
+          {
+            "name": "CostCenterCategory",
+            "newParameterName": "costcentercategory"
+          },
+          {
+            "name": "CostCtrResponsiblePersonName",
+            "newParameterName": "costctrresponsiblepersonname"
+          },
+          {
+            "name": "CostCtrResponsibleUser",
+            "newParameterName": "costctrresponsibleuser"
+          },
+          {
+            "name": "CostCenterCurrency",
+            "newParameterName": "costcentercurrency"
+          },
+          {
+            "name": "CostingSheet",
+            "newParameterName": "costingsheet"
+          },
+          {
+            "name": "TaxJurisdiction",
+            "newParameterName": "taxjurisdiction"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "Plant",
+            "newParameterName": "plant"
+          },
+          {
+            "name": "LogicalSystem",
+            "newParameterName": "logicalsystem"
+          },
+          {
+            "name": "CostCenterCreationDate",
+            "newParameterName": "costcentercreationdate"
+          },
+          {
+            "name": "CostCenterCreatedByUser",
+            "newParameterName": "costcentercreatedbyuser"
+          },
+          {
+            "name": "IsBlkdForSecondaryCostsPosting",
+            "newParameterName": "isblkdforsecondarycostsposting"
+          },
+          {
+            "name": "IsBlockedForRevenuePosting",
+            "newParameterName": "isblockedforrevenueposting"
+          },
+          {
+            "name": "IsBlockedForCommitmentPosting",
+            "newParameterName": "isblockedforcommitmentposting"
+          },
+          {
+            "name": "IsBlockedForPlanSecondaryCosts",
+            "newParameterName": "isblockedforplansecondarycosts"
+          },
+          {
+            "name": "IsBlockedForPlanRevenues",
+            "newParameterName": "isblockedforplanrevenues"
+          },
+          {
+            "name": "CostCenterAllocationMethod",
+            "newParameterName": "costcenterallocationmethod"
+          },
+          {
+            "name": "ConsumptionQtyIsRecorded",
+            "newParameterName": "consumptionqtyisrecorded"
+          },
+          {
+            "name": "Department",
+            "newParameterName": "department"
+          },
+          {
+            "name": "Country",
+            "newParameterName": "country"
+          },
+          {
+            "name": "FormOfAddress",
+            "newParameterName": "formofaddress"
+          },
+          {
+            "name": "AddressName",
+            "newParameterName": "addressname"
+          },
+          {
+            "name": "AddressAdditionalName",
+            "newParameterName": "addressadditionalname"
+          },
+          {
+            "name": "CostCenterAddrName3",
+            "newParameterName": "costcenteraddrname3"
+          },
+          {
+            "name": "CostCenterAddrName4",
+            "newParameterName": "costcenteraddrname4"
+          },
+          {
+            "name": "CityName",
+            "newParameterName": "cityname"
+          },
+          {
+            "name": "District",
+            "newParameterName": "district"
+          },
+          {
+            "name": "StreetAddressName",
+            "newParameterName": "streetaddressname"
+          },
+          {
+            "name": "POBox",
+            "newParameterName": "pobox"
+          },
+          {
+            "name": "PostalCode",
+            "newParameterName": "postalcode"
+          },
+          {
+            "name": "POBoxPostalCode",
+            "newParameterName": "poboxpostalcode"
+          },
+          {
+            "name": "Region",
+            "newParameterName": "region"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "TeleboxNumber",
+            "newParameterName": "teleboxnumber"
+          },
+          {
+            "name": "PhoneNumber1",
+            "newParameterName": "phonenumber1"
+          },
+          {
+            "name": "PhoneNumber2",
+            "newParameterName": "phonenumber2"
+          },
+          {
+            "name": "FaxNumber",
+            "newParameterName": "faxnumber"
+          },
+          {
+            "name": "TeletexNumber",
+            "newParameterName": "teletexnumber"
+          },
+          {
+            "name": "TelexNumber",
+            "newParameterName": "telexnumber"
+          },
+          {
+            "name": "DataCommunicationPhoneNumber",
+            "newParameterName": "datacommunicationphonenumber"
+          },
+          {
+            "name": "CostCenterPrinterDestination",
+            "newParameterName": "costcenterprinterdestination"
+          },
+          {
+            "name": "CostCenterStandardHierArea",
+            "newParameterName": "costcenterstandardhierarea"
+          },
+          {
+            "name": "CostCenterFunction",
+            "newParameterName": "costcenterfunction"
+          },
+          {
+            "name": "CostCenterAlternativeFunction",
+            "newParameterName": "costcenteralternativefunction"
+          },
+          {
+            "name": "FunctionalArea",
+            "newParameterName": "functionalarea"
+          },
+          {
+            "name": "ActyIndepFormulaPlanningTmpl",
+            "newParameterName": "actyindepformulaplanningtmpl"
+          },
+          {
+            "name": "ActyDepdntFormulaPlanningTmpl",
+            "newParameterName": "actydepdntformulaplanningtmpl"
+          },
+          {
+            "name": "ActyIndependentAllocationTmpl",
+            "newParameterName": "actyindependentallocationtmpl"
+          },
+          {
+            "name": "ActyDependentAllocationTmpl",
+            "newParameterName": "actydependentallocationtmpl"
+          },
+          {
+            "name": "ActlIndepStatisticalKeyFigures",
+            "newParameterName": "actlindepstatisticalkeyfigures"
+          },
+          {
+            "name": "ActlDepStatisticalKeyFigures",
+            "newParameterName": "actldepstatisticalkeyfigures"
+          },
+          {
+            "name": "JointVenture",
+            "newParameterName": "jointventure"
+          },
+          {
+            "name": "JointVentureRecoveryCode",
+            "newParameterName": "jointventurerecoverycode"
+          },
+          {
+            "name": "JointVentureEquityType",
+            "newParameterName": "jointventureequitytype"
+          },
+          {
+            "name": "JointVentureObjectType",
+            "newParameterName": "jointventureobjecttype"
+          },
+          {
+            "name": "JointVentureClass",
+            "newParameterName": "jointventureclass"
+          },
+          {
+            "name": "JointVentureSubClass",
+            "newParameterName": "jointventuresubclass"
+          },
+          {
+            "name": "BudgetCarryingCostCenter",
+            "newParameterName": "budgetcarryingcostcenter"
+          },
+          {
+            "name": "AvailabilityControlProfile",
+            "newParameterName": "availabilitycontrolprofile"
+          },
+          {
+            "name": "AvailabilityControlIsActive",
+            "newParameterName": "availabilitycontrolisactive"
+          },
+          {
+            "name": "Fund",
+            "newParameterName": "fund"
+          },
+          {
+            "name": "GrantID",
+            "newParameterName": "grantid"
+          },
+          {
+            "name": "FundIsFixAssigned",
+            "newParameterName": "fundisfixassigned"
+          },
+          {
+            "name": "GrantIDIsFixAssigned",
+            "newParameterName": "grantidisfixassigned"
+          },
+          {
+            "name": "FunctionalAreaIsFixAssigned",
+            "newParameterName": "functionalareaisfixassigned"
+          },
+          {
+            "name": "CostCenterIsBudgetCarrying",
+            "newParameterName": "costcenterisbudgetcarrying"
+          },
+          {
+            "name": "CostCenterCreationTime",
+            "newParameterName": "costcentercreationtime"
+          },
+          {
+            "name": "CostCenterLastChangedByUser",
+            "newParameterName": "costcenterlastchangedbyuser"
+          },
+          {
+            "name": "CostCenterLastChangedOnDate",
+            "newParameterName": "costcenterlastchangedondate"
+          },
+          {
+            "name": "CostCenterLastChangedAtTime",
+            "newParameterName": "costcenterlastchangedattime"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_CostCenterText",
+            "newParameterName": "costcentertext"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_a_costcenter_2_for_sap_self",
+    "title": "delete_A_CostCenter_2_for_sap_self",
+    "description": "Delete an entity from A_CostCenter_2 EntitySet in the sap_self service.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "delete",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_a_costcenter_2_for_sap_self",
+    "title": "get_A_CostCenter_2_for_sap_self",
+    "description": "Retrieve a single entity by its key from the A_CostCenter_2 collection in the sap_self service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_a_costcenter_2_for_sap_self",
+    "title": "count_A_CostCenter_2_for_sap_self",
+    "description": "Get the total count of entities in the A_CostCenter_2 collection in the sap_self service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "list_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Retrieve a collection of contained entities from the _CostCenterText contained entity set (accessed via navigation path: A_CostCenter_2 → _CostCenterText) in the sap_self service. Supports OData query options for filtering, sorting, and pagination.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "count"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "create_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "create_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Create a new entity in the contained _CostCenterText entity set in the sap_self service. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "controllingarea"
+            },
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "CostCenterName",
+              "newParameterName": "costcentername"
+            },
+            {
+              "name": "CostCenterDescription",
+              "newParameterName": "costcenterdescription"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_CostCenter",
+              "newParameterName": "costcenter_2"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "odata-entityid"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "update_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "update_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Update an existing entity in the contained _CostCenterText entity set in the sap_self service. Provide all ancestor keys, entity key, and the properties to update.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "costcentertext_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "costcentertext_controllingarea"
+            },
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcentertext_costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "costcentertext_validityenddate"
+            },
+            {
+              "name": "CostCenterName",
+              "newParameterName": "costcentername"
+            },
+            {
+              "name": "CostCenterDescription",
+              "newParameterName": "costcenterdescription"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_CostCenter",
+              "newParameterName": "costcenter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "delete_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Delete an entity from the contained _CostCenterText entity set in the sap_self service. Provide all ancestor keys and the entity key to identify the entity to delete.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "delete",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "costcentertext_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "costcentertext_controllingarea"
+            },
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcentertext_costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "costcentertext_validityenddate"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "get_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Retrieve a single contained entity by its key from the _CostCenterText contained entity set in the sap_self service. Provide all ancestor and entity key values to identify the specific entity.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "costcentertext_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "costcentertext_controllingarea"
+            },
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcentertext_costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "costcentertext_validityenddate"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_a_costcenter_2__costcentertext_for_sap_self",
+    "title": "count_A_CostCenter_2__CostCenterText_for_sap_self",
+    "description": "Count the number of entities in the contained _CostCenterText entity set in the sap_self service. Optionally use $filter to count only entities matching specific criteria.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "navigationProperty": {
+          "name": "_CostCenterText",
+          "crudOperation": "count",
+          "parameters": []
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "a_costcenter_2_controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "a_costcenter_2_costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "a_costcenter_2_validityenddate"
+          },
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "get__costcenter_in_a_costcentertext_2_for_sap_self",
+    "title": "get__CostCenter_in_A_CostCenterText_2_for_sap_self",
+    "description": "Navigate from A_CostCenterText_2 to the related CostCenter_Type entity via the '_CostCenter' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "navigationProperty": {
+          "name": "_CostCenter",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update__costcenter_in_a_costcentertext_2_for_sap_self",
+    "title": "update__CostCenter_in_A_CostCenterText_2_for_sap_self",
+    "description": "Update the CostCenter_Type entity navigated from A_CostCenterText_2 via the '_CostCenter' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenterText_2",
+        "navigationProperty": {
+          "name": "_CostCenter",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "ValidityStartDate",
+              "newParameterName": "validitystartdate"
+            },
+            {
+              "name": "CostCenterName",
+              "newParameterName": "costcentername"
+            },
+            {
+              "name": "CostCenterDescription",
+              "newParameterName": "costcenterdescription"
+            },
+            {
+              "name": "IsBlkdForPrimaryCostsPosting",
+              "newParameterName": "isblkdforprimarycostsposting"
+            },
+            {
+              "name": "IsBlockedForPlanPrimaryCosts",
+              "newParameterName": "isblockedforplanprimarycosts"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "companycode"
+            },
+            {
+              "name": "BusinessArea",
+              "newParameterName": "businessarea"
+            },
+            {
+              "name": "CostCenterCategory",
+              "newParameterName": "costcentercategory"
+            },
+            {
+              "name": "CostCtrResponsiblePersonName",
+              "newParameterName": "costctrresponsiblepersonname"
+            },
+            {
+              "name": "CostCtrResponsibleUser",
+              "newParameterName": "costctrresponsibleuser"
+            },
+            {
+              "name": "CostCenterCurrency",
+              "newParameterName": "costcentercurrency"
+            },
+            {
+              "name": "CostingSheet",
+              "newParameterName": "costingsheet"
+            },
+            {
+              "name": "TaxJurisdiction",
+              "newParameterName": "taxjurisdiction"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcenter"
+            },
+            {
+              "name": "Plant",
+              "newParameterName": "plant"
+            },
+            {
+              "name": "LogicalSystem",
+              "newParameterName": "logicalsystem"
+            },
+            {
+              "name": "CostCenterCreationDate",
+              "newParameterName": "costcentercreationdate"
+            },
+            {
+              "name": "CostCenterCreatedByUser",
+              "newParameterName": "costcentercreatedbyuser"
+            },
+            {
+              "name": "IsBlkdForSecondaryCostsPosting",
+              "newParameterName": "isblkdforsecondarycostsposting"
+            },
+            {
+              "name": "IsBlockedForRevenuePosting",
+              "newParameterName": "isblockedforrevenueposting"
+            },
+            {
+              "name": "IsBlockedForCommitmentPosting",
+              "newParameterName": "isblockedforcommitmentposting"
+            },
+            {
+              "name": "IsBlockedForPlanSecondaryCosts",
+              "newParameterName": "isblockedforplansecondarycosts"
+            },
+            {
+              "name": "IsBlockedForPlanRevenues",
+              "newParameterName": "isblockedforplanrevenues"
+            },
+            {
+              "name": "CostCenterAllocationMethod",
+              "newParameterName": "costcenterallocationmethod"
+            },
+            {
+              "name": "ConsumptionQtyIsRecorded",
+              "newParameterName": "consumptionqtyisrecorded"
+            },
+            {
+              "name": "Department",
+              "newParameterName": "department"
+            },
+            {
+              "name": "Country",
+              "newParameterName": "country"
+            },
+            {
+              "name": "FormOfAddress",
+              "newParameterName": "formofaddress"
+            },
+            {
+              "name": "AddressName",
+              "newParameterName": "addressname"
+            },
+            {
+              "name": "AddressAdditionalName",
+              "newParameterName": "addressadditionalname"
+            },
+            {
+              "name": "CostCenterAddrName3",
+              "newParameterName": "costcenteraddrname3"
+            },
+            {
+              "name": "CostCenterAddrName4",
+              "newParameterName": "costcenteraddrname4"
+            },
+            {
+              "name": "CityName",
+              "newParameterName": "cityname"
+            },
+            {
+              "name": "District",
+              "newParameterName": "district"
+            },
+            {
+              "name": "StreetAddressName",
+              "newParameterName": "streetaddressname"
+            },
+            {
+              "name": "POBox",
+              "newParameterName": "pobox"
+            },
+            {
+              "name": "PostalCode",
+              "newParameterName": "postalcode"
+            },
+            {
+              "name": "POBoxPostalCode",
+              "newParameterName": "poboxpostalcode"
+            },
+            {
+              "name": "Region",
+              "newParameterName": "region"
+            },
+            {
+              "name": "Language",
+              "newParameterName": "language_2"
+            },
+            {
+              "name": "TeleboxNumber",
+              "newParameterName": "teleboxnumber"
+            },
+            {
+              "name": "PhoneNumber1",
+              "newParameterName": "phonenumber1"
+            },
+            {
+              "name": "PhoneNumber2",
+              "newParameterName": "phonenumber2"
+            },
+            {
+              "name": "FaxNumber",
+              "newParameterName": "faxnumber"
+            },
+            {
+              "name": "TeletexNumber",
+              "newParameterName": "teletexnumber"
+            },
+            {
+              "name": "TelexNumber",
+              "newParameterName": "telexnumber"
+            },
+            {
+              "name": "DataCommunicationPhoneNumber",
+              "newParameterName": "datacommunicationphonenumber"
+            },
+            {
+              "name": "CostCenterPrinterDestination",
+              "newParameterName": "costcenterprinterdestination"
+            },
+            {
+              "name": "CostCenterStandardHierArea",
+              "newParameterName": "costcenterstandardhierarea"
+            },
+            {
+              "name": "CostCenterFunction",
+              "newParameterName": "costcenterfunction"
+            },
+            {
+              "name": "CostCenterAlternativeFunction",
+              "newParameterName": "costcenteralternativefunction"
+            },
+            {
+              "name": "FunctionalArea",
+              "newParameterName": "functionalarea"
+            },
+            {
+              "name": "ActyIndepFormulaPlanningTmpl",
+              "newParameterName": "actyindepformulaplanningtmpl"
+            },
+            {
+              "name": "ActyDepdntFormulaPlanningTmpl",
+              "newParameterName": "actydepdntformulaplanningtmpl"
+            },
+            {
+              "name": "ActyIndependentAllocationTmpl",
+              "newParameterName": "actyindependentallocationtmpl"
+            },
+            {
+              "name": "ActyDependentAllocationTmpl",
+              "newParameterName": "actydependentallocationtmpl"
+            },
+            {
+              "name": "ActlIndepStatisticalKeyFigures",
+              "newParameterName": "actlindepstatisticalkeyfigures"
+            },
+            {
+              "name": "ActlDepStatisticalKeyFigures",
+              "newParameterName": "actldepstatisticalkeyfigures"
+            },
+            {
+              "name": "JointVenture",
+              "newParameterName": "jointventure"
+            },
+            {
+              "name": "JointVentureRecoveryCode",
+              "newParameterName": "jointventurerecoverycode"
+            },
+            {
+              "name": "JointVentureEquityType",
+              "newParameterName": "jointventureequitytype"
+            },
+            {
+              "name": "JointVentureObjectType",
+              "newParameterName": "jointventureobjecttype"
+            },
+            {
+              "name": "JointVentureClass",
+              "newParameterName": "jointventureclass"
+            },
+            {
+              "name": "JointVentureSubClass",
+              "newParameterName": "jointventuresubclass"
+            },
+            {
+              "name": "BudgetCarryingCostCenter",
+              "newParameterName": "budgetcarryingcostcenter"
+            },
+            {
+              "name": "AvailabilityControlProfile",
+              "newParameterName": "availabilitycontrolprofile"
+            },
+            {
+              "name": "AvailabilityControlIsActive",
+              "newParameterName": "availabilitycontrolisactive"
+            },
+            {
+              "name": "Fund",
+              "newParameterName": "fund"
+            },
+            {
+              "name": "GrantID",
+              "newParameterName": "grantid"
+            },
+            {
+              "name": "FundIsFixAssigned",
+              "newParameterName": "fundisfixassigned"
+            },
+            {
+              "name": "GrantIDIsFixAssigned",
+              "newParameterName": "grantidisfixassigned"
+            },
+            {
+              "name": "FunctionalAreaIsFixAssigned",
+              "newParameterName": "functionalareaisfixassigned"
+            },
+            {
+              "name": "CostCenterIsBudgetCarrying",
+              "newParameterName": "costcenterisbudgetcarrying"
+            },
+            {
+              "name": "CostCenterCreationTime",
+              "newParameterName": "costcentercreationtime"
+            },
+            {
+              "name": "CostCenterLastChangedByUser",
+              "newParameterName": "costcenterlastchangedbyuser"
+            },
+            {
+              "name": "CostCenterLastChangedOnDate",
+              "newParameterName": "costcenterlastchangedondate"
+            },
+            {
+              "name": "CostCenterLastChangedAtTime",
+              "newParameterName": "costcenterlastchangedattime"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_CostCenterText",
+              "newParameterName": "costcentertext"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "CostCenter",
+            "newParameterName": "costcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "action_createvalidityperiod_on_sap_self_costcenter_type",
+    "title": "action_CreateValidityPeriod_on_sap_self_costcenter_type",
+    "description": "OData bound action: CreateValidityPeriod on entity SAP__self.CostCenter_Type in the sap_self service. Returns: SAP__self.CostCtrCreateValidityPeriodP_Type",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "operation": {
+          "name": "CreateValidityPeriod",
+          "type": "action",
+          "parameters": [
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "ValidityStartDate",
+              "newParameterName": "validitystartdate"
+            },
+            {
+              "name": "CostCenterName",
+              "newParameterName": "costcentername"
+            },
+            {
+              "name": "CostCenterDescription",
+              "newParameterName": "costcenterdescription"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "companycode"
+            },
+            {
+              "name": "CostCenterCategory",
+              "newParameterName": "costcentercategory"
+            },
+            {
+              "name": "CostCtrResponsiblePersonName",
+              "newParameterName": "costctrresponsiblepersonname"
+            },
+            {
+              "name": "CostCenterStandardHierArea",
+              "newParameterName": "costcenterstandardhierarea"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "controllingarea"
+            },
+            {
+              "name": "IsBlkdForPrimaryCostsPosting",
+              "newParameterName": "isblkdforprimarycostsposting"
+            },
+            {
+              "name": "CostCtrResponsibleUser",
+              "newParameterName": "costctrresponsibleuser"
+            },
+            {
+              "name": "CostCenterCurrency",
+              "newParameterName": "costcentercurrency"
+            },
+            {
+              "name": "TaxJurisdiction",
+              "newParameterName": "taxjurisdiction"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcenter"
+            },
+            {
+              "name": "LogicalSystem",
+              "newParameterName": "logicalsystem"
+            },
+            {
+              "name": "CostCenterCreationDate",
+              "newParameterName": "costcentercreationdate"
+            },
+            {
+              "name": "CostCenterCreatedByUser",
+              "newParameterName": "costcentercreatedbyuser"
+            },
+            {
+              "name": "IsBlkdForSecondaryCostsPosting",
+              "newParameterName": "isblkdforsecondarycostsposting"
+            },
+            {
+              "name": "IsBlockedForRevenuePosting",
+              "newParameterName": "isblockedforrevenueposting"
+            },
+            {
+              "name": "IsBlockedForCommitmentPosting",
+              "newParameterName": "isblockedforcommitmentposting"
+            },
+            {
+              "name": "ConsumptionQtyIsRecorded",
+              "newParameterName": "consumptionqtyisrecorded"
+            },
+            {
+              "name": "Department",
+              "newParameterName": "department"
+            },
+            {
+              "name": "Country",
+              "newParameterName": "country"
+            },
+            {
+              "name": "FormOfAddress",
+              "newParameterName": "formofaddress"
+            },
+            {
+              "name": "AddressName",
+              "newParameterName": "addressname"
+            },
+            {
+              "name": "CityName",
+              "newParameterName": "cityname"
+            },
+            {
+              "name": "District",
+              "newParameterName": "district"
+            },
+            {
+              "name": "StreetAddressName",
+              "newParameterName": "streetaddressname"
+            },
+            {
+              "name": "POBox",
+              "newParameterName": "pobox"
+            },
+            {
+              "name": "PostalCode",
+              "newParameterName": "postalcode"
+            },
+            {
+              "name": "POBoxPostalCode",
+              "newParameterName": "poboxpostalcode"
+            },
+            {
+              "name": "Region",
+              "newParameterName": "region"
+            },
+            {
+              "name": "Language",
+              "newParameterName": "language"
+            },
+            {
+              "name": "PhoneNumber1",
+              "newParameterName": "phonenumber1"
+            },
+            {
+              "name": "FaxNumber",
+              "newParameterName": "faxnumber"
+            },
+            {
+              "name": "CostCenterPrinterDestination",
+              "newParameterName": "costcenterprinterdestination"
+            },
+            {
+              "name": "FunctionalArea",
+              "newParameterName": "functionalarea"
+            },
+            {
+              "name": "JointVenture",
+              "newParameterName": "jointventure"
+            },
+            {
+              "name": "JointVentureRecoveryCode",
+              "newParameterName": "jointventurerecoverycode"
+            },
+            {
+              "name": "JointVentureEquityType",
+              "newParameterName": "jointventureequitytype"
+            },
+            {
+              "name": "JointVentureObjectType",
+              "newParameterName": "jointventureobjecttype"
+            },
+            {
+              "name": "JointVentureClass",
+              "newParameterName": "jointventureclass"
+            },
+            {
+              "name": "JointVentureSubClass",
+              "newParameterName": "jointventuresubclass"
+            },
+            {
+              "name": "BudgetCarryingCostCenter",
+              "newParameterName": "budgetcarryingcostcenter"
+            },
+            {
+              "name": "AvailabilityControlProfile",
+              "newParameterName": "availabilitycontrolprofile"
+            },
+            {
+              "name": "AvailabilityControlIsActive",
+              "newParameterName": "availabilitycontrolisactive"
+            },
+            {
+              "name": "Fund",
+              "newParameterName": "fund"
+            },
+            {
+              "name": "GrantID",
+              "newParameterName": "grantid"
+            },
+            {
+              "name": "FundIsFixAssigned",
+              "newParameterName": "fundisfixassigned"
+            },
+            {
+              "name": "GrantIDIsFixAssigned",
+              "newParameterName": "grantidisfixassigned"
+            },
+            {
+              "name": "FunctionalAreaIsFixAssigned",
+              "newParameterName": "functionalareaisfixassigned"
+            },
+            {
+              "name": "CostCenterIsBudgetCarrying",
+              "newParameterName": "costcenterisbudgetcarrying"
+            },
+            {
+              "name": "CostCenterCreationTime",
+              "newParameterName": "costcentercreationtime"
+            },
+            {
+              "name": "CostCenterLastChangedByUser",
+              "newParameterName": "costcenterlastchangedbyuser"
+            },
+            {
+              "name": "CostCenterLastChangedOnDate",
+              "newParameterName": "costcenterlastchangedondate"
+            },
+            {
+              "name": "CostCenterLastChangedAtTime",
+              "newParameterName": "costcenterlastchangedattime"
+            },
+            {
+              "name": "_CostCenterText",
+              "newParameterName": "costcentertext"
+            }
+          ]
+        },
+        "parameters": []
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "action_updatevalidityperiod_on_sap_self_costcenter_type",
+    "title": "action_UpdateValidityPeriod_on_sap_self_costcenter_type",
+    "description": "OData bound action: UpdateValidityPeriod on entity SAP__self.CostCenter_Type in the sap_self service. Returns: SAP__self.CostCtrUpdateValidityPeriodP_Type",
+    "odataType": {
+      "entitySet": {
+        "name": "A_CostCenter_2",
+        "operation": {
+          "name": "UpdateValidityPeriod",
+          "type": "action",
+          "parameters": [
+            {
+              "name": "CostCenter",
+              "newParameterName": "costcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "controllingarea"
+            },
+            {
+              "name": "NewValidityEndDate",
+              "newParameterName": "newvalidityenddate"
+            },
+            {
+              "name": "ValidityStartDate",
+              "newParameterName": "validitystartdate"
+            },
+            {
+              "name": "CostCenterName",
+              "newParameterName": "costcentername"
+            },
+            {
+              "name": "CostCenterDescription",
+              "newParameterName": "costcenterdescription"
+            },
+            {
+              "name": "IsBlkdForPrimaryCostsPosting",
+              "newParameterName": "isblkdforprimarycostsposting"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "companycode"
+            },
+            {
+              "name": "CostCenterCategory",
+              "newParameterName": "costcentercategory"
+            },
+            {
+              "name": "CostCtrResponsiblePersonName",
+              "newParameterName": "costctrresponsiblepersonname"
+            },
+            {
+              "name": "CostCtrResponsibleUser",
+              "newParameterName": "costctrresponsibleuser"
+            },
+            {
+              "name": "CostCenterCurrency",
+              "newParameterName": "costcentercurrency"
+            },
+            {
+              "name": "TaxJurisdiction",
+              "newParameterName": "taxjurisdiction"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcenter"
+            },
+            {
+              "name": "LogicalSystem",
+              "newParameterName": "logicalsystem"
+            },
+            {
+              "name": "CostCenterCreationDate",
+              "newParameterName": "costcentercreationdate"
+            },
+            {
+              "name": "CostCenterCreatedByUser",
+              "newParameterName": "costcentercreatedbyuser"
+            },
+            {
+              "name": "IsBlkdForSecondaryCostsPosting",
+              "newParameterName": "isblkdforsecondarycostsposting"
+            },
+            {
+              "name": "IsBlockedForRevenuePosting",
+              "newParameterName": "isblockedforrevenueposting"
+            },
+            {
+              "name": "IsBlockedForCommitmentPosting",
+              "newParameterName": "isblockedforcommitmentposting"
+            },
+            {
+              "name": "ConsumptionQtyIsRecorded",
+              "newParameterName": "consumptionqtyisrecorded"
+            },
+            {
+              "name": "Department",
+              "newParameterName": "department"
+            },
+            {
+              "name": "Country",
+              "newParameterName": "country"
+            },
+            {
+              "name": "FormOfAddress",
+              "newParameterName": "formofaddress"
+            },
+            {
+              "name": "AddressName",
+              "newParameterName": "addressname"
+            },
+            {
+              "name": "CityName",
+              "newParameterName": "cityname"
+            },
+            {
+              "name": "District",
+              "newParameterName": "district"
+            },
+            {
+              "name": "StreetAddressName",
+              "newParameterName": "streetaddressname"
+            },
+            {
+              "name": "POBox",
+              "newParameterName": "pobox"
+            },
+            {
+              "name": "PostalCode",
+              "newParameterName": "postalcode"
+            },
+            {
+              "name": "POBoxPostalCode",
+              "newParameterName": "poboxpostalcode"
+            },
+            {
+              "name": "Region",
+              "newParameterName": "region"
+            },
+            {
+              "name": "Language",
+              "newParameterName": "language"
+            },
+            {
+              "name": "PhoneNumber1",
+              "newParameterName": "phonenumber1"
+            },
+            {
+              "name": "FaxNumber",
+              "newParameterName": "faxnumber"
+            },
+            {
+              "name": "CostCenterPrinterDestination",
+              "newParameterName": "costcenterprinterdestination"
+            },
+            {
+              "name": "CostCenterStandardHierArea",
+              "newParameterName": "costcenterstandardhierarea"
+            },
+            {
+              "name": "FunctionalArea",
+              "newParameterName": "functionalarea"
+            },
+            {
+              "name": "JointVenture",
+              "newParameterName": "jointventure"
+            },
+            {
+              "name": "JointVentureRecoveryCode",
+              "newParameterName": "jointventurerecoverycode"
+            },
+            {
+              "name": "JointVentureEquityType",
+              "newParameterName": "jointventureequitytype"
+            },
+            {
+              "name": "JointVentureObjectType",
+              "newParameterName": "jointventureobjecttype"
+            },
+            {
+              "name": "JointVentureClass",
+              "newParameterName": "jointventureclass"
+            },
+            {
+              "name": "JointVentureSubClass",
+              "newParameterName": "jointventuresubclass"
+            },
+            {
+              "name": "BudgetCarryingCostCenter",
+              "newParameterName": "budgetcarryingcostcenter"
+            },
+            {
+              "name": "AvailabilityControlProfile",
+              "newParameterName": "availabilitycontrolprofile"
+            },
+            {
+              "name": "AvailabilityControlIsActive",
+              "newParameterName": "availabilitycontrolisactive"
+            },
+            {
+              "name": "Fund",
+              "newParameterName": "fund"
+            },
+            {
+              "name": "GrantID",
+              "newParameterName": "grantid"
+            },
+            {
+              "name": "FundIsFixAssigned",
+              "newParameterName": "fundisfixassigned"
+            },
+            {
+              "name": "GrantIDIsFixAssigned",
+              "newParameterName": "grantidisfixassigned"
+            },
+            {
+              "name": "FunctionalAreaIsFixAssigned",
+              "newParameterName": "functionalareaisfixassigned"
+            },
+            {
+              "name": "CostCenterIsBudgetCarrying",
+              "newParameterName": "costcenterisbudgetcarrying"
+            },
+            {
+              "name": "CostCenterCreationTime",
+              "newParameterName": "costcentercreationtime"
+            },
+            {
+              "name": "CostCenterLastChangedByUser",
+              "newParameterName": "costcenterlastchangedbyuser"
+            },
+            {
+              "name": "CostCenterLastChangedOnDate",
+              "newParameterName": "costcenterlastchangedondate"
+            },
+            {
+              "name": "CostCenterLastChangedAtTime",
+              "newParameterName": "costcenterlastchangedattime"
+            },
+            {
+              "name": "_CostCenterText",
+              "newParameterName": "costcentertext"
+            }
+          ]
+        },
+        "parameters": []
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  }
+]

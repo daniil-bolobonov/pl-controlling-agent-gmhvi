@@ -1,0 +1,18 @@
+apiVersion: solution.sap/v1
+kind: Solution
+
+metadata:
+  name: pl-controlling-agent-baa66
+  version: "1.0.0"
+  description: Autonomous monthly P&L analysis agent for financial controllers — analyzes SAP S/4HANA data from Sales to EBIT, drills down through G/L accounts and journal entries to root-cause material deviations, and produces management-ready reports
+
+assets:
+  - ref: ./assets/pl-controlling-agent/asset.yaml
+  - ref: ./assets/sap-s4-journalentryitembasic-srv-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-glaccountinchartofaccounts-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-glaccountlineitem-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-profitcenter-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-functionalarea-srv-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-costcenter-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-business-partner-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-product-srv-mcp-server/asset.yaml

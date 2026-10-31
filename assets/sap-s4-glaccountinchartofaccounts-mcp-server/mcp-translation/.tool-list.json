@@ -1,0 +1,853 @@
+[
+  {
+    "name": "get_metadata_api_glaccountinchartofaccounts_srv",
+    "title": "get_metadata_api_glaccountinchartofaccounts_srv",
+    "description": "Get metadata of the OData service with optional filtering to reduce token consumption.\nReturns the metadata in XML format, which can be used to discover available entities and their properties.\nCall this endpoint every time before you call other tools to ensure understanding of the schema.\nBased on the metadata, you can dynamically create an OData request.\n\nUse filtering parameters to get specific metadata sections. Without parameters, this tool returns the complete XML metadata (which might be huge).\nOnly use the specified enum values for the filtering parameters.\n",
+    "odataType": {
+      "metadataRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_a_glaccountinchartofaccounts",
+    "title": "list_A_GLAccountInChartOfAccounts_for_api_glaccountinchartofaccounts_srv",
+    "description": "Retrieve a list of entities from the A_GLAccountInChartOfAccounts collection in the api_glaccountinchartofaccounts_srv service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountInChartOfAccounts",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "get_a_glaccountinchartofaccounts",
+    "title": "get_A_GLAccountInChartOfAccounts_for_api_glaccountinchartofaccounts_srv",
+    "description": "Retrieve a single entity by its key from the A_GLAccountInChartOfAccounts collection in the api_glaccountinchartofaccounts_srv service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountInChartOfAccounts",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_a_glaccountinchartofaccounts",
+    "title": "count_A_GLAccountInChartOfAccounts_for_api_glaccountinchartofaccounts_srv",
+    "description": "Get the total count of entities in the A_GLAccountInChartOfAccounts collection in the api_glaccountinchartofaccounts_srv service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountInChartOfAccounts",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_a_glaccounttext_for_api_glaccountinchartofaccounts_srv",
+    "title": "list_A_GLAccountText_for_api_glaccountinchartofaccounts_srv",
+    "description": "Retrieve a list of entities from the A_GLAccountText collection in the api_glaccountinchartofaccounts_srv service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountText",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "get_a_glaccounttext_for_api_glaccountinchartofaccounts_srv",
+    "title": "get_A_GLAccountText_for_api_glaccountinchartofaccounts_srv",
+    "description": "Retrieve a single entity by its key from the A_GLAccountText collection in the api_glaccountinchartofaccounts_srv service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountText",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_a_glaccounttext_for_api_glaccountinchartofaccounts_srv",
+    "title": "count_A_GLAccountText_for_api_glaccountinchartofaccounts_srv",
+    "description": "Get the total count of entities in the A_GLAccountText collection in the api_glaccountinchartofaccounts_srv service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountText",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_to_text_in_a_glaccountinchartofaccounts",
+    "title": "list_to_Text_in_A_GLAccountInChartOfAccounts_for_api_glaccountinchartofaccounts_srv",
+    "description": "Navigate from A_GLAccountInChartOfAccounts to related A_GLAccountTextType entities via the 'to_Text' navigation property. Supports OData query options for filtering, sorting, paging, expanding, counting, and selecting specific properties. If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountInChartOfAccounts",
+        "navigationProperty": {
+          "name": "to_Text",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_to_text_in_a_glaccountinchartofaccounts",
+    "title": "count_to_Text_in_A_GLAccountInChartOfAccounts_for_api_glaccountinchartofaccounts_srv",
+    "description": "Count A_GLAccountTextType entities accessible via the 'to_Text' navigation property of A_GLAccountInChartOfAccounts in the api_glaccountinchartofaccounts_srv service. Returns the total number of matching entities.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountInChartOfAccounts",
+        "navigationProperty": {
+          "name": "to_Text",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "get_to_glaccountinchartofaccounts_in_a_glaccounttext",
+    "title": "get_to_GLAccountInChartOfAccounts_in_A_GLAccountText_for_api_glaccountinchartofaccounts_srv",
+    "description": "Navigate from A_GLAccountText to the related A_GLAccountInChartOfAccountsType entity via the 'to_GLAccountInChartOfAccounts' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_api_glaccountinchartofaccounts_srv tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountText",
+        "navigationProperty": {
+          "name": "to_GLAccountInChartOfAccounts",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update_to_glaccountinchartofaccounts_in_a_glaccounttext",
+    "title": "update_to_GLAccountInChartOfAccounts_in_A_GLAccountText_for_api_glaccountinchartofaccounts_srv",
+    "description": "Update the A_GLAccountInChartOfAccountsType entity navigated from A_GLAccountText via the 'to_GLAccountInChartOfAccounts' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_api_glaccountinchartofaccounts_srv tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "A_GLAccountText",
+        "navigationProperty": {
+          "name": "to_GLAccountInChartOfAccounts",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "IsBalanceSheetAccount",
+              "newParameterName": "isbalancesheetaccount"
+            },
+            {
+              "name": "GLAccountGroup",
+              "newParameterName": "glaccountgroup"
+            },
+            {
+              "name": "CorporateGroupAccount",
+              "newParameterName": "corporategroupaccount"
+            },
+            {
+              "name": "ProfitLossAccountType",
+              "newParameterName": "profitlossaccounttype"
+            },
+            {
+              "name": "SampleGLAccount",
+              "newParameterName": "sampleglaccount"
+            },
+            {
+              "name": "AccountIsMarkedForDeletion",
+              "newParameterName": "accountismarkedfordeletion"
+            },
+            {
+              "name": "AccountIsBlockedForCreation",
+              "newParameterName": "accountisblockedforcreation"
+            },
+            {
+              "name": "AccountIsBlockedForPosting",
+              "newParameterName": "accountisblockedforposting"
+            },
+            {
+              "name": "AccountIsBlockedForPlanning",
+              "newParameterName": "accountisblockedforplanning"
+            },
+            {
+              "name": "PartnerCompany",
+              "newParameterName": "partnercompany"
+            },
+            {
+              "name": "FunctionalArea",
+              "newParameterName": "functionalarea"
+            },
+            {
+              "name": "CreationDate",
+              "newParameterName": "creationdate"
+            },
+            {
+              "name": "CreatedByUser",
+              "newParameterName": "createdbyuser"
+            },
+            {
+              "name": "LastChangeDateTime",
+              "newParameterName": "lastchangedatetime"
+            },
+            {
+              "name": "GLAccountType",
+              "newParameterName": "glaccounttype"
+            },
+            {
+              "name": "GLAccountExternal",
+              "newParameterName": "glaccountexternal"
+            },
+            {
+              "name": "IsProfitLossAccount",
+              "newParameterName": "isprofitlossaccount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ChartOfAccounts",
+            "newParameterName": "chartofaccounts"
+          },
+          {
+            "name": "GLAccount",
+            "newParameterName": "glaccount"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  }
+]

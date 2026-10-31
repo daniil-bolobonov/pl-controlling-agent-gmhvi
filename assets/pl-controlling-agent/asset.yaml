@@ -1,0 +1,63 @@
+apiVersion: asset.sap/v1
+kind: Asset
+type: agent
+
+metadata:
+  name: pl-controlling-agent
+  description: Autonomous monthly P&L analysis agent — analyzes SAP S/4HANA data from Sales to EBIT, drills down to journal entries, and produces management-ready deviation reports for financial controllers
+  version: "1.0.0"
+
+provides:
+  apis:
+    - name: pl-controlling-agent
+      kind: a2a
+      ordId: customer.build:apiResource:pl-controlling-agent-baa66.pl-controlling-agent:v1
+
+container:
+  buildPath: .
+  port: 5000
+
+requires:
+  - name: sap-s4-journalentryitembasic-srv-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-journalentryitembasic-srv-mcp-server:v1
+  - name: sap-s4-glaccountinchartofaccounts-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-glaccountinchartofaccounts-mcp-server:v1
+  - name: sap-s4-glaccountlineitem-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-glaccountlineitem-mcp-server:v1
+  - name: sap-s4-profitcenter-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-profitcenter-mcp-server:v1
+  - name: sap-s4-functionalarea-srv-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-functionalarea-srv-mcp-server:v1
+  - name: sap-s4-costcenter-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-costcenter-mcp-server:v1
+  - name: sap-s4-business-partner-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-business-partner-mcp-server:v1
+  - name: sap-s4-product-srv-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-product-srv-mcp-server:v1
+
+probes:
+  startup:
+    path: /.well-known/agent.json
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 18
+  liveness:
+    path: /.well-known/agent.json
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readiness:
+    path: /.well-known/agent.json
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3

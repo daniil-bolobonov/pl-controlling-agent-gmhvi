@@ -1,0 +1,3756 @@
+[
+  {
+    "name": "get_metadata_sap_self",
+    "title": "get_metadata_sap_self",
+    "description": "Get metadata of the OData service with optional filtering to reduce token consumption.\nReturns the metadata in XML format, which can be used to discover available entities and their properties.\nCall this endpoint every time before you call other tools to ensure understanding of the schema.\nBased on the metadata, you can dynamically create an OData request.\n\nUse filtering parameters to get specific metadata sections. Without parameters, this tool returns the complete XML metadata (which might be huge).\nOnly use the specified enum values for the filtering parameters.\n",
+    "odataType": {
+      "metadataRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "batch_for_sap_self",
+    "title": "batch_for_sap_self",
+    "description": "Execute multiple OData operations in a single batch request using the $batch endpoint. This allows you to combine multiple tool calls into one HTTP request, improving efficiency when performing multiple operations.",
+    "odataType": {
+      "batchRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "list_prftctrcocodeassignment_for_sap_self",
+    "title": "list_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Retrieve a list of entities from the PrftCtrCoCodeAssignment collection in the sap_self service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "count"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update_prftctrcocodeassignment_for_sap_self",
+    "title": "update_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Update an entity in PrftCtrCoCodeAssignment EntitySet in the sap_self service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          },
+          {
+            "name": "PrftCtrIsAssignedToCompCode",
+            "newParameterName": "prftctrisassignedtocompcode"
+          },
+          {
+            "name": "JointVenture",
+            "newParameterName": "jointventure"
+          },
+          {
+            "name": "JointVentureRecoveryCode",
+            "newParameterName": "jointventurerecoverycode"
+          },
+          {
+            "name": "JointVentureEquityType",
+            "newParameterName": "jointventureequitytype"
+          },
+          {
+            "name": "JointVentureObjectType",
+            "newParameterName": "jointventureobjecttype"
+          },
+          {
+            "name": "JointVentureClass",
+            "newParameterName": "jointventureclass"
+          },
+          {
+            "name": "JointVentureSubClass",
+            "newParameterName": "jointventuresubclass"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_ProfitCenterTP",
+            "newParameterName": "profitcentertp"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_prftctrcocodeassignment_for_sap_self",
+    "title": "get_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Retrieve a single entity by its key from the PrftCtrCoCodeAssignment collection in the sap_self service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_prftctrcocodeassignment_for_sap_self",
+    "title": "count_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Get the total count of entities in the PrftCtrCoCodeAssignment collection in the sap_self service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_profitcenter_for_sap_self",
+    "title": "list_ProfitCenter_for_sap_self",
+    "description": "Retrieve a list of entities from the ProfitCenter collection in the sap_self service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "count"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "create_profitcenter_for_sap_self",
+    "title": "create_ProfitCenter_for_sap_self",
+    "description": "Create a new instance of the ProfitCenter EntitySet in the sap_self service. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "ValidityStartDate",
+            "newParameterName": "validitystartdate"
+          },
+          {
+            "name": "ProfitCenterName",
+            "newParameterName": "profitcentername"
+          },
+          {
+            "name": "ProfitCenterLongName",
+            "newParameterName": "profitcenterlongname"
+          },
+          {
+            "name": "ProfitCtrResponsiblePersonName",
+            "newParameterName": "profitctrresponsiblepersonname"
+          },
+          {
+            "name": "ProfitCtrResponsibleUser",
+            "newParameterName": "profitctrresponsibleuser"
+          },
+          {
+            "name": "ProfitCenterCreationDate",
+            "newParameterName": "profitcentercreationdate"
+          },
+          {
+            "name": "ProfitCenterCreatedByUser",
+            "newParameterName": "profitcentercreatedbyuser"
+          },
+          {
+            "name": "ProfitCenterIsBlocked",
+            "newParameterName": "profitcenterisblocked"
+          },
+          {
+            "name": "ProfitCenterStandardHierarchy",
+            "newParameterName": "profitcenterstandardhierarchy"
+          },
+          {
+            "name": "Segment",
+            "newParameterName": "segment"
+          },
+          {
+            "name": "ProfitCenterDepartment",
+            "newParameterName": "profitcenterdepartment"
+          },
+          {
+            "name": "ProfitCenterTitleName",
+            "newParameterName": "profitcentertitlename"
+          },
+          {
+            "name": "AddressName",
+            "newParameterName": "addressname"
+          },
+          {
+            "name": "AdditionalName",
+            "newParameterName": "additionalname"
+          },
+          {
+            "name": "ProfitCenterAddrName3",
+            "newParameterName": "profitcenteraddrname3"
+          },
+          {
+            "name": "ProfitCenterAddrName4",
+            "newParameterName": "profitcenteraddrname4"
+          },
+          {
+            "name": "StreetAddressName",
+            "newParameterName": "streetaddressname"
+          },
+          {
+            "name": "CityName",
+            "newParameterName": "cityname"
+          },
+          {
+            "name": "PostalCode",
+            "newParameterName": "postalcode"
+          },
+          {
+            "name": "District",
+            "newParameterName": "district"
+          },
+          {
+            "name": "Country",
+            "newParameterName": "country"
+          },
+          {
+            "name": "Region",
+            "newParameterName": "region"
+          },
+          {
+            "name": "TaxJurisdiction",
+            "newParameterName": "taxjurisdiction"
+          },
+          {
+            "name": "POBox",
+            "newParameterName": "pobox"
+          },
+          {
+            "name": "POBoxPostalCode",
+            "newParameterName": "poboxpostalcode"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "PhoneNumber1",
+            "newParameterName": "phonenumber1"
+          },
+          {
+            "name": "PhoneNumber2",
+            "newParameterName": "phonenumber2"
+          },
+          {
+            "name": "FaxNumber",
+            "newParameterName": "faxnumber"
+          },
+          {
+            "name": "TeleboxNumber",
+            "newParameterName": "teleboxnumber"
+          },
+          {
+            "name": "TelexNumber",
+            "newParameterName": "telexnumber"
+          },
+          {
+            "name": "TeletexNumber",
+            "newParameterName": "teletexnumber"
+          },
+          {
+            "name": "DataCommunicationPhoneNumber",
+            "newParameterName": "datacommunicationphonenumber"
+          },
+          {
+            "name": "ProfitCenterPrinterName",
+            "newParameterName": "profitcenterprintername"
+          },
+          {
+            "name": "LogicalSystem",
+            "newParameterName": "logicalsystem"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_PrftCtrCompCodeAssgmtTP",
+            "newParameterName": "prftctrcompcodeassgmttp"
+          },
+          {
+            "name": "_ProfitCenterTextTP",
+            "newParameterName": "profitcentertexttp"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "odata-entityid"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "update_profitcenter_for_sap_self",
+    "title": "update_ProfitCenter_for_sap_self",
+    "description": "Update an entity in ProfitCenter EntitySet in the sap_self service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "ValidityStartDate",
+            "newParameterName": "validitystartdate"
+          },
+          {
+            "name": "ProfitCenterName",
+            "newParameterName": "profitcentername"
+          },
+          {
+            "name": "ProfitCenterLongName",
+            "newParameterName": "profitcenterlongname"
+          },
+          {
+            "name": "ProfitCtrResponsiblePersonName",
+            "newParameterName": "profitctrresponsiblepersonname"
+          },
+          {
+            "name": "ProfitCtrResponsibleUser",
+            "newParameterName": "profitctrresponsibleuser"
+          },
+          {
+            "name": "ProfitCenterCreationDate",
+            "newParameterName": "profitcentercreationdate"
+          },
+          {
+            "name": "ProfitCenterCreatedByUser",
+            "newParameterName": "profitcentercreatedbyuser"
+          },
+          {
+            "name": "ProfitCenterIsBlocked",
+            "newParameterName": "profitcenterisblocked"
+          },
+          {
+            "name": "ProfitCenterStandardHierarchy",
+            "newParameterName": "profitcenterstandardhierarchy"
+          },
+          {
+            "name": "Segment",
+            "newParameterName": "segment"
+          },
+          {
+            "name": "ProfitCenterDepartment",
+            "newParameterName": "profitcenterdepartment"
+          },
+          {
+            "name": "ProfitCenterTitleName",
+            "newParameterName": "profitcentertitlename"
+          },
+          {
+            "name": "AddressName",
+            "newParameterName": "addressname"
+          },
+          {
+            "name": "AdditionalName",
+            "newParameterName": "additionalname"
+          },
+          {
+            "name": "ProfitCenterAddrName3",
+            "newParameterName": "profitcenteraddrname3"
+          },
+          {
+            "name": "ProfitCenterAddrName4",
+            "newParameterName": "profitcenteraddrname4"
+          },
+          {
+            "name": "StreetAddressName",
+            "newParameterName": "streetaddressname"
+          },
+          {
+            "name": "CityName",
+            "newParameterName": "cityname"
+          },
+          {
+            "name": "PostalCode",
+            "newParameterName": "postalcode"
+          },
+          {
+            "name": "District",
+            "newParameterName": "district"
+          },
+          {
+            "name": "Country",
+            "newParameterName": "country"
+          },
+          {
+            "name": "Region",
+            "newParameterName": "region"
+          },
+          {
+            "name": "TaxJurisdiction",
+            "newParameterName": "taxjurisdiction"
+          },
+          {
+            "name": "POBox",
+            "newParameterName": "pobox"
+          },
+          {
+            "name": "POBoxPostalCode",
+            "newParameterName": "poboxpostalcode"
+          },
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "PhoneNumber1",
+            "newParameterName": "phonenumber1"
+          },
+          {
+            "name": "PhoneNumber2",
+            "newParameterName": "phonenumber2"
+          },
+          {
+            "name": "FaxNumber",
+            "newParameterName": "faxnumber"
+          },
+          {
+            "name": "TeleboxNumber",
+            "newParameterName": "teleboxnumber"
+          },
+          {
+            "name": "TelexNumber",
+            "newParameterName": "telexnumber"
+          },
+          {
+            "name": "TeletexNumber",
+            "newParameterName": "teletexnumber"
+          },
+          {
+            "name": "DataCommunicationPhoneNumber",
+            "newParameterName": "datacommunicationphonenumber"
+          },
+          {
+            "name": "ProfitCenterPrinterName",
+            "newParameterName": "profitcenterprintername"
+          },
+          {
+            "name": "LogicalSystem",
+            "newParameterName": "logicalsystem"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_PrftCtrCompCodeAssgmtTP",
+            "newParameterName": "prftctrcompcodeassgmttp"
+          },
+          {
+            "name": "_ProfitCenterTextTP",
+            "newParameterName": "profitcentertexttp"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_profitcenter_for_sap_self",
+    "title": "delete_ProfitCenter_for_sap_self",
+    "description": "Delete an entity from ProfitCenter EntitySet in the sap_self service.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "delete",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_profitcenter_for_sap_self",
+    "title": "get_ProfitCenter_for_sap_self",
+    "description": "Retrieve a single entity by its key from the ProfitCenter collection in the sap_self service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_profitcenter_for_sap_self",
+    "title": "count_ProfitCenter_for_sap_self",
+    "description": "Get the total count of entities in the ProfitCenter collection in the sap_self service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_profitcentertext_for_sap_self",
+    "title": "list_ProfitCenterText_for_sap_self",
+    "description": "Retrieve a list of entities from the ProfitCenterText collection in the sap_self service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "count"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update_profitcentertext_for_sap_self",
+    "title": "update_ProfitCenterText_for_sap_self",
+    "description": "Update an entity in ProfitCenterText EntitySet in the sap_self service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "ProfitCenterName",
+            "newParameterName": "profitcentername"
+          },
+          {
+            "name": "ProfitCenterLongName",
+            "newParameterName": "profitcenterlongname"
+          },
+          {
+            "name": "SAP__Messages",
+            "newParameterName": "sap_messages"
+          },
+          {
+            "name": "_ProfitCenterTP",
+            "newParameterName": "profitcentertp"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_profitcentertext_for_sap_self",
+    "title": "delete_ProfitCenterText_for_sap_self",
+    "description": "Delete an entity from ProfitCenterText EntitySet in the sap_self service.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "crudOperation": "delete",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_profitcentertext_for_sap_self",
+    "title": "get_ProfitCenterText_for_sap_self",
+    "description": "Retrieve a single entity by its key from the ProfitCenterText collection in the sap_self service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_profitcentertext_for_sap_self",
+    "title": "count_ProfitCenterText_for_sap_self",
+    "description": "Get the total count of entities in the ProfitCenterText collection in the sap_self service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "list_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Retrieve a collection of contained entities from the _PrftCtrCompCodeAssgmtTP contained entity set (accessed via navigation path: ProfitCenter → _PrftCtrCompCodeAssgmtTP) in the sap_self service. Supports OData query options for filtering, sorting, and pagination.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "count"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "create_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "create_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Create a new entity in the contained _PrftCtrCompCodeAssgmtTP entity set in the sap_self service. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "ControllingArea",
+              "newParameterName": "controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "companycode"
+            },
+            {
+              "name": "CompanyCodeName",
+              "newParameterName": "companycodename"
+            },
+            {
+              "name": "PrftCtrIsAssignedToCompCode",
+              "newParameterName": "prftctrisassignedtocompcode"
+            },
+            {
+              "name": "JointVenture",
+              "newParameterName": "jointventure"
+            },
+            {
+              "name": "JointVentureRecoveryCode",
+              "newParameterName": "jointventurerecoverycode"
+            },
+            {
+              "name": "JointVentureEquityType",
+              "newParameterName": "jointventureequitytype"
+            },
+            {
+              "name": "JointVentureObjectType",
+              "newParameterName": "jointventureobjecttype"
+            },
+            {
+              "name": "JointVentureClass",
+              "newParameterName": "jointventureclass"
+            },
+            {
+              "name": "JointVentureSubClass",
+              "newParameterName": "jointventuresubclass"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_ProfitCenterTP",
+              "newParameterName": "profitcentertp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "odata-entityid"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "update_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "update_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Update an existing entity in the contained _PrftCtrCompCodeAssgmtTP entity set in the sap_self service. Provide all ancestor keys, entity key, and the properties to update.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "ControllingArea",
+              "newParameterName": "prftctrcompcodeassgmttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "prftctrcompcodeassgmttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "prftctrcompcodeassgmttp_validityenddate"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "prftctrcompcodeassgmttp_companycode"
+            },
+            {
+              "name": "PrftCtrIsAssignedToCompCode",
+              "newParameterName": "prftctrisassignedtocompcode"
+            },
+            {
+              "name": "JointVenture",
+              "newParameterName": "jointventure"
+            },
+            {
+              "name": "JointVentureRecoveryCode",
+              "newParameterName": "jointventurerecoverycode"
+            },
+            {
+              "name": "JointVentureEquityType",
+              "newParameterName": "jointventureequitytype"
+            },
+            {
+              "name": "JointVentureObjectType",
+              "newParameterName": "jointventureobjecttype"
+            },
+            {
+              "name": "JointVentureClass",
+              "newParameterName": "jointventureclass"
+            },
+            {
+              "name": "JointVentureSubClass",
+              "newParameterName": "jointventuresubclass"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_ProfitCenterTP",
+              "newParameterName": "profitcentertp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "delete_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Delete an entity from the contained _PrftCtrCompCodeAssgmtTP entity set in the sap_self service. Provide all ancestor keys and the entity key to identify the entity to delete.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "delete",
+          "parameters": [
+            {
+              "name": "ControllingArea",
+              "newParameterName": "prftctrcompcodeassgmttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "prftctrcompcodeassgmttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "prftctrcompcodeassgmttp_validityenddate"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "prftctrcompcodeassgmttp_companycode"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "get_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Retrieve a single contained entity by its key from the _PrftCtrCompCodeAssgmtTP contained entity set in the sap_self service. Provide all ancestor and entity key values to identify the specific entity.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "ControllingArea",
+              "newParameterName": "prftctrcompcodeassgmttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "prftctrcompcodeassgmttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "prftctrcompcodeassgmttp_validityenddate"
+            },
+            {
+              "name": "CompanyCode",
+              "newParameterName": "prftctrcompcodeassgmttp_companycode"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_profitcenter__prftctrcompcodeassgmttp_for_sap_self",
+    "title": "count_ProfitCenter__PrftCtrCompCodeAssgmtTP_for_sap_self",
+    "description": "Count the number of entities in the contained _PrftCtrCompCodeAssgmtTP entity set in the sap_self service. Optionally use $filter to count only entities matching specific criteria.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_PrftCtrCompCodeAssgmtTP",
+          "crudOperation": "count",
+          "parameters": []
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          },
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "list_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "list_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Retrieve a collection of contained entities from the _ProfitCenterTextTP contained entity set (accessed via navigation path: ProfitCenter → _ProfitCenterTextTP) in the sap_self service. Supports OData query options for filtering, sorting, and pagination.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "count"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "create_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "create_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Create a new entity in the contained _ProfitCenterTextTP entity set in the sap_self service. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "ProfitCenterName",
+              "newParameterName": "profitcentername"
+            },
+            {
+              "name": "ProfitCenterLongName",
+              "newParameterName": "profitcenterlongname"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_ProfitCenterTP",
+              "newParameterName": "profitcentertp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "odata-entityid"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "update_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "update_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Update an existing entity in the contained _ProfitCenterTextTP entity set in the sap_self service. Provide all ancestor keys, entity key, and the properties to update.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "profitcentertexttp_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "profitcentertexttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcentertexttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "profitcentertexttp_validityenddate"
+            },
+            {
+              "name": "ProfitCenterName",
+              "newParameterName": "profitcentername"
+            },
+            {
+              "name": "ProfitCenterLongName",
+              "newParameterName": "profitcenterlongname"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_ProfitCenterTP",
+              "newParameterName": "profitcentertp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "delete_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "delete_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Delete an entity from the contained _ProfitCenterTextTP entity set in the sap_self service. Provide all ancestor keys and the entity key to identify the entity to delete.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "delete",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "profitcentertexttp_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "profitcentertexttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcentertexttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "profitcentertexttp_validityenddate"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "get_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Retrieve a single contained entity by its key from the _ProfitCenterTextTP contained entity set in the sap_self service. Provide all ancestor and entity key values to identify the specific entity.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "Language",
+              "newParameterName": "profitcentertexttp_language"
+            },
+            {
+              "name": "ControllingArea",
+              "newParameterName": "profitcentertexttp_controllingarea"
+            },
+            {
+              "name": "ProfitCenter",
+              "newParameterName": "profitcentertexttp_profitcenter"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "profitcentertexttp_validityenddate"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "count_profitcenter__profitcentertexttp_for_sap_self",
+    "title": "count_ProfitCenter__ProfitCenterTextTP_for_sap_self",
+    "description": "Count the number of entities in the contained _ProfitCenterTextTP entity set in the sap_self service. Optionally use $filter to count only entities matching specific criteria.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "navigationProperty": {
+          "name": "_ProfitCenterTextTP",
+          "crudOperation": "count",
+          "parameters": []
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "profitcenter_controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter_profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "profitcenter_validityenddate"
+          },
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "get__profitcentertp_in_prftctrcocodeassignment_for_sap_self",
+    "title": "get__ProfitCenterTP_in_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Navigate from PrftCtrCoCodeAssignment to the related ProfitCenter_Type entity via the '_ProfitCenterTP' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "navigationProperty": {
+          "name": "_ProfitCenterTP",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update__profitcentertp_in_prftctrcocodeassignment_for_sap_self",
+    "title": "update__ProfitCenterTP_in_PrftCtrCoCodeAssignment_for_sap_self",
+    "description": "Update the ProfitCenter_Type entity navigated from PrftCtrCoCodeAssignment via the '_ProfitCenterTP' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "PrftCtrCoCodeAssignment",
+        "navigationProperty": {
+          "name": "_ProfitCenterTP",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "ValidityStartDate",
+              "newParameterName": "validitystartdate"
+            },
+            {
+              "name": "ProfitCenterName",
+              "newParameterName": "profitcentername"
+            },
+            {
+              "name": "ProfitCenterLongName",
+              "newParameterName": "profitcenterlongname"
+            },
+            {
+              "name": "ProfitCtrResponsiblePersonName",
+              "newParameterName": "profitctrresponsiblepersonname"
+            },
+            {
+              "name": "ProfitCtrResponsibleUser",
+              "newParameterName": "profitctrresponsibleuser"
+            },
+            {
+              "name": "ProfitCenterCreationDate",
+              "newParameterName": "profitcentercreationdate"
+            },
+            {
+              "name": "ProfitCenterCreatedByUser",
+              "newParameterName": "profitcentercreatedbyuser"
+            },
+            {
+              "name": "ProfitCenterIsBlocked",
+              "newParameterName": "profitcenterisblocked"
+            },
+            {
+              "name": "ProfitCenterStandardHierarchy",
+              "newParameterName": "profitcenterstandardhierarchy"
+            },
+            {
+              "name": "Segment",
+              "newParameterName": "segment"
+            },
+            {
+              "name": "ProfitCenterDepartment",
+              "newParameterName": "profitcenterdepartment"
+            },
+            {
+              "name": "ProfitCenterTitleName",
+              "newParameterName": "profitcentertitlename"
+            },
+            {
+              "name": "AddressName",
+              "newParameterName": "addressname"
+            },
+            {
+              "name": "AdditionalName",
+              "newParameterName": "additionalname"
+            },
+            {
+              "name": "ProfitCenterAddrName3",
+              "newParameterName": "profitcenteraddrname3"
+            },
+            {
+              "name": "ProfitCenterAddrName4",
+              "newParameterName": "profitcenteraddrname4"
+            },
+            {
+              "name": "StreetAddressName",
+              "newParameterName": "streetaddressname"
+            },
+            {
+              "name": "CityName",
+              "newParameterName": "cityname"
+            },
+            {
+              "name": "PostalCode",
+              "newParameterName": "postalcode"
+            },
+            {
+              "name": "District",
+              "newParameterName": "district"
+            },
+            {
+              "name": "Country",
+              "newParameterName": "country"
+            },
+            {
+              "name": "Region",
+              "newParameterName": "region"
+            },
+            {
+              "name": "TaxJurisdiction",
+              "newParameterName": "taxjurisdiction"
+            },
+            {
+              "name": "POBox",
+              "newParameterName": "pobox"
+            },
+            {
+              "name": "POBoxPostalCode",
+              "newParameterName": "poboxpostalcode"
+            },
+            {
+              "name": "Language",
+              "newParameterName": "language"
+            },
+            {
+              "name": "PhoneNumber1",
+              "newParameterName": "phonenumber1"
+            },
+            {
+              "name": "PhoneNumber2",
+              "newParameterName": "phonenumber2"
+            },
+            {
+              "name": "FaxNumber",
+              "newParameterName": "faxnumber"
+            },
+            {
+              "name": "TeleboxNumber",
+              "newParameterName": "teleboxnumber"
+            },
+            {
+              "name": "TelexNumber",
+              "newParameterName": "telexnumber"
+            },
+            {
+              "name": "TeletexNumber",
+              "newParameterName": "teletexnumber"
+            },
+            {
+              "name": "DataCommunicationPhoneNumber",
+              "newParameterName": "datacommunicationphonenumber"
+            },
+            {
+              "name": "ProfitCenterPrinterName",
+              "newParameterName": "profitcenterprintername"
+            },
+            {
+              "name": "LogicalSystem",
+              "newParameterName": "logicalsystem"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_PrftCtrCompCodeAssgmtTP",
+              "newParameterName": "prftctrcompcodeassgmttp"
+            },
+            {
+              "name": "_ProfitCenterTextTP",
+              "newParameterName": "profitcentertexttp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          },
+          {
+            "name": "CompanyCode",
+            "newParameterName": "companycode"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "get__profitcentertp_in_profitcentertext_for_sap_self",
+    "title": "get__ProfitCenterTP_in_ProfitCenterText_for_sap_self",
+    "description": "Navigate from ProfitCenterText to the related ProfitCenter_Type entity via the '_ProfitCenterTP' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_sap_self tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "navigationProperty": {
+          "name": "_ProfitCenterTP",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "retry-after"
+        },
+        {
+          "name": "asyncresult"
+        },
+        {
+          "name": "odata-error"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "update__profitcentertp_in_profitcentertext_for_sap_self",
+    "title": "update__ProfitCenterTP_in_ProfitCenterText_for_sap_self",
+    "description": "Update the ProfitCenter_Type entity navigated from ProfitCenterText via the '_ProfitCenterTP' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_sap_self tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenterText",
+        "navigationProperty": {
+          "name": "_ProfitCenterTP",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "ValidityStartDate",
+              "newParameterName": "validitystartdate"
+            },
+            {
+              "name": "ProfitCenterName",
+              "newParameterName": "profitcentername"
+            },
+            {
+              "name": "ProfitCenterLongName",
+              "newParameterName": "profitcenterlongname"
+            },
+            {
+              "name": "ProfitCtrResponsiblePersonName",
+              "newParameterName": "profitctrresponsiblepersonname"
+            },
+            {
+              "name": "ProfitCtrResponsibleUser",
+              "newParameterName": "profitctrresponsibleuser"
+            },
+            {
+              "name": "ProfitCenterCreationDate",
+              "newParameterName": "profitcentercreationdate"
+            },
+            {
+              "name": "ProfitCenterCreatedByUser",
+              "newParameterName": "profitcentercreatedbyuser"
+            },
+            {
+              "name": "ProfitCenterIsBlocked",
+              "newParameterName": "profitcenterisblocked"
+            },
+            {
+              "name": "ProfitCenterStandardHierarchy",
+              "newParameterName": "profitcenterstandardhierarchy"
+            },
+            {
+              "name": "Segment",
+              "newParameterName": "segment"
+            },
+            {
+              "name": "ProfitCenterDepartment",
+              "newParameterName": "profitcenterdepartment"
+            },
+            {
+              "name": "ProfitCenterTitleName",
+              "newParameterName": "profitcentertitlename"
+            },
+            {
+              "name": "AddressName",
+              "newParameterName": "addressname"
+            },
+            {
+              "name": "AdditionalName",
+              "newParameterName": "additionalname"
+            },
+            {
+              "name": "ProfitCenterAddrName3",
+              "newParameterName": "profitcenteraddrname3"
+            },
+            {
+              "name": "ProfitCenterAddrName4",
+              "newParameterName": "profitcenteraddrname4"
+            },
+            {
+              "name": "StreetAddressName",
+              "newParameterName": "streetaddressname"
+            },
+            {
+              "name": "CityName",
+              "newParameterName": "cityname"
+            },
+            {
+              "name": "PostalCode",
+              "newParameterName": "postalcode"
+            },
+            {
+              "name": "District",
+              "newParameterName": "district"
+            },
+            {
+              "name": "Country",
+              "newParameterName": "country"
+            },
+            {
+              "name": "Region",
+              "newParameterName": "region"
+            },
+            {
+              "name": "TaxJurisdiction",
+              "newParameterName": "taxjurisdiction"
+            },
+            {
+              "name": "POBox",
+              "newParameterName": "pobox"
+            },
+            {
+              "name": "POBoxPostalCode",
+              "newParameterName": "poboxpostalcode"
+            },
+            {
+              "name": "Language",
+              "newParameterName": "language_2"
+            },
+            {
+              "name": "PhoneNumber1",
+              "newParameterName": "phonenumber1"
+            },
+            {
+              "name": "PhoneNumber2",
+              "newParameterName": "phonenumber2"
+            },
+            {
+              "name": "FaxNumber",
+              "newParameterName": "faxnumber"
+            },
+            {
+              "name": "TeleboxNumber",
+              "newParameterName": "teleboxnumber"
+            },
+            {
+              "name": "TelexNumber",
+              "newParameterName": "telexnumber"
+            },
+            {
+              "name": "TeletexNumber",
+              "newParameterName": "teletexnumber"
+            },
+            {
+              "name": "DataCommunicationPhoneNumber",
+              "newParameterName": "datacommunicationphonenumber"
+            },
+            {
+              "name": "ProfitCenterPrinterName",
+              "newParameterName": "profitcenterprintername"
+            },
+            {
+              "name": "LogicalSystem",
+              "newParameterName": "logicalsystem"
+            },
+            {
+              "name": "SAP__Messages",
+              "newParameterName": "sap_messages"
+            },
+            {
+              "name": "_PrftCtrCompCodeAssgmtTP",
+              "newParameterName": "prftctrcompcodeassgmttp"
+            },
+            {
+              "name": "_ProfitCenterTextTP",
+              "newParameterName": "profitcentertexttp"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "Language",
+            "newParameterName": "language"
+          },
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "action_merge_on_sap_self_profitcenter_type",
+    "title": "action_Merge_on_sap_self_profitcenter_type",
+    "description": "OData bound action: Merge on entity SAP__self.ProfitCenter_Type in the sap_self service. Returns: SAP__self.ProfitCenter_Type",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "operation": {
+          "name": "Merge",
+          "type": "action",
+          "parameters": []
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  },
+  {
+    "name": "action_changevalidityperiod_on_sap_self_profitcenter_type",
+    "title": "action_ChangeValidityPeriod_on_sap_self_profitcenter_type",
+    "description": "OData bound action: ChangeValidityPeriod on entity SAP__self.ProfitCenter_Type in the sap_self service. Returns: SAP__self.ProfitCenter_Type",
+    "odataType": {
+      "entitySet": {
+        "name": "ProfitCenter",
+        "operation": {
+          "name": "ChangeValidityPeriod",
+          "type": "action",
+          "parameters": [
+            {
+              "name": "NewValidityStartDate",
+              "newParameterName": "newvaliditystartdate"
+            },
+            {
+              "name": "NewValidityEndDate",
+              "newParameterName": "newvalidityenddate"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "ControllingArea",
+            "newParameterName": "controllingarea"
+          },
+          {
+            "name": "ProfitCenter",
+            "newParameterName": "profitcenter"
+          },
+          {
+            "name": "ValidityEndDate",
+            "newParameterName": "validityenddate"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "odata-version"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "preference-applied"
+        },
+        {
+          "name": "vary"
+        },
+        {
+          "name": "sap-messages"
+        }
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false
+    }
+  }
+]

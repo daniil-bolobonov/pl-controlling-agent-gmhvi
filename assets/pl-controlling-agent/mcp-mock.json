@@ -1,0 +1,313 @@
+{
+  "metadata": { "version": "1.0.0" },
+  "servers": {
+    "s4-journalentryitembasic": {
+      "tools": {
+        "list_a_journalentryitembasic_for_api_journalentryitembasic_srv": {
+          "response": {
+            "value": [
+              {
+                "AccountingDocument": "1000012345",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "0080100000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 1250000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Revenue October 2024 - Product A"
+              },
+              {
+                "AccountingDocument": "1000012346",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "0080200000",
+                "ProfitCenter": "PC_APAC",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 430000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Revenue October 2024 - Product B"
+              },
+              {
+                "AccountingDocument": "1000012347",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "0050100000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_PROD",
+                "CostCenter": "CC_2000",
+                "AmountInCompanyCodeCurrency": -620000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-15",
+                "DocumentItemText": "COGS - Material consumption Product A"
+              },
+              {
+                "AccountingDocument": "1000012348",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "0060100000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": -145000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Overhead - Salaries October"
+              },
+              {
+                "AccountingDocument": "1000012349",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "0060200000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": -98000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Overhead - Maintenance one-time correction"
+              },
+              {
+                "AccountingDocument": "1000012350",
+                "CompanyCode": "1010",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "009",
+                "GLAccount": "0080100000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 1100000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-09-30",
+                "DocumentItemText": "Revenue September 2024 - Product A"
+              },
+              {
+                "AccountingDocument": "1000012351",
+                "CompanyCode": "1010",
+                "FiscalYear": "2023",
+                "FiscalPeriod": "010",
+                "GLAccount": "0080100000",
+                "ProfitCenter": "PC_EMEA",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 980000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2023-10-31",
+                "DocumentItemText": "Revenue October 2023 - Product A"
+              }
+            ]
+          }
+        },
+        "aggregate_a_journalentryitembasic": {
+          "response": {
+            "value": [
+              {
+                "GLAccount": "0080100000",
+                "FiscalPeriod": "010",
+                "FiscalYear": "2024",
+                "SumAmountInCompanyCodeCurrency": 1250000.00,
+                "CompanyCodeCurrency": "EUR"
+              },
+              {
+                "GLAccount": "0050100000",
+                "FiscalPeriod": "010",
+                "FiscalYear": "2024",
+                "SumAmountInCompanyCodeCurrency": -620000.00,
+                "CompanyCodeCurrency": "EUR"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "s4-glaccountinchartofaccounts": {
+      "tools": {
+        "list_a_glaccountinchartofaccounts": {
+          "response": {
+            "value": [
+              { "GLAccount": "0080100000", "ChartOfAccounts": "INT", "GLAccountName": "Revenue - Product A", "AccountType": "X" },
+              { "GLAccount": "0080200000", "ChartOfAccounts": "INT", "GLAccountName": "Revenue - Product B", "AccountType": "X" },
+              { "GLAccount": "0080300000", "ChartOfAccounts": "INT", "GLAccountName": "Revenue - Services", "AccountType": "X" },
+              { "GLAccount": "0050100000", "ChartOfAccounts": "INT", "GLAccountName": "COGS - Material", "AccountType": "X" },
+              { "GLAccount": "0050200000", "ChartOfAccounts": "INT", "GLAccountName": "COGS - Labour", "AccountType": "X" },
+              { "GLAccount": "0060100000", "ChartOfAccounts": "INT", "GLAccountName": "Salaries & Wages", "AccountType": "X" },
+              { "GLAccount": "0060200000", "ChartOfAccounts": "INT", "GLAccountName": "Maintenance & Repairs", "AccountType": "X" },
+              { "GLAccount": "0060300000", "ChartOfAccounts": "INT", "GLAccountName": "Depreciation", "AccountType": "X" },
+              { "GLAccount": "0070100000", "ChartOfAccounts": "INT", "GLAccountName": "Other Operating Income", "AccountType": "X" },
+              { "GLAccount": "0070200000", "ChartOfAccounts": "INT", "GLAccountName": "Other Operating Expense", "AccountType": "X" }
+            ]
+          }
+        },
+        "get_a_glaccountinchartofaccounts": {
+          "response": {
+            "GLAccount": "0080100000",
+            "ChartOfAccounts": "INT",
+            "GLAccountName": "Revenue - Product A",
+            "AccountType": "X"
+          }
+        }
+      }
+    },
+    "s4-glaccountlineitem": {
+      "tools": {
+        "list_glaccountlineitem_for_cds_api_glaccountlineitem": {
+          "response": {
+            "value": [
+              {
+                "CompanyCode": "1010",
+                "GLAccount": "0060200000",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "DocumentNumber": "1000012349",
+                "AmountInCompanyCodeCurrency": -98000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-31",
+                "AssignmentReference": "MAINT-OCT",
+                "DocumentItemText": "Maintenance one-time correction - Storno",
+                "Supplier": "VEND_001",
+                "CostCenter": "CC_3000"
+              },
+              {
+                "CompanyCode": "1010",
+                "GLAccount": "0060200000",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "DocumentNumber": "1000012360",
+                "AmountInCompanyCodeCurrency": -32000.00,
+                "CompanyCodeCurrency": "EUR",
+                "PostingDate": "2024-10-15",
+                "AssignmentReference": "MAINT-ROUTINE",
+                "DocumentItemText": "Routine maintenance building",
+                "Supplier": "VEND_002",
+                "CostCenter": "CC_3000"
+              }
+            ]
+          }
+        },
+        "aggregate_glaccountlineitem_for_cds_api_glaccountlineitem": {
+          "response": {
+            "value": [
+              { "GLAccount": "0060200000", "FiscalPeriod": "010", "FiscalYear": "2024", "SumAmount": -130000.00, "CompanyCodeCurrency": "EUR" }
+            ]
+          }
+        }
+      }
+    },
+    "s4-profitcenter": {
+      "tools": {
+        "list_profitcenter_for_sap_self": {
+          "response": {
+            "value": [
+              { "ProfitCenter": "PC_EMEA", "ProfitCenterName": "EMEA Region", "CompanyCode": "1010", "ResponsiblePerson": "J. Mueller" },
+              { "ProfitCenter": "PC_APAC", "ProfitCenterName": "APAC Region", "CompanyCode": "1010", "ResponsiblePerson": "K. Tanaka" },
+              { "ProfitCenter": "PC_AMER", "ProfitCenterName": "Americas Region", "CompanyCode": "1010", "ResponsiblePerson": "M. Johnson" }
+            ]
+          }
+        },
+        "get_profitcenter_for_sap_self": {
+          "response": {
+            "ProfitCenter": "PC_EMEA",
+            "ProfitCenterName": "EMEA Region",
+            "CompanyCode": "1010",
+            "ResponsiblePerson": "J. Mueller"
+          }
+        }
+      }
+    },
+    "s4-functionalarea": {
+      "tools": {
+        "list_a_functionalarea_for_api_functionalarea_srv": {
+          "response": {
+            "value": [
+              { "FunctionalArea": "FA_SALES", "FunctionalAreaName": "Sales & Distribution" },
+              { "FunctionalArea": "FA_PROD", "FunctionalAreaName": "Production / Manufacturing" },
+              { "FunctionalArea": "FA_ADMIN", "FunctionalAreaName": "General & Administration" },
+              { "FunctionalArea": "FA_RD", "FunctionalAreaName": "Research & Development" }
+            ]
+          }
+        },
+        "get_a_functionalarea_for_api_functionalarea_srv": {
+          "response": {
+            "FunctionalArea": "FA_SALES",
+            "FunctionalAreaName": "Sales & Distribution"
+          }
+        }
+      }
+    },
+    "s4-costcenter": {
+      "tools": {
+        "list_a_costcenter_2_for_sap_self": {
+          "response": {
+            "value": [
+              { "CostCenter": "CC_1000", "CostCenterName": "Sales Department", "CompanyCode": "1010", "CostCenterCategory": "V" },
+              { "CostCenter": "CC_2000", "CostCenterName": "Production Department", "CompanyCode": "1010", "CostCenterCategory": "P" },
+              { "CostCenter": "CC_3000", "CostCenterName": "Administration", "CompanyCode": "1010", "CostCenterCategory": "G" },
+              { "CostCenter": "CC_4000", "CostCenterName": "R&D Department", "CompanyCode": "1010", "CostCenterCategory": "F" }
+            ]
+          }
+        },
+        "get_a_costcenter_2_for_sap_self": {
+          "response": {
+            "CostCenter": "CC_1000",
+            "CostCenterName": "Sales Department",
+            "CompanyCode": "1010",
+            "CostCenterCategory": "V"
+          }
+        }
+      }
+    },
+    "s4-business-partner": {
+      "tools": {
+        "list_a_businesspartner_for_api_business_partner": {
+          "response": {
+            "value": [
+              { "BusinessPartner": "BP_001", "BusinessPartnerFullName": "Acme Corp", "Country": "DE", "BusinessPartnerType": "Customer" },
+              { "BusinessPartner": "BP_002", "BusinessPartnerFullName": "Global Industries Ltd", "Country": "GB", "BusinessPartnerType": "Customer" },
+              { "BusinessPartner": "BP_003", "BusinessPartnerFullName": "Pacific Trading Co", "Country": "JP", "BusinessPartnerType": "Customer" },
+              { "BusinessPartner": "VEND_001", "BusinessPartnerFullName": "TechService GmbH", "Country": "DE", "BusinessPartnerType": "Vendor" },
+              { "BusinessPartner": "VEND_002", "BusinessPartnerFullName": "Facility Services AG", "Country": "CH", "BusinessPartnerType": "Vendor" }
+            ]
+          }
+        },
+        "get_a_businesspartner_for_api_business_partner": {
+          "response": {
+            "BusinessPartner": "BP_001",
+            "BusinessPartnerFullName": "Acme Corp",
+            "Country": "DE",
+            "BusinessPartnerType": "Customer"
+          }
+        }
+      }
+    },
+    "s4-product": {
+      "tools": {
+        "list_a_product_for_api_product_srv": {
+          "response": {
+            "value": [
+              { "Product": "PROD_A", "ProductDescription": "Industrial Sensor Series X", "ProductGroup": "SENSORS", "BaseUnit": "EA" },
+              { "Product": "PROD_B", "ProductDescription": "Control Unit Pro", "ProductGroup": "CONTROLS", "BaseUnit": "EA" },
+              { "Product": "PROD_SVC", "ProductDescription": "Maintenance Service Package", "ProductGroup": "SERVICES", "BaseUnit": "HR" }
+            ]
+          }
+        },
+        "get_a_product_for_api_product_srv": {
+          "response": {
+            "Product": "PROD_A",
+            "ProductDescription": "Industrial Sensor Series X",
+            "ProductGroup": "SENSORS",
+            "BaseUnit": "EA"
+          }
+        }
+      }
+    }
+  }
+}
