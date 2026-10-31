@@ -55,7 +55,7 @@ From the result read:
 - pl_lines: revenue, cogs, gm1, overhead, gm2, other_op, ebit (already sign-normalized)
 - materiality_order: GL accounts sorted by |amount| descending -- use this order for all drill-downs
 - posting_counts: include in report citations
-- fetch_strategy: include in report so the controller knows how data was retrieved
+- fetch_strategy: include in report so the controller knows how data was retrieved ('server-aggregate (N gl-groups)' or 'client-pagination (N rows)')
 - warnings: include verbatim as WARNING blocks if non-empty
 
 DO NOT recompute, re-sum, or re-derive any pl_lines value -- use the tool output directly.

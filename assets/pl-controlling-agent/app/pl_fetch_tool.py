@@ -3,16 +3,23 @@
 Owns the entire retrieve-aggregate pipeline so the LLM never drives the
 pagination loop and completeness never depends on model behaviour.
 
-The journal-entry API is OData V2 with no ApplySupported capability.
-$apply is therefore never attempted -- pagination is the sole fetch path:
-  top=500 / skip=0,500,1000,... loop until the page size drops below PAGE_SIZE.
+Two MCP tools are used:
+  1. aggregate_a_journalentryitembasic  (PREFERRED)
+     Server-side aggregation via the 'apply' parameter (no $ prefix).
+     Returns one pre-summed row per GL/dimension — single API call, no pagination.
+     Bound via agg_tool_fn in _make_fetch_aggregate_tool.
 
-IMPORTANT -- parameter names match the MCP tool schema exactly:
-  'filter', 'top', 'skip', 'select'  (NO leading '$')
-The '$'-prefixed variants ($filter, $top, ...) are silently dropped by the MCP
-layer and cause unfiltered/unpaginated requests returning empty results.
+  2. list_a_journalentryitembasic_*  (FALLBACK)
+     Standard pagination: top=500 / skip=0,500,1000,...
+     Used when the aggregate tool is unavailable or returns unexpected results.
+     Bound via list_tool_fn in _make_fetch_aggregate_tool.
 
-All pages are passed to _aggregate() in one deterministic pass.
+IMPORTANT -- parameter names match each MCP tool schema exactly (NO leading '$'):
+  aggregate tool: 'apply', 'filter', 'select'
+  list tool:      'filter', 'top', 'skip', 'select'
+The '$'-prefixed variants are silently dropped by the MCP layer.
+
+All results are passed to _aggregate() in one deterministic pass.
 """
 
 from __future__ import annotations
@@ -131,13 +138,54 @@ class _FetchAggregateInput(BaseModel):
     )
 
 
-def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
-    """Factory: returns a LangChain tool bound to a specific journal-entry caller.
+def _make_fetch_aggregate_tool(
+    list_tool_fn,
+    agg_tool_fn=None,
+) -> StructuredTool:
+    """Factory: returns a LangChain tool bound to the real journal-entry MCP callers.
 
-    journal_entry_tool_fn must be an async callable that accepts SAP OData
-    query parameters as keyword args (WITHOUT '$' prefix) and returns the raw
-    API response string.
+    list_tool_fn:  async callable for list_a_journalentryitembasic_* (pagination).
+                   Accepts: filter, top, skip, select (no $ prefix).
+    agg_tool_fn:   async callable for aggregate_a_journalentryitembasic (preferred).
+                   Accepts: apply, filter, select (no $ prefix).
+                   Pass None to skip the $apply path and go straight to pagination.
     """
+    _scope_filter = (
+        "CompanyCode eq '{cc}' "
+        "and FiscalYear eq '{fy}' "
+        "and FiscalPeriod eq '{fp}' "
+        "and GLAccount ge '40000000' and GLAccount le '79999999'"
+    )
+
+    async def _try_aggregate_tool(company_code: str, fiscal_year: str, fiscal_period: str):
+        """Attempt server-side aggregation via aggregate_a_journalentryitembasic.
+
+        Builds an OData $apply expression with the scope filter embedded inside
+        the pipeline: filter(...)/groupby((...),aggregate(...))
+        Uses 'apply' param (no $ prefix) as required by the MCP tool schema.
+        Returns list of pre-summed rows, or None if unavailable/failed.
+        """
+        if agg_tool_fn is None:
+            return None
+        scope = _scope_filter.format(cc=company_code, fy=fiscal_year, fp=fiscal_period)
+        apply_expr = (
+            f"filter({scope})"
+            "/groupby("
+            "(GLAccount,ProfitCenter,FunctionalArea,CostCenter,CompanyCodeCurrency),"
+            "aggregate(AmountInCompanyCodeCurrency with sum as AmountInCompanyCodeCurrency)"
+            ")"
+        )
+        try:
+            raw = await agg_tool_fn(apply=apply_expr)
+            rows = _parse_response(raw)
+            if rows is None:
+                logger.info("aggregate tool returned unexpected shape — falling back to pagination")
+                return None
+            logger.info("aggregate tool succeeded: %d pre-summed rows", len(rows))
+            return rows
+        except Exception as exc:
+            logger.info("aggregate tool failed (%s) — falling back to pagination", exc)
+            return None
 
     async def _run(
         company_code: str,
@@ -145,23 +193,27 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
         fiscal_period: str,
         label: str = "",
     ) -> str:
-        # Parameter names match the MCP tool schema exactly -- no leading '$'.
-        # CompanyCode / FiscalYear / FiscalPeriod are NOT separate named params
-        # in the tool schema; scoping is done entirely via the 'filter' string.
-        base_params: dict[str, Any] = {
-            "filter": (
-                f"CompanyCode eq '{company_code}' "
-                f"and FiscalYear eq '{fiscal_year}' "
-                f"and FiscalPeriod eq '{fiscal_period}' "
-                f"and GLAccount ge '40000000' and GLAccount le '79999999'"
-            ),
-        }
+        scope_filter = _scope_filter.format(
+            cc=company_code, fy=fiscal_year, fp=fiscal_period
+        )
+        base_params: dict[str, Any] = {"filter": scope_filter}
+        preaggregated = False
 
         try:
-            rows = await _fetch_all_pages(journal_entry_tool_fn, base_params)
-            result = _aggregate(rows, preaggregated=False)
+            # Preferred path: server-side aggregation (single call, no pagination)
+            rows = await _try_aggregate_tool(company_code, fiscal_year, fiscal_period)
+
+            if rows is not None:
+                preaggregated = True
+                fetch_strategy = f"server-aggregate ({len(rows)} gl-groups)"
+            else:
+                # Fallback: client-side pagination loop
+                rows = await _fetch_all_pages(list_tool_fn, base_params)
+                fetch_strategy = f"client-pagination ({len(rows)} rows)"
+
+            result = _aggregate(rows, preaggregated=preaggregated)
             result["label"] = label or f"{fiscal_period}/{fiscal_year} CompanyCode={company_code}"
-            result["fetch_strategy"] = f"client-pagination ({len(rows)} rows)"
+            result["fetch_strategy"] = fetch_strategy
 
             # Materiality order: GL accounts sorted by |normalized_sum| descending
             gl_sorted = sorted(
@@ -180,7 +232,7 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
             )
             return json.dumps({
                 "error": str(exc),
-                "fetch_strategy": "client-pagination (failed)",
+                "fetch_strategy": "failed",
                 "label": label or f"{fiscal_period}/{fiscal_year} CompanyCode={company_code}",
                 "pl_lines": None,
                 "warnings": [
@@ -194,12 +246,12 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
         description=(
             "Fetch ALL P&L journal entry items for a given company code, fiscal year, and period "
             "and aggregate them deterministically into P&L totals. "
-            "Uses a top=500 / skip pagination loop until all pages are retrieved -- "
-            "completeness is guaranteed regardless of data volume. "
+            "Tries server-side aggregation first (aggregate_a_journalentryitembasic with apply param), "
+            "falls back to a complete top=500/skip pagination loop if unavailable. "
             "ALWAYS use this tool instead of calling the journal entry API directly. "
             "Returns pl_lines (revenue, cogs, gm1, overhead, gm2, other_op, ebit), "
             "materiality_order (GL accounts sorted by absolute amount, largest first), "
-            "fetch_strategy (always 'client-pagination (N rows)'), and warnings. "
+            "fetch_strategy (server-aggregate or client-pagination), and warnings. "
             "Use pl_lines values directly in the report -- do not re-derive them."
         ),
         args_schema=_FetchAggregateInput,
