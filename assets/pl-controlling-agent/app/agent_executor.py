@@ -61,48 +61,23 @@ class AgentExecutor(A2AAgentExecutor):
         except Exception as e:
             logger.error(f"Failed to load tools from Agent Gateway: {e}")
 
-        # Build fetch_and_aggregate_pl bound to the real journal entry MCP tools.
-        # Two tools are bound:
-        #   1. list_a_journalentryitembasic_* — used for the pagination fallback path
-        #      (filter / top / skip params, no $-prefix)
-        #   2. aggregate_a_journalentryitembasic — used for the preferred $apply path
-        #      (apply param, server-side aggregation)
-        # Tool name matching is explicit to avoid binding to the wrong tool.
+        # Build fetch_and_aggregate_pl bound to the real journal entry list MCP tool.
+        # Sole fetch path: top=500/skip pagination loop (no $apply — the connected
+        # OData V2 service has no ApplySupported annotation; $apply is silently ignored).
         je_list_tool = next(
             (t for t in tools if "list_a_journalentryitembasic" in t.name.lower()),
-            None,
-        )
-        je_agg_tool = next(
-            (t for t in tools if "aggregate_a_journalentryitembasic" in t.name.lower()),
             None,
         )
 
         if je_list_tool is not None:
             async def _je_list_caller(**kwargs):
-                # arun(tool_input) — positional dict form is the correct LangChain
-                # contract for StructuredTool and mcp_tool_to_langchain wrappers alike.
-                # tool_input= keyword form was ambiguous and caused silent failures with
-                # some MCP wrapper implementations.
                 result = await je_list_tool.arun(kwargs)
                 if isinstance(result, Exception):
                     raise result
                 return result
 
-            async def _je_agg_caller(**kwargs):
-                if je_agg_tool is None:
-                    raise RuntimeError("aggregate_a_journalentryitembasic tool not available")
-                result = await je_agg_tool.arun(kwargs)
-                if isinstance(result, Exception):
-                    raise result
-                return result
-
-            fetch_tool = _make_fetch_aggregate_tool(
-                list_tool_fn=_je_list_caller,
-                agg_tool_fn=_je_agg_caller if je_agg_tool is not None else None,
-            )
+            fetch_tool = _make_fetch_aggregate_tool(list_tool_fn=_je_list_caller)
             tools = [*tools, *self.skill_tools, fetch_tool]
-            if je_agg_tool is None:
-                logger.warning("aggregate_a_journalentryitembasic not found — $apply path unavailable, using pagination only")
         else:
             logger.warning("Journal entry list MCP tool not found — fetch_and_aggregate_pl unavailable")
             tools = [*tools, *self.skill_tools]
