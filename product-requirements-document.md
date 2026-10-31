@@ -69,7 +69,7 @@ Thomas is the Finance Director who receives the monthly P&L narrative. He does n
 
 ### Other User Types
 
-- **IT / SAP Basis Administrator:** Manages connectivity between the agent and SAP S/4HANA (Business Connector proxy, API authorization). Not a regular user of the agent.
+- **IT / SAP Basis Administrator:** Manages connectivity between the agent and SAP S/4HANA (Agent Gateway, API authorization). Not a regular user of the agent.
 
 ---
 
@@ -161,10 +161,10 @@ The agent directly supports the Finance function's goal to accelerate the financ
 
 **REQ-02: P&L Structure Construction from G/L Account Hierarchy**
 
-- **Problem to Solve:** S/4HANA has no dedicated P&L account. The P&L must be assembled from the G/L account hierarchy and journal entry items.
-- **User Story:** As a Financial Controller, I need the agent to read the G/L account hierarchy from S/4HANA and assemble the P&L view (Sales → GM1 → GM2 → EBIT) so that I do not need to manually map accounts to P&L lines.
+- **Problem to Solve:** The P&L is built by fetching all GL account line items in the P&L account-number range (40000000–79999999) filtered by `Ledger='0L'` and the target period, then grouping accounts into P&L lines (Revenue, COGS, Overhead, Other Op) by account range.
+- **User Story:** As a Financial Controller, I need the agent to retrieve all GL line items in the P&L account range and aggregate them into a Sales → GM1 → GM2 → EBIT structure so that I receive a complete P&L without manually mapping accounts.
 - **Acceptance Criteria:**
-  - Given a target period and company code, when the agent builds the P&L, then it uses the G/L account hierarchy to determine P&L line groupings and populates each line with the sum of actual journal entry amounts for the period.
+  - Given a target period and company code, when the agent builds the P&L, then it fetches all `API_GLACCOUNTLINEITEM` rows for `Ledger='0L'`, `FiscalYear`, `FiscalPeriod`, and GLAccount range 40000000–79999999 via `fetch_and_aggregate_pl`, and groups them into P&L lines by account-number range.
   - The assembled P&L covers all lines from Net Sales to EBIT.
 - **Maps to Objective:** 1, 4
 - **Priority Rank:** 2
@@ -285,15 +285,17 @@ The agent directly supports the Finance function's goal to accelerate the financ
 ## Solution Architecture
 
 **Architecture Overview:**
-A Python-based AI agent (A2A protocol) deployed on SAP Business Technology Platform. The agent connects to SAP S/4HANA Cloud Public Edition via the SAP Business Connector proxy using standard OData APIs. No MCP servers are currently available for these APIs; the agent calls them directly. The agent is conversational — it receives a prompt, executes the autonomous analysis loop, and delivers the report as a structured chat response.
+A Python-based AI agent (A2A protocol) deployed on SAP Business Technology Platform. The agent accesses SAP S/4HANA Cloud Public Edition via standard OData APIs through the Agent Gateway. The agent is conversational — it receives a prompt, executes the autonomous analysis loop, and delivers the report as a structured chat response.
 
 **Key Components:**
 
 - **P&L Controlling Agent (Python / A2A):** Core reasoning and analysis engine; orchestrates all tool calls, applies materiality logic, assembles the report, and handles follow-up Q&A
-- **SAP Business Connector Proxy:** Authenticated gateway for all OData API calls to S/4HANA Cloud Public Edition
-- **SAP S/4HANA Cloud Public Edition OData APIs (8 APIs):** Source of all financial and master data
+- **Agent Gateway:** Authenticated gateway for all OData API calls to S/4HANA Cloud Public Edition
+- **SAP S/4HANA Cloud Public Edition OData APIs (7 APIs):** Source of all financial and master data
 
 **Integration Points:**
+
+> ⚠️ **API coverage note:** `API_GLACCOUNTLINEITEM` returns **primary GL postings only**. Secondary postings (cost assessments, activity allocations, accruals, overhead absorption settlement) are not included. This means GM2/overhead-absorption reconciliation may be incomplete. Full coverage would require `C_JournalEntryItemBrowser` (internal CDS view, not a published OData API). This is an open architectural gap; see Open Questions.
 
 - **GL Account Line Items API** (`API_GLACCOUNTLINEITEM:v1`): single API serving two purposes — (1) full P&L aggregation via `fetch_and_aggregate_pl` (filter: `Ledger eq '0L'`, standalone `FiscalYear`, `FiscalPeriod`, GLAccount range 40000000–79999999; top=500/skip pagination, deterministic Python aggregation); (2) document-level drill-down to individual postings for root-cause analysis. Chosen over `API_JOURNALENTRYITEMBASIC_SRV` which lacks a standalone `FiscalYear` filter field — read-only, high-volume
 - **G/L Account Master Data API** (`API_GLACCOUNTINCHARTOFACCOUNTS_SRV:v1`): retrieves G/L account master data and hierarchy used to construct the P&L structure — read-only
@@ -331,7 +333,7 @@ All five key business milestones (see Milestones section) must be instrumented w
 **Automation Level:** Autonomous agent — the agent reasons about which steps to take, which lines to drill into, and what to flag, based on the data it retrieves.
 
 **Actions the system performs without human approval:**
-- Retrieving all journal entry items, G/L account hierarchies, master data, and supporting documents from S/4HANA
+- Retrieving all GL account line items (primary postings) via `fetch_and_aggregate_pl`, plus master data (G/L accounts, Profit Centers, Cost Centers, Business Partners, Products) from S/4HANA
 - Calculating deviations and applying the materiality threshold to select lines for drill-down
 - Assembling and formatting the deviation table and narrative
 - Flagging items as suspected wrong bookings or one-time effects based on posting patterns
@@ -354,7 +356,7 @@ All five key business milestones (see Milestones section) must be instrumented w
 **Tools or connectors invoked:**
 
 - `get_gl_account_line_items` (via `fetch_and_aggregate_pl`): retrieves GL account line items for a given company code, fiscal year, fiscal period, ledger, and G/L account range — deterministic Python aggregation, never LLM arithmetic; read-only
-- `get_gl_account_hierarchy`: retrieves the G/L account hierarchy for a given chart of accounts — read-only
+- `fetch_and_aggregate_pl`: fetches all GL account line items for a company code, fiscal year, and period via `API_GLACCOUNTLINEITEM` (Ledger='0L', GLAccount 40000000–79999999, top=500/skip pagination) and aggregates into P&L totals deterministically in Python — read-only
 - `get_gl_line_items`: retrieves G/L line items at document level for drill-down — read-only
 - `get_profit_centers`: retrieves Profit Center master data and hierarchy — read-only
 - `get_functional_areas`: retrieves Functional Area master data — read-only
@@ -376,7 +378,7 @@ All five key business milestones (see Milestones section) must be instrumented w
 
 **Data Handling:**
 - All data is read from S/4HANA Cloud Public Edition via authenticated OData APIs. No data is persisted by the agent beyond the active session.
-- Financial journal entry data is sensitive. The agent must operate under the same data access controls as the controller's SAP user (authorization inheritance via Business Connector proxy).
+- Financial journal entry data is sensitive. The agent must operate under the same data access controls as the controller's SAP user (authorization via Agent Gateway).
 - No PII beyond what is already present in SAP customer master data is accessed or stored.
 
 **Compliance Frameworks:**
@@ -410,8 +412,8 @@ All five key business milestones (see Milestones section) must be instrumented w
 
 ### M2: P&L Structure Retrieved
 
-- **Description:** The agent has read the G/L account hierarchy from S/4HANA and successfully built the aggregated P&L view from Sales to EBIT, populated with actual amounts for the target period.
-- **Achieved when:** The P&L structure is assembled with all lines from Net Sales to EBIT, each populated with the sum of actual journal entry items for the target period.
+- **Description:** The agent has retrieved all GL line items in the P&L account range (40000000–79999999) for the target period and aggregated them into the P&L view from Sales to EBIT.
+- **Achieved when:** All GL line items in the P&L account range are retrieved and aggregated into P&L lines (Revenue, COGS, GM1, Overhead, GM2, Other Op, EBIT) for the target period via `fetch_and_aggregate_pl`.
 - **Log on achievement:** `M2.achieved: P&L structure built — lines=[COUNT], total_revenue=[AMOUNT], ebit=[AMOUNT], period=[PERIOD]`
 - **Log on miss:** `M2.missed: P&L structure could not be built — reason=[REASON], period=[PERIOD]`
 
@@ -445,27 +447,27 @@ All five key business milestones (see Milestones section) must be instrumented w
 - **CO-PA vs. G/L structure ambiguity:** If the organization uses CO-PA (Margin Analysis) for P&L line items, the agent may need to query different API endpoints or apply different aggregation logic. Risk: incorrect GM1/GM2 calculation if the wrong path is used. Mitigation: confirm structure in design workshop before implementation.
 - **Data volume at journal entry level:** High transaction volumes per monthly close may lead to large API response payloads and slow retrieval. Mitigation: agent applies materiality-gated top-down filtering; pagination is handled per API call.
 - **No plan/forecast connectivity:** Variance-to-plan analysis cannot be delivered in v1. Risk: limited value for budget-vs-actual management reporting. Mitigation: architecture is extensible; plan data source to be confirmed in design workshop.
-- **API authorization scope:** The Business Connector proxy must have sufficient authorization to read all required entities (journal entries, cost objects, business partners, products). Risk: missing authorizations block certain data paths. Mitigation: validate API authorization scope during QA setup.
+- **API authorization scope:** The Agent Gateway must have sufficient authorization to read all required entities (GL line items, cost objects, business partners, products). Risk: missing authorizations block certain data paths. Mitigation: validate API authorization scope during QA setup.
 
 ### Assumptions (Validate These)
 
 - SAP S/4HANA Cloud Public Edition is the system of record for all financial postings relevant to the P&L.
-- The controller's SAP user (propagated via Business Connector) has read access to all required entities: journal entries, G/L accounts, Profit Centers, Functional Areas, Cost Centers, Business Partners, and Product Master.
-- The G/L account hierarchy in S/4HANA is maintained and correctly reflects the P&L structure used by Controlling.
+- The controller's SAP user (propagated via Agent Gateway) has read access to all required entities: GL account line items, G/L accounts, Profit Centers, Functional Areas, Cost Centers, Business Partners, and Product Master.
+- The P&L account-number ranges used by `fetch_and_aggregate_pl` (Revenue: 40000000–49999999, COGS: 50000000–59999999, Overhead: 60000000–69999999, Other Op: 70000000–79999999) match this company’s chart of accounts structure. If ranges differ, they must be reconfigured before go-live.
 - A configurable materiality threshold (amount and/or percentage) will be agreed and provided before or at first agent invocation.
 - The agent runs in a single-company-code context in v1.
 
 ### Dependencies
 
-- SAP S/4HANA Cloud Public Edition — all 8 OData APIs must be enabled and authorized in the production tenant before go-live.
-- SAP Business Connector proxy — must be configured and available for the agent's API calls.
+- SAP S/4HANA Cloud Public Edition — all 7 OData APIs must be enabled and authorized in the production tenant before go-live (GL Account Line Items, G/L Account Master, Profit Center, Functional Area, Cost Center, Business Partner, Product Master).
+- Agent Gateway — must be configured and available for the agent's OData API calls to S/4HANA.
 - Design workshop outcome — CO-PA structure confirmation, materiality threshold, and plan/forecast data source decision are required before full implementation.
 
 ---
 
 ## Open Questions
 
-- What is the exact P&L account hierarchy node / financial statement version used by Controlling? (Required to correctly build the Sales-to-EBIT view)
+- Do the fixed P&L account-number ranges (Revenue 40000000–49999999, COGS 50000000–59999999, Overhead 60000000–69999999, Other Op 70000000–79999999) match this company’s chart of accounts? If not, what are the correct ranges?
 - Is CO-PA (Margin Analysis) active and used for P&L line items, or is the P&L purely G/L-based?
 - What is the agreed materiality threshold (absolute amount and/or percentage) for the drill-down?
 - Where will plan and forecast data be sourced from — S/4HANA plan versions, SAP Analytics Cloud, or another system?

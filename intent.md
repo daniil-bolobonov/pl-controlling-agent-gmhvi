@@ -6,7 +6,9 @@ Monthly P&L Analysis Agent — from Sales to EBIT, powered by SAP S/4HANA data
 
 After each monthly close, a controller names the target period and the agent works autonomously: it analyzes the P&L from Sales to EBIT in SAP S/4HANA, identifies the main cost, revenue, and margin drivers, and compares actuals against the previous month, previous year, current forecast, and business plan. Without waiting for the user to prompt each step, it drills down from the aggregated P&L through G/L accounts to individual journal entry items and their supporting documents to find the root cause of each material deviation. It explains GM1 (revenue less direct costs) and GM2 (GM1 less overhead absorption) effects, including over-/under-absorption and product margins, enriches bookings with customer, country, and product dimensions for sales and revenue analysis, and produces a management-ready monthly P&L report — deviation table plus narrative — organized by EBIT impact and by Functional Area / Profit Center. The agent also answers follow-up questions about the P&L and flags suspected wrong bookings and one-time effects in the report for a human controller to review and act on.
 
-Connectivity: SAP S/4HANA Cloud Public Edition — standard OData APIs only (G/L account master data and hierarchies, Journal Entry Item, Business Partner, Product Master, Profit Center, Functional Area, Cost Center). Read-only; the agent never posts or changes data in SAP. All figures in answers and reports must come from retrieved data — the agent never fabricates or interpolates numbers, and states clearly when data or history is unavailable.
+Connectivity: SAP S/4HANA Cloud Public Edition — standard OData APIs via Agent Gateway (GL Account Line Items, G/L Account Master, Business Partner, Product Master, Profit Center, Functional Area, Cost Center). Read-only; the agent never posts or changes data in SAP. All figures must come from retrieved data — the agent never fabricates or interpolates numbers, and states clearly when data or history is unavailable.
+
+> ⚠️ **Coverage limitation:** `API_GLACCOUNTLINEITEM` returns primary GL postings only. Secondary postings (cost assessments, activity allocations, accruals, overhead absorption settlements) are not included via the standard published API. Full posting coverage would require `C_JournalEntryItemBrowser` (internal CDS view, not a published OData API). This limits GM2/absorption reconciliation completeness and is an open architectural gap.
 
 Plan/forecast data source is not yet decided (to be confirmed in design workshop); until then the agent scopes comparisons to actuals vs. prior month and prior year only.
 
@@ -23,7 +25,7 @@ Plan/forecast data source is not yet decided (to be confirmed in design workshop
 ## Key Milestones
 
 1. **Period Invocation** — Controller sends a single prompt naming the target period; agent begins autonomous analysis
-2. **P&L Structure Retrieved** — Agent retrieves the G/L account hierarchy and builds the aggregated P&L (Sales → GM1 → GM2 → EBIT) from journal entry items
+2. **P&L Structure Retrieved** — Agent fetches all GL line items in the P&L account range (40000000–79999999, `Ledger='0L'`) for the target period and aggregates them into the P&L view (Sales → GM1 → GM2 → EBIT) using `fetch_and_aggregate_pl`
 3. **Multi-Period Comparison Completed** — Agent compares actuals vs. prior month, prior year (and plan/forecast when available) across all P&L lines
 4. **Deviation Root Cause Identified** — Agent drills into all material deviations down to journal entry items and supporting documents, explaining GM1/GM2 effects, over-/under-absorption, product margins, and customer/country/product dimensions
 5. **Management Report Delivered** — Agent produces a structured deviation table and narrative in the chat, flagging suspected wrong bookings and one-time effects for controller review
@@ -68,8 +70,8 @@ The controller's monthly P&L challenge maps to two Finance sub-processes in SAP'
 ### Key Findings
 
 - SAP S/4HANA Cloud Public Edition covers all mandatory capabilities for financial analytics, margin analysis, overhead cost accounting, production cost accounting, and financial structure management — all required APIs are available and accessible.
-- `API_GLACCOUNTLINEITEM` is the primary data API — one MCP server is deployed and covers P&L aggregation, drill-down, and G/L-based margin analysis. Remaining APIs (G/L hierarchy, Profit Center, Cost Center, Business Partner, Product) are called directly via the Business Connector proxy; MCP servers for these are deployed as needed.
-- The P&L structure in S/4HANA has no dedicated P&L account; it is derived from the G/L account hierarchy — the agent must traverse this hierarchy to build the P&L view.
+- `API_GLACCOUNTLINEITEM` is the primary data API — one MCP server is deployed and covers P&L aggregation, drill-down, and G/L-based margin analysis. Remaining APIs (G/L account master, Profit Center, Cost Center, Business Partner, Product) are accessed through the Agent Gateway; MCP servers for these are deployed as needed.
+- The P&L is built by range-based account selection: `API_GLACCOUNTLINEITEM` is filtered to `Ledger='0L'` and GLAccount 40000000–79999999, and accounts are grouped into P&L lines by number range (Revenue 40M–49M, COGS 50M–59M, Overhead 60M–69M, Other Op 70M–79M). No hierarchy traversal is required or implemented.
 - Plan/forecast connectivity is an open gap: until the source is confirmed, the agent compares actuals vs. prior month and prior year only.
 - CO-PA vs. pure G/L P&L structure is not yet confirmed; the agent design must handle both paths gracefully.
 - The autonomous multi-step drill-down with management narrative is a genuine gap in standard SAP products — a custom AI Agent (Python, A2A protocol) is required.
@@ -86,7 +88,7 @@ Pro-code Python AI agent calling S/4HANA OData APIs to deliver autonomous P&L an
 
 Build a Python-based AI agent (A2A protocol) that connects to SAP S/4HANA Cloud Public Edition via standard OData APIs. The agent receives a single prompt from the controller naming the target period, then autonomously:
 
-1. Fetches the G/L account hierarchy to construct the P&L structure (Sales → GM1 → GM2 → EBIT)
+1. Fetches all GL line items in the P&L account range (40000000–79999999, `Ledger='0L'`) via `fetch_and_aggregate_pl` and aggregates into the P&L structure (Revenue → GM1 → GM2 → EBIT)
 2. Retrieves journal entry items for the target period and all comparison periods (prior month, prior year; plan/forecast when available)
 3. Calculates deviations across all P&L lines and identifies material drivers above the configurable materiality threshold
 4. Drills down from aggregated lines into G/L account detail, then to individual journal entry items and supporting documents to root-cause each material deviation
@@ -116,9 +118,9 @@ The analysis spans four layers (P&L aggregate → G/L account → journal entry 
 
 The agent must never post or change data in SAP. All figures must be traceable to retrieved records. This is both a technical constraint and a trust requirement for controller adoption.
 
-##### P&L structure is hierarchy-derived
+##### P&L structure is range-based
 
-S/4HANA has no dedicated P&L account; the P&L must be assembled from the G/L account hierarchy. The agent must navigate this hierarchy to build the correct P&L view for each company code.
+The P&L is assembled by fetching all GL line items in a fixed account-number range (40000000–79999999) filtered by ledger and period, then grouping by sub-range into Revenue, COGS, Overhead, and Other Operating lines. This approach is simpler and more reliable than hierarchy traversal, but assumes the company’s chart of accounts maps to these standard ranges. Ranges must be validated and reconfigured if the chart of accounts differs.
 
 ##### Plan/forecast gap is a design workshop deliverable
 

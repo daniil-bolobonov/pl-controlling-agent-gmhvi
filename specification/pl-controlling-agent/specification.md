@@ -25,10 +25,10 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
 
 - [ ] Create `assets/pl-controlling-agent/app/skills/pl-analysis/SKILL.md` with:
   - **name**: `pl-analysis`
-  - **description**: Step-by-step instructions for autonomous monthly P&L analysis — period parsing, P&L hierarchy construction, multi-period comparison, materiality-gated drill-down, GM1/GM2/EBIT explanation, and management report formatting
+  - **description**: Step-by-step instructions for autonomous monthly P&L analysis — period parsing, range-based P&L aggregation (no hierarchy traversal), multi-period comparison, materiality-gated drill-down, GM1/GM2/EBIT explanation, and management report formatting
   - **Body**: Cover these steps in order:
     1. Parse target period and company code from the user prompt
-    2. Retrieve G/L account hierarchy and assemble the P&L structure (Sales → Cost of Sales → GM1 → Overhead Absorption → GM2 → further cost lines → EBIT); map each G/L account to its P&L line
+    2. Call `fetch_and_aggregate_pl(company_code, fiscal_year, fiscal_period)` — this fetches all `API_GLACCOUNTLINEITEM` rows for `Ledger='0L'` and GLAccount 40000000–79999999 via top=500/skip pagination and aggregates deterministically into P&L lines by account-number range: Revenue (40M–49M), COGS (50M–59M, GM1=Revenue−COGS), Overhead (60M–69M, GM2=GM1−Overhead), Other Op (70M–79M), EBIT=GM2−OtherOp. No hierarchy traversal.
     3. Retrieve GL account line items for the target period via `fetch_and_aggregate_pl` (Ledger='0L', FiscalYear, FiscalPeriod, GLAccount 40000000–79999999); aggregate by P&L line
     4. Retrieve GL account line items for comparison periods (prior month, prior year) via the same tool; compute absolute and percentage deviations per P&L line
     5. Apply materiality filter: select all lines where the absolute or percentage deviation exceeds the threshold; proceed with drill-down for those lines only
@@ -70,15 +70,19 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
   - Error handling: relay tool errors verbatim; do not suggest workarounds unless asked
   - Follow-up Q&A: after delivering the report, remain available to answer questions about any P&L line, G/L account, or journal entry; always retrieve live data for answers
 
-### P&L Hierarchy Construction (REQ-02)
+### P&L Account Range Mapping (REQ-02)
 
-- [ ] Implement a tool or agent reasoning step that:
-  - Calls the G/L Account API (`API_GLACCOUNTINCHARTOFACCOUNTS_SRV`) to retrieve G/L accounts for the chart of accounts and company code
-  - Groups accounts by P&L section using the account range / hierarchy node information: Net Revenue (sales accounts), Cost of Sales (direct cost accounts), Overhead Costs, and Other Income/Expense down to EBIT
-  - Builds a mapping: `gl_account → p_and_l_line_label` used in all downstream aggregations
-  - Handles cases where the hierarchy is not fully populated — logs a warning and continues with available accounts
+- [ ] The P&L structure is built by `fetch_and_aggregate_pl` using fixed account-number ranges (confirmed from EDMX and `pl_aggregation_tool.py`):
+  - **Revenue:** GLAccount 40000000–49999999 (credit-normal, sign-flipped to positive)
+  - **COGS:** GLAccount 50000000–59999999
+  - **Overhead:** GLAccount 60000000–69999999
+  - **Other Operating:** GLAccount 70000000–79999999
+  - No hierarchy API call required. `API_GLACCOUNTINCHARTOFACCOUNTS_SRV` is used only for account description enrichment (display names) and drill-down labelling — not for P&L structure determination.
+  - **Assumption to validate:** these ranges match this company’s chart of accounts. If not, ranges in `pl_aggregation_tool.py` must be updated before go-live.
 
 ### GL Account Line Item Retrieval and Aggregation (REQ-01, REQ-02, REQ-03)
+
+> ⚠️ **Coverage limitation:** `API_GLACCOUNTLINEITEM` returns **primary GL postings only**. Secondary postings (cost assessments, activity allocations, accruals, overhead absorption settlements) are excluded. This may limit completeness of GM2/absorption reconciliation. Full coverage requires `C_JournalEntryItemBrowser` (internal CDS view, not a published OData API — not accessible via Agent Gateway). This is an open gap; flag in the report when overhead absorption lines appear incomplete.
 
 - [ ] Implement retrieval of GL account line items for the target period using `API_GLACCOUNTLINEITEM` via `fetch_and_aggregate_pl`:
   - Filter: `Ledger eq '0L' and CompanyCode eq '{cc}' and GLAccount ge '40000000' and GLAccount le '79999999' and FiscalYear eq '{fy}' and FiscalPeriod eq '{fp}'`
@@ -108,8 +112,8 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
 
 - [ ] Implement GM1 calculation:
   - GM1 = Net Revenue − Cost of Sales (direct material, direct labor, variable production costs)
-  - Identify direct cost postings by G/L account range (accounts in Cost of Sales section of hierarchy)
-  - State clearly if the exact account categorization (direct vs. overhead) cannot be determined from the hierarchy alone
+  - Identify direct cost postings by G/L account range: COGS = 50000000–59999999 (already handled by `_aggregate()` in `pl_aggregation_tool.py`)
+  - If an account falls outside all defined ranges, `_aggregate()` emits a SCOPE WARNING and excludes it — the agent must surface this warning in the report
 
 - [ ] Implement GM2 / overhead absorption analysis:
   - GM2 = GM1 − Overhead Absorption
@@ -251,7 +255,7 @@ Resources in scope: A_Product, A_ProductDescription
 - [ ] `conftest.py` only sets `IBD_TESTING=true`
 - [ ] Write unit tests in `assets/pl-controlling-agent/tests/` — one test per MCP tool / agent reasoning path; run each immediately after writing:
   - `test_journal_entry_retrieval.py` — tests journal entry item tool call with period and company code filters
-  - `test_gl_account_hierarchy.py` — tests G/L account retrieval and P&L mapping construction
+  - `test_gl_account_hierarchy.py` — tests G/L account retrieval for description enrichment (display names); P&L structure is range-based, not hierarchy-based
   - `test_gl_line_items.py` — tests GL line items drill-down for a given account and period
   - `test_profit_center.py` — tests Profit Center retrieval
   - `test_functional_area.py` — tests Functional Area retrieval
