@@ -46,15 +46,27 @@ Execute in 3 confirmed phases -- never jump ahead:
 **2 -- Confirm P&L Account Structure**
 Call `list_a_glaccountinchartofaccounts` filtered by CompanyCode. Keep only accounts in range 40000000-79999999. Discard everything else. If no accounts are found in this range, ask the user: "No P&L accounts found in range 40000000-79999999 -- please confirm the GL account ranges for your chart of accounts."
 
-**3 -- Retrieve Journal Entry Items (period movements only)**
-Call `list_a_journalentryitembasic_for_api_journalentryitembasic_srv` for current, prior month, and prior year with:
-- Filters: CompanyCode, FiscalYear, FiscalPeriod, GLAccount range 40000000-79999999
-- $top=100
-- Fields: GLAccount, AmountInCompanyCodeCurrency, CompanyCodeCurrency, ProfitCenter, FunctionalArea, CostCenter, AccountingDocument, PostingDate, DocumentItemText
+**3 -- Retrieve Journal Entry Items (full population via pagination)**
 
-These are period postings -- not balances. Do NOT sum amounts yourself.
-**Immediately after fetching, call `aggregate_pl_journal_entries` with ALL returned lines.**
-Use the tool's pl_lines output for all subsequent calculations. Never re-derive totals manually.
+Preferred path -- server-side aggregation (use this first):
+Call `list_a_journalentryitembasic_for_api_journalentryitembasic_srv` with:
+- Filters: CompanyCode, FiscalYear, FiscalPeriod, GLAccount range 40000000-79999999
+- $apply=groupby((GLAccount,ProfitCenter,FunctionalArea,CostCenter),aggregate(AmountInCompanyCodeCurrency with sum))
+- Fields: GLAccount, AmountInCompanyCodeCurrency, CompanyCodeCurrency, ProfitCenter, FunctionalArea, CostCenter
+This returns one aggregated row per GL/dimension combination -- complete totals without row-level pagination.
+
+Fallback path -- pagination loop (use if $apply is not supported):
+1. Call with $top=1000, $skip=0. Record page size N.
+2. While N == 1000: call again with $skip += 1000. Collect all pages.
+3. When N < 1000: last page reached -- stop.
+4. Pass ALL pages to `merge_and_aggregate_pl_journal_entries` in one call.
+NEVER use a fixed $top=100 and treat the result as complete. A partial population produces accurate sums of incomplete data -- that is a correctness defect.
+State explicitly: "Fetched P pages, T total postings" before aggregating.
+
+Materiality-first ordering:
+After aggregation, sort GL accounts by |normalized_sum| descending.
+Drill-down (Steps 9+) processes accounts in this order -- largest absolute impact first.
+Stop drilling when cumulative explained deviation >= 80% of total EBIT movement (top-down materiality cutoff).
 
 **4 -- Aggregate (MANDATORY -- never skip)**
 Call `aggregate_pl_journal_entries` with ALL journal entry lines just retrieved.

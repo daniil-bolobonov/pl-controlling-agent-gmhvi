@@ -19,7 +19,7 @@ from a2a.utils.errors import ServerError
 from agent import SampleAgent
 from datetime_tool import get_datetime_tool
 from load_skill_resources import get_load_skill_resource_tool
-from pl_aggregation_tool import get_pl_aggregation_tool
+from pl_aggregation_tool import get_pl_aggregation_tool, get_pl_merge_aggregation_tool
 from mcp_providers.agw import get_mcp_tools
 from prompt_injection_detector import wrap_tool
 
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class AgentExecutor(A2AAgentExecutor):
     def __init__(self):
         self.agent = SampleAgent()
-        self.skill_tools = [get_datetime_tool(), *get_load_skill_resource_tool(), get_pl_aggregation_tool()]
+        self.skill_tools = [get_datetime_tool(), *get_load_skill_resource_tool(), get_pl_aggregation_tool(), get_pl_merge_aggregation_tool()]
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute the agent and stream results back via A2A protocol.

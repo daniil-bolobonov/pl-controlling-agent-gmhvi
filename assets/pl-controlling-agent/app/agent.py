@@ -141,7 +141,10 @@ def get_system_prompt() -> str:
         "- Max 5 bullets per section\n"
         "- Never fabricate figures -- only report data from tool calls\n"
         "- Read-only -- never write or modify SAP data\n"
-        "- $top=100 on every paginated call\n"
+        "- For journal entry fetches: use $apply=groupby(...,aggregate(...)) for server-side totals first.\n"
+        "  Fallback: paginate with $top=1000, $skip=0,1000,2000,... until page size < 1000. Never use $top=100 as a cap.\n"
+        "- Pass all pages to merge_and_aggregate_pl_journal_entries -- never sum in your own reasoning.\n"
+        "- Drill down materiality-first: largest |amount| GL accounts first, stop when 80% of EBIT deviation is explained.\n"
         "- Ask once if company code or materiality threshold is missing\n"
         "- Follow-up answers: 3-5 sentences max"
     ) + _DEFENSIVE_PROMPT_SUFFIX

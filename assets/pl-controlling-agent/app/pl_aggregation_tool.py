@@ -228,6 +228,45 @@ def _run_aggregation(journal_entry_items: list[dict[str, Any]], label: str = "")
     return json.dumps(result, indent=2)
 
 
+class _MergeInput(BaseModel):
+    batches: list[list[dict[str, Any]]] = Field(
+        description=(
+            "List of raw journal entry page results, each page exactly as returned "
+            "by the SAP API. All pages are merged before aggregation so the full "
+            "population is aggregated in one deterministic pass."
+        )
+    )
+    label: str = Field(
+        default="",
+        description="Optional label for traceability, e.g. 'October 2024 all pages'."
+    )
+
+
+def _run_merge_and_aggregate(batches: list[list[dict[str, Any]]], label: str = "") -> str:
+    """Merge multiple pagination pages then aggregate — use when fetching in a loop."""
+    merged = [item for page in batches for item in page]
+    result = _aggregate(merged)
+    result["label"] = label
+    result["pages_merged"] = len(batches)
+    return json.dumps(result, indent=2)
+
+
+def get_pl_merge_aggregation_tool() -> StructuredTool:
+    """Return a tool that merges paginated SAP results then aggregates deterministically."""
+    return StructuredTool(
+        name="merge_and_aggregate_pl_journal_entries",
+        description=(
+            "Merge multiple pages of SAP journal entry results and aggregate into P&L totals. "
+            "Use this when you have fetched multiple pages via $skip/$skiptoken pagination. "
+            "Pass all pages as a list-of-lists — the tool merges them and runs one deterministic "
+            "aggregation pass so no posting is missed or double-counted. "
+            "Same output format as aggregate_pl_journal_entries."
+        ),
+        args_schema=_MergeInput,
+        func=_run_merge_and_aggregate,
+    )
+
+
 def get_pl_aggregation_tool() -> StructuredTool:
     """Return a LangChain tool that deterministically aggregates P&L journal entries."""
     return StructuredTool(

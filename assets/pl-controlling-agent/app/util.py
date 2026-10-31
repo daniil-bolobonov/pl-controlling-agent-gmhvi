@@ -27,7 +27,7 @@ MCP_CALL_TIMEOUT_SECONDS = float(os.environ.get("MCP_CALL_TIMEOUT_SECONDS", 60.0
 # larger than this are truncated. Kept modest by default because tool results are
 # re-sent on every subsequent turn; raise MCP_MAX_RESPONSE_CHARS for agents that
 # genuinely need large payloads.
-MCP_MAX_RESPONSE_CHARS = int(os.environ.get("MCP_MAX_RESPONSE_CHARS", 30_000))
+MCP_MAX_RESPONSE_CHARS = int(os.environ.get("MCP_MAX_RESPONSE_CHARS", 500_000))
 
 
 def minify_json(text: str) -> str:
