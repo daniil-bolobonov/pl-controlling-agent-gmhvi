@@ -406,14 +406,19 @@ class TestFetchAllPages:
 
 
 # ---------------------------------------------------------------------------
-# fetch_strategy — aggregate tool preferred, pagination fallback
+# fetch_strategy — pagination is the sole path ($apply removed)
 # ---------------------------------------------------------------------------
 
 class TestFetchStrategy:
 
     @pytest.mark.asyncio
     async def test_list_tool_never_receives_apply_param(self):
-        """list_tool_fn must never receive 'apply' or '$apply' — pagination path only."""
+        """list_tool_fn must never receive 'apply' or '$apply'.
+
+        $apply was removed: the connected OData V2 service has no ApplySupported
+        annotation — $apply is silently ignored and would return a partial page
+        mistaken for complete server totals.
+        """
         from pl_fetch_tool import _make_fetch_aggregate_tool
         received = []
 
@@ -421,8 +426,7 @@ class TestFetchStrategy:
             received.append(dict(kwargs))
             return json.dumps({"d": {"results": []}})
 
-        # No agg_tool_fn -> goes straight to pagination
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher)
         await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
 
         for params in received:
@@ -430,49 +434,14 @@ class TestFetchStrategy:
             assert "apply"  not in params, f"'apply' must never go to list tool, got: {params}"
 
     @pytest.mark.asyncio
-    async def test_pagination_fallback_when_no_agg_tool(self):
-        """When agg_tool_fn=None, fetch_strategy must start with 'client-pagination'."""
+    async def test_fetch_strategy_always_client_pagination(self):
+        """fetch_strategy must always start with 'client-pagination' — no other path exists."""
         from pl_fetch_tool import _make_fetch_aggregate_tool
 
         async def mock_list_fetcher(**kwargs):
             return json.dumps({"d": {"results": [_make_raw_item("41000000", "-1000.00")] * 5}})
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=None)
-        raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
-        result = json.loads(raw)
-        assert result["fetch_strategy"].startswith("client-pagination"), result["fetch_strategy"]
-
-    @pytest.mark.asyncio
-    async def test_server_aggregate_path_used_when_agg_tool_available(self):
-        """When agg_tool_fn succeeds, fetch_strategy must start with 'server-aggregate'."""
-        from pl_fetch_tool import _make_fetch_aggregate_tool
-
-        async def mock_agg_fetcher(**kwargs):
-            # Aggregate tool receives 'apply' param, returns pre-summed rows
-            assert "apply" in kwargs, f"aggregate tool must receive 'apply' param, got: {kwargs}"
-            return json.dumps({"value": [_make_raw_item("41000000", "-88000000.00")]})
-
-        async def mock_list_fetcher(**kwargs):
-            # Should not be called when aggregate tool succeeds
-            raise AssertionError("list tool should not be called when aggregate tool succeeds")
-
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=mock_agg_fetcher)
-        raw = await tool.arun({"company_code": "1710", "fiscal_year": "2026", "fiscal_period": "010"})
-        result = json.loads(raw)
-        assert result["fetch_strategy"].startswith("server-aggregate"), result["fetch_strategy"]
-
-    @pytest.mark.asyncio
-    async def test_falls_back_to_pagination_when_agg_tool_fails(self):
-        """When agg_tool_fn raises, must fall back to list tool (pagination)."""
-        from pl_fetch_tool import _make_fetch_aggregate_tool
-
-        async def mock_agg_fetcher(**kwargs):
-            raise RuntimeError("$apply not supported")
-
-        async def mock_list_fetcher(**kwargs):
-            return json.dumps({"value": [_make_raw_item("41000000", "-200.00")] * 3})
-
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=mock_agg_fetcher)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher)
         raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
         result = json.loads(raw)
         assert result["fetch_strategy"].startswith("client-pagination"), result["fetch_strategy"]
@@ -484,7 +453,7 @@ class TestFetchStrategy:
         async def mock_list_fetcher(**kwargs):
             return json.dumps({"d": {"results": [_make_raw_item("41000000", "-200.00")] * 7}})
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher)
         raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
         result = json.loads(raw)
         assert "7" in result["fetch_strategy"]
@@ -497,7 +466,7 @@ class TestFetchStrategy:
         async def mock_list_fetcher(**kwargs):
             raise RuntimeError("connection refused")
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=mock_list_fetcher)
         raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
         result = json.loads(raw)
         assert result["fetch_strategy"] == "client-pagination (0 rows)"
@@ -547,8 +516,7 @@ class TestMcpToolParamSeam:
         async def fetcher(**kwargs):
             return await self._strict_fetcher(received, **kwargs)
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher, agg_tool_fn=None)
-        # Must not raise AssertionError from _strict_fetcher
+        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher)
         await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
         assert received, "Fetcher was never called"
 
@@ -567,21 +535,22 @@ class TestMcpToolParamSeam:
             received.append(dict(kwargs))
             return json.dumps({"d": {"results": []}})
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher)
         await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
 
         assert received, "Fetcher was never called"
         f = received[0].get("filter", "")
-        assert "1710"           in f, f"CompanyCode missing from filter: {f}"
-        assert "FiscalYearPeriod" in f, f"FiscalYearPeriod field missing from filter (must NOT use FiscalYear): {f}"
-        assert "2024010"        in f, f"FiscalYearPeriod value '2024010' missing from filter: {f}"
-        assert "FiscalYear eq"  not in f, f"FiscalYear must NOT appear as standalone field (invalid in EDMX): {f}"
-        assert "40000000"       in f, f"GL lower bound missing from filter: {f}"
-        assert "79999999"       in f, f"GL upper bound missing from filter: {f}"
+        assert "1710"             in f, f"CompanyCode missing from filter: {f}"
+        assert "FiscalYearPeriod" in f, f"FiscalYearPeriod missing from filter (must NOT use bare FiscalYear): {f}"
+        assert "2024010"          in f, f"FiscalYearPeriod value '2024010' missing from filter: {f}"
+        assert "FiscalYear eq"   not in f, f"Bare FiscalYear must NOT appear (invalid EDMX field): {f}"
+        assert "40000000"         in f, f"GL lower bound missing from filter: {f}"
+        assert "79999999"         in f, f"GL upper bound missing from filter: {f}"
 
     @pytest.mark.asyncio
     async def test_top_and_skip_present_and_no_dollar_prefix(self):
-        """'top' and 'skip' sent without '$'."""
+        """'top' and 'skip' sent without '
+."""
         from pl_fetch_tool import _make_fetch_aggregate_tool
         received = []
 
@@ -589,15 +558,44 @@ class TestMcpToolParamSeam:
             received.append(dict(kwargs))
             return json.dumps({"d": {"results": []}})
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher)
         await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
 
         assert received, "Fetcher was never called"
         first = received[0]
-        assert "top"   in first,   f"'top' missing — got: {list(first.keys())}"
-        assert "skip"  in first,   f"'skip' missing — got: {list(first.keys())}"
+        assert "top"   in first,     f"'top' missing — got: {list(first.keys())}"
+        assert "skip"  in first,     f"'skip' missing — got: {list(first.keys())}"
         assert "$top"  not in first, "'$top' with $ must NOT be sent"
         assert "$skip" not in first, "'$skip' with $ must NOT be sent"
+
+    @pytest.mark.asyncio
+    async def test_select_uses_fiscalyearperiod_not_fiscalyear(self):
+        """Bug 1 regression: 'select' must contain FiscalYearPeriod, NOT bare FiscalYear.
+
+        A_JournalEntryItemBasic has no FiscalYear property (confirmed from EDMX).
+        Sending FiscalYear in $select causes the OData service to reject the
+        entire request and return 0 rows even when 795 postings exist.
+        """
+        from pl_fetch_tool import _make_fetch_aggregate_tool
+        received = []
+
+        async def fetcher(**kwargs):
+            received.append(dict(kwargs))
+            return json.dumps({"d": {"results": []}})
+
+        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher)
+        await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+
+        assert received, "Fetcher was never called"
+        select = received[0].get("select", "")
+        assert "FiscalYearPeriod" in select, (
+            f"'FiscalYearPeriod' must be in select — got: {select}"
+        )
+        # 'FiscalYear' must not appear as a standalone field (i.e. not followed by 'Period')
+        import re
+        assert not re.search(r"FiscalYear(?!Period)", select), (
+            f"Bare 'FiscalYear' (not 'FiscalYearPeriod') must NOT be in select — got: {select}"
+        )
 
     @pytest.mark.asyncio
     async def test_no_entity_level_params_sent_outside_filter(self):
@@ -611,11 +609,11 @@ class TestMcpToolParamSeam:
             received.append(dict(kwargs))
             return json.dumps({"d": {"results": []}})
 
-        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher, agg_tool_fn=None)
+        tool = _make_fetch_aggregate_tool(list_tool_fn=fetcher)
         await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
 
         assert received, "Fetcher was never called"
         first = received[0]
-        assert "CompanyCode"   not in first, f"CompanyCode must not be a top-level param: {first}"
-        assert "FiscalYear"    not in first, f"FiscalYear must not be a top-level param: {first}"
-        assert "FiscalPeriod"  not in first, f"FiscalPeriod must not be a top-level param: {first}"
+        assert "CompanyCode"  not in first, f"CompanyCode must not be a top-level param: {first}"
+        assert "FiscalYear"   not in first, f"FiscalYear must not be a top-level param: {first}"
+        assert "FiscalPeriod" not in first, f"FiscalPeriod must not be a top-level param: {first}"
