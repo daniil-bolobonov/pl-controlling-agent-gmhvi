@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "timer-duration-approximate",
+    "sbpaId": "intermediateCatchEvent_3",
+    "raw": "\"P1M\"",
+    "emitted": "30 days",
+    "message": "ISO 8601 duration \"P1M\" uses years/months which have no exact n8n equivalent; converted to 30 days (1 month = 30 days, 1 year = 365 days) — review after import",
+    "process": "singleWaitProcess"
+  },
+  {
+    "kind": "timer-duration-approximate",
+    "sbpaId": "intermediateCatchEvent_4",
+    "raw": "\"P1Y\"",
+    "emitted": "365 days",
+    "message": "ISO 8601 duration \"P1Y\" uses years/months which have no exact n8n equivalent; converted to 365 days (1 month = 30 days, 1 year = 365 days) — review after import",
+    "process": "singleWaitProcess"
+  },
+  {
+    "kind": "timer-duration-dynamic",
+    "sbpaId": "intermediateCatchEvent_5",
+    "source": "ConcatenateStrings([\"P\", context.startEvent.waittime, \"M\"], \"\")",
+    "emittedUnit": "days",
+    "message": "Dynamic timer duration detected; unit \"days\" inferred from ConcatenateStrings suffix (approximate: 1 month = 30 days) — verify the expression resolves to a number",
+    "process": "singleWaitProcess"
+  }
+]

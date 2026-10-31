@@ -1,0 +1,4 @@
+{
+  "note": "Validates all four SBPA trigger types (api, event, scheduled, form) are correctly mapped to n8n trigger nodes.",
+  "cases": []
+}

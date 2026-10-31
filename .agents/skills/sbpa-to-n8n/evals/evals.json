@@ -1,0 +1,158 @@
+{
+  "skill_name": "sbpa-to-n8n",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to migrate my SAP Build Process Automation project to n8n. Here is the archive: evals/files/SimpleOrderManagement.mtar",
+      "expected_output": "One or more .workflow.json files produced for bpi.process artifacts, a credential-stubs.json stub, and a report.json. The response includes an ASCII topology diagram per workflow.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "At least one .workflow.json file is produced",
+        "Each workflow JSON has top-level keys: name, nodes, connections, settings",
+        "credential-stubs.json is produced and lists destination stubs",
+        "report.json is produced",
+        "Response contains an ASCII topology diagram section",
+        "No bearer tokens or live URLs appear in any workflow JSON"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Convert this SBPA export to n8n. The process uses custom variables: evals/files/simpleCustomVariableUsecase.mtar",
+      "expected_output": "Workflow JSON with an 'Initialize Custom Data' code node that initialises DataObject fields, plus Set/Get custom data nodes. report.json lists any custom-var-unsupported-type entries for non-string fields.",
+      "files": ["evals/files/simpleCustomVariableUsecase.mtar"],
+      "assertions": [
+        "A node named 'Initialize Custom Data' exists in the emitted workflow",
+        "report.json entries with kind 'custom-var-unsupported-type' appear for object/array fields",
+        "Each workflow JSON passes node scripts/validate.js without errors",
+        "Response explains which custom variables required workarounds"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How does SBPA to n8n migration work? I don't have an archive yet.",
+      "expected_output": "Explanation of the migration process pointing at references/SBPA_READING_GUIDE.md and references/activity-mapping.md. The converter script is NOT run and no workflow JSON is produced.",
+      "files": [],
+      "assertions": [
+        "No node scripts/migrate.js command is executed",
+        "No .workflow.json files are produced",
+        "Response references the SBPA reading guide or activity mapping reference",
+        "Response describes the overall migration approach"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Convert this SAP Build Process Automation project to n8n: evals/files/SimpleOrderManagement.mtar. Make sure you write all required lifecycle documents.",
+      "expected_output": "Three lifecycle documents written: assets/intent.md, assets/product-requirements-document.md, and assets/specification.md. Each file must have real content derived from the archive, not placeholder text. The framing uses the business use case, never the word 'migration'.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "assets/intent.md is written with a title framing the business use case (no 'migration' in the title)",
+        "assets/product-requirements-document.md is written after assets/intent.md",
+        "assets/specification.md is written after assets/product-requirements-document.md",
+        "Each of the three lifecycle files contains real content — no '<placeholder>' tokens remain",
+        "assets/intent.md includes a Fit Gap Analysis table",
+        "assets/product-requirements-document.md references the Fit Gap Analysis rather than duplicating the gap table",
+        "assets/specification.md contains a node-mapping table for at least one bpi.process"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I want to convert my SAP Build Process Automation project to n8n. The archive is at evals/files/SimpleOrderManagement.mtar. Run the converter, then show me the topology of every emitted workflow.",
+      "expected_output": "The converter (node scripts/migrate.js) is run before the lifecycle documents are written. The final response contains an ASCII topology diagram for every emitted workflow under a single '## n8n workflow topology' heading.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "node scripts/migrate.js is run before assets/intent.md is written",
+        "The converter output is read as reference only — validate.js is NOT run on the converter output",
+        "The response contains a '## n8n workflow topology' heading",
+        "At least one ASCII diagram (boxes, arrows) appears under that heading",
+        "Each workflow emitted by the skill has a corresponding topology diagram"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Convert this SAP Build Process Automation archive to n8n: evals/files/SimpleOrderManagement.mtar. I need the final workflow JSON validated before you're done.",
+      "expected_output": "The skill generates each .workflow.json from scratch (not by copying the converter output), then runs 'node scripts/validate.js' on every generated file. If validation fails, the JSON is fixed and validate.js is rerun until it passes.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "node scripts/validate.js is called on the generated workflow JSON, not on the converter output",
+        "The generated workflow JSON is distinct from the converter output (not a copy)",
+        "Every node in the generated workflow has: a unique name, a valid type (package.node format), a numeric typeVersion, a [x,y] position, and an object parameters field",
+        "If validate.js fails, the agent fixes the JSON and reruns rather than stopping",
+        "The word 'migration' does not appear in any generated workflow node name or connection label"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Convert evals/files/SimpleOrderManagement.mtar to n8n. Every node type must come from the node-discovery tools.",
+      "expected_output": "search_nodes (or list-supported-nodes) is called at least once before the workflow JSON is written. No node type is invented from general n8n knowledge — every type used in the JSON can be traced to a search_nodes / list-supported-nodes lookup result.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "search_nodes or list-supported-nodes is called before the workflow JSON is written",
+        "Every node type in the generated workflow JSON uses the package.node format (e.g. n8n-nodes-base.httpRequest, CUSTOM.sapTaskCenter)",
+        "No node type appears that was not returned by the node-discovery lookup",
+        "The workflow JSON does not contain node types invented from general n8n knowledge (e.g. n8n-nodes-base.sapBapi, n8n-nodes-base.sbpa)"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Convert evals/files/SimpleOrderManagement.mtar to n8n and set up the solution structure so it's ready to deploy.",
+      "expected_output": "After the workflow JSON is validated, the setup-solution skill is invoked to place asset.yaml and solution.yaml. Both files are present in the solution directory when the skill finishes.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "The setup-solution skill is invoked after the workflow JSON passes validation",
+        "asset.yaml is present in the solution directory",
+        "solution.yaml is present in the solution directory",
+        "The skill does not stop after writing the workflow JSON — it proceeds through setup-solution"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Convert evals/files/simpleCustomVariableUsecase.mtar to n8n. Tell me upfront about any gaps or unsupported constructs before you start writing files.",
+      "expected_output": "After running the converter, the skill surfaces every report.json item and every known under-development construct (RuleTask → CUSTOM.sapAgent, non-string custom variables, boundary timers) before writing assets/intent.md. The Fit Gap Analysis in intent.md captures these gaps.",
+      "files": ["evals/files/simpleCustomVariableUsecase.mtar"],
+      "assertions": [
+        "The converter is run and report.json is read before any lifecycle document is written",
+        "Known constraints (custom-var-unsupported-type, RuleTask under-development) are surfaced to the user before assets/intent.md is written",
+        "The Fit Gap Analysis table in assets/intent.md lists the gaps identified from report.json",
+        "assets/product-requirements-document.md references the Fit Gap Analysis rather than restating every gap",
+        "The agent does not silently work around unsupported constructs"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Can you convert this SBPA archive to n8n: evals/files/SimpleOrderManagement.mtar? Keep the original activity names as node names in the workflow.",
+      "expected_output": "Node names in the generated workflow JSON match the human-readable labels from the SBPA process's translations.units block, not machine IDs. The workflow is recognisable after import into n8n.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "Node names in the generated workflow JSON come from the SBPA process translations (human-readable labels), not from internal SBPA IDs",
+        "No node is named with a UUID or machine-generated identifier",
+        "Node names in the topology diagram match the node names in the workflow JSON"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Convert evals/files/SimpleOrderManagement.mtar to n8n. The process uses an ExclusiveGateway — make sure the decision logic is translated correctly.",
+      "expected_output": "ExclusiveGateway maps to n8n-nodes-base.if. Conditions use n8n expression syntax translated from the SBPA JUEL conditions (${...} expressions). No SBPA formula-language constructs (Map(), path.dot.notation) are used inside IF node conditions.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "ExclusiveGateway nodes in the SBPA process map to n8n-nodes-base.if nodes in the output",
+        "IF node conditions use n8n expression syntax, not raw JUEL or SBPA formula syntax",
+        "JUEL word-form operators (eq, gt, and, not, mod, empty) are translated to their n8n equivalents",
+        "The decision gate (JUEL vs mapping formula) from references/formula-grammar.md is applied: ${...} conditions go through the JUEL path, not the formula path",
+        "No untranslated ${...} or #{...} tokens remain in the generated workflow JSON"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "I have an SBPA project but I just want to understand what processes it contains before committing to a full conversion. Archive: evals/files/SimpleOrderManagement.mtar",
+      "expected_output": "The skill unpacks the archive, builds the process inventory and dependency graph (per references/intent-extraction.md), and reports: process names, identifiers, trigger types, sub-workflow dependencies, and destination names. The converter is run (it is needed for inventory), but no lifecycle documents are written and the user is not committed to a full conversion.",
+      "files": ["evals/files/SimpleOrderManagement.mtar"],
+      "assertions": [
+        "The archive is unpacked and the process inventory is built",
+        "The response lists every bpi.process found: name, identifier, trigger type",
+        "Sub-workflow dependencies (ReferencedSubflow targets) are identified and listed",
+        "Destination names from environment-variable artifacts are listed",
+        "The user is informed of any gaps or unsupported constructs found during inventory"
+      ]
+    }
+  ]
+}

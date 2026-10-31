@@ -1,0 +1,338 @@
+{
+  "name": "process",
+  "nodes": [
+    {
+      "id": "n8n-1",
+      "name": "Initialize Custom Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Initialize custom variables from $execution.customData.\n// Fields with defaults from StartEvent are seeded only if not already set.\nconst cd = $execution.customData.getAll();\n\nif (!(\"custstr\" in cd)) $execution.customData.set(\"custstr\", String(\"defaultValue\"));\nif (!(\"cust2\" in cd)) $execution.customData.set(\"cust2\", String($('StartEvent').item.json.body.instatus));\n\nreturn [{ json: { custom: $execution.customData.getAll(), ...$('StartEvent').item.json } }];"
+      }
+    },
+    {
+      "id": "n8n-2",
+      "name": "StartEvent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tst123",
+        "responseMode": "onReceived"
+      },
+      "webhookId": "0395d2c8-0820-428e-8dad-1a177087431a"
+    },
+    {
+      "id": "n8n-3",
+      "name": "EndEvent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "end-output",
+              "name": "output",
+              "type": "string",
+              "value": "={{ $('Read Custom Data: EndEvent').item.json.custom.custstr }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n8n-4",
+      "name": "Script Task 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "javaScript",
+        "jsCode": "// Migrated from SBPA ScriptTask script_3\n// v1 rewrite: $.context.startEvent → $('StartEvent').item.json (cross-node ref),\n//             $.context.custom.*   → $execution.customData (read + write).\n// NOTE: $execution.customData is string-only (max key=50, value=255, items=10).\nconst custom = Object.assign({}, $execution.customData.getAll());\n\n/*\n// read from existing process data/context\nvar productInfo = custom.productInfo;\nvar productName = productInfo.productName;\nvar productDescription = productInfo.productDescription;\n\n// read contextual information\nvar workflowInstanceId = $.info.workflowInstanceId;\n\n// read user task information\nvar lastUserTask1 = $.usertasks.usertask1.last;\nvar userTaskSubject = lastUserTask1.subject;\nvar userTaskProcessor = lastUserTask1.processor;\nvar userTaskCompletedAt = lastUserTask1.completedAt;\n\nvar userTaskStatusMessage = \" User task '\" + userTaskSubject + \"' has been completed by \" + userTaskProcessor + \" at \" + userTaskCompletedAt;\n\n// create new node 'product'\nvar product = {\n\t\tproductDetails: productName  + \" \" + productDescription,\n\t\tworkflowStep: workflowInstanceId\n};\n\n// write 'product' node to process data/context\ncustom.product = product;\n*/\nvar bool = custom.customboolean;\nvar num = custom.customnumber;\nvar date = custom.customdate;\nvar datetime = custom.customdatetime;\nvar doc = custom.customdocument;\nvar str = custom.custstr;\ncustom.custstr = custom.custstr + ' Updated';\n\n// Persist mutations back to $execution.customData (string values only).\nfor (const [_k, _v] of Object.entries(custom)) {\n  $execution.customData.set(_k, String(_v));\n}\nreturn { ...$json, custom: $execution.customData.getAll() };"
+      }
+    },
+    {
+      "id": "n8n-5",
+      "name": "subProcess 2",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        180
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "subProcess",
+          "mode": "id",
+          "cachedResultName": "subProcess"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $('Read Custom Data: subProcess 2').item.json.custom.custstr }}"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "defaultMatch": false,
+              "display": true,
+              "required": false,
+              "canBeUsedToMatch": false
+            }
+          ],
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "mode": "each",
+        "options": {}
+      }
+    },
+    {
+      "id": "n8n-6",
+      "name": "Condition 1",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition_2-cb7a8a57-e2d1-4091-81a8-3f5ba4aac553",
+                    "leftValue": "={{ $('Initialize Custom Data').item.json.custom.custstr == \"test\" }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": false
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    },
+    {
+      "id": "n8n-7",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "mode": "append"
+      }
+    },
+    {
+      "id": "n8n-8",
+      "name": "Update Custom Data: subProcess 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        180
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Persist custom variable updates to $execution.customData.\nconst output = $input.first().json;\n$execution.customData.set(\"custstr\", String(output.returnstatus));\nreturn [{ json: { custom: $execution.customData.getAll() } }];"
+      }
+    },
+    {
+      "id": "n8n-9",
+      "name": "Read Custom Data: EndEvent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        360
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Load $execution.customData into $json.custom for downstream formula access.\nreturn [ {custom: $execution.customData.getAll()} ];"
+      }
+    },
+    {
+      "id": "n8n-10",
+      "name": "Read Custom Data: subProcess 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        540
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Load $execution.customData into $json.custom for downstream formula access.\nreturn [ {custom: $execution.customData.getAll()} ];"
+      }
+    }
+  ],
+  "connections": {
+    "StartEvent": {
+      "main": [
+        [
+          {
+            "node": "Initialize Custom Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Custom Data": {
+      "main": [
+        [
+          {
+            "node": "Condition 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition 1": {
+      "main": [
+        [
+          {
+            "node": "Read Custom Data: subProcess 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Script Task 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Read Custom Data: EndEvent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script Task 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "subProcess 2": {
+      "main": [
+        [
+          {
+            "node": "Update Custom Data: subProcess 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Custom Data: subProcess 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Read Custom Data: EndEvent": {
+      "main": [
+        [
+          {
+            "node": "EndEvent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Custom Data: subProcess 2": {
+      "main": [
+        [
+          {
+            "node": "subProcess 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {
+    "StartEvent": [
+      {
+        "body": {
+          "instatus": "",
+          "amount": 0
+        }
+      }
+    ]
+  }
+}

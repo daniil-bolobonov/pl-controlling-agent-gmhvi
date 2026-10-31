@@ -1,0 +1,13 @@
+{
+  "description": "SBPA supplier invoice approval workflow with variance-based routing. Contains ScriptTasks for variance calculation, a UserTask (SAP Task Center node) for manual approval, and a RuleTask (Business Rules decision) that is not converted. The main workflow is triggered by an S/4HANA business event (supplierInvoiceCreated) rather than a plain webhook, and the UserTask requires manual interaction to proceed — full end-to-end execution is not testable in the eval harness. Validated at report level only.",
+  "workflows": ["supplierInvoiceApproval", "approvalRequired"],
+  "expectReport": {
+    "kinds": [
+      "custom-var-unsupported-type",
+      "custom-var-unsupported-type",
+      "usertask-duedate-no-direct-mapping",
+      "usertask-duedate-no-direct-mapping",
+      "rule-task-unsupported"
+    ]
+  }
+}

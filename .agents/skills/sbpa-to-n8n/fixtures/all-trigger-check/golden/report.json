@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "trigger-event-manual-topic",
+    "sbpaId": "salesOrderApprovalStatusChanged",
+    "message": "SAP S/4HANA Event Trigger: broker topic \"salesOrderApprovalStatusChanged\" must be verified and configured in n8n after import (node is in manualTopic mode).",
+    "process": "eventTrigger"
+  }
+]

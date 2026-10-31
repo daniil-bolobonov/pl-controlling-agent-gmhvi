@@ -1,0 +1,61 @@
+{
+  "name": "apiTrigger",
+  "nodes": [
+    {
+      "id": "n8n-1",
+      "name": "StartEvent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api-trigger1",
+        "responseMode": "onReceived"
+      },
+      "webhookId": "e0f70492-6fe5-4144-a2be-294cea475665"
+    },
+    {
+      "id": "n8n-2",
+      "name": "Script Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "javaScript",
+        "jsCode": "// Migrated from SBPA ScriptTask script_1\n// v1 rewrite: $.context.startEvent → $('StartEvent').item.json (cross-node ref),\n//             $.context.custom.*   → $execution.customData (read + write).\n// NOTE: $execution.customData is string-only (max key=50, value=255, items=10).\nconst custom = Object.assign({}, $execution.customData.getAll());\n\n/*\n// read from existing process data/context\nvar productInfo = custom.productInfo;\nvar productName = productInfo.productName;\nvar productDescription = productInfo.productDescription;\n\n// read contextual information\nvar workflowInstanceId = $.info.workflowInstanceId;\n\n// read user task information\nvar lastUserTask1 = $.usertasks.usertask1.last;\nvar userTaskSubject = lastUserTask1.subject;\nvar userTaskProcessor = lastUserTask1.processor;\nvar userTaskCompletedAt = lastUserTask1.completedAt;\n\nvar userTaskStatusMessage = \" User task '\" + userTaskSubject + \"' has been completed by \" + userTaskProcessor + \" at \" + userTaskCompletedAt;\n\n// create new node 'product'\nvar product = {\n\t\tproductDetails: productName  + \" \" + productDescription,\n\t\tworkflowStep: workflowInstanceId\n};\n\n// write 'product' node to process data/context\ncustom.product = product;\n*/\nvar a = $.info.startedBy;\nvar b = $('StartEvent').item.json.body.test;\n\n// Persist mutations back to $execution.customData (string values only).\nfor (const [_k, _v] of Object.entries(custom)) {\n  $execution.customData.set(_k, String(_v));\n}\nreturn { ...$json, custom: $execution.customData.getAll() };"
+      }
+    }
+  ],
+  "connections": {
+    "StartEvent": {
+      "main": [
+        [
+          {
+            "node": "Script Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {
+    "StartEvent": [
+      {
+        "body": {
+          "test": ""
+        }
+      }
+    ]
+  }
+}

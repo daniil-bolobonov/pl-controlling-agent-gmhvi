@@ -1,0 +1,39 @@
+{
+  "trigger": {
+    "processIdentifier": "simpleParallelActionProcess",
+    "webhookPath": "start-simple-parallel-action-process"
+  },
+  "expectReport": {
+    "maxItems": 0
+  },
+  "cases": [
+    {
+      "name": "both-branches-fire-then-merge-then-one-more",
+      "note": "AND-split fans StartEvent.main[0] out to HelloAction + HelloAction 1 (parallel). Each hits GET /foobar. The AND-join Merge (n8n mode: chooseBranch, chooseBranchMode: waitForAll, output: empty) synchronizes on both branches and emits ONE downstream execution. HelloAction 2 sits after the merge and must fire EXACTLY ONCE \u2014 proving the join emits a single token, not one per input branch. Total WireMock journal: 3 GET /foobar requests (2 pre-merge + 1 post-merge). If the merge mode were 'append' the journal would show 4 (post-merge fires twice); if it were 'combine/combineAll' it would show 4 (2x2 cross product = 2 downstream runs).",
+      "payload": {},
+      "execution": {
+        "status": "success"
+      },
+      "expectHttp": [
+        {
+          "method": "GET",
+          "urlPath": "/foobar"
+        },
+        {
+          "method": "GET",
+          "urlPath": "/foobar"
+        },
+        {
+          "method": "GET",
+          "urlPath": "/foobar"
+        }
+      ],
+      "expectMail": [],
+      "expectResult": [
+        {
+          "matches": { "data": "{\"ok\":true,\"id\":\"stub\"}" }
+        }
+      ]
+    }
+  ]
+}

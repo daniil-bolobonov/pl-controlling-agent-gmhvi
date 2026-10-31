@@ -150,10 +150,13 @@ def _make_fetch_aggregate_tool(
                    Accepts: apply, filter, select (no $ prefix).
                    Pass None to skip the $apply path and go straight to pagination.
     """
+    # FiscalYear is NOT a property on A_JournalEntryItemBasic (confirmed from EDMX).
+    # The correct combined field is FiscalYearPeriod (MaxLength=8, format YYYYPPP,
+    # e.g. '2026010' for October 2026).  FiscalPeriod alone is also a valid field
+    # but without FiscalYear it would match across all years -- always use FiscalYearPeriod.
     _scope_filter = (
         "CompanyCode eq '{cc}' "
-        "and FiscalYear eq '{fy}' "
-        "and FiscalPeriod eq '{fp}' "
+        "and FiscalYearPeriod eq '{fyp}' "
         "and GLAccount ge '40000000' and GLAccount le '79999999'"
     )
 
@@ -167,7 +170,8 @@ def _make_fetch_aggregate_tool(
         """
         if agg_tool_fn is None:
             return None
-        scope = _scope_filter.format(cc=company_code, fy=fiscal_year, fp=fiscal_period)
+        fiscal_year_period = f"{fiscal_year}{fiscal_period}"
+        scope = _scope_filter.format(cc=company_code, fyp=fiscal_year_period)
         apply_expr = (
             f"filter({scope})"
             "/groupby("
@@ -193,8 +197,10 @@ def _make_fetch_aggregate_tool(
         fiscal_period: str,
         label: str = "",
     ) -> str:
+        # FiscalYearPeriod = YYYYPPP, e.g. fiscal_year='2026', fiscal_period='010' -> '2026010'
+        fiscal_year_period = f"{fiscal_year}{fiscal_period}"
         scope_filter = _scope_filter.format(
-            cc=company_code, fy=fiscal_year, fp=fiscal_period
+            cc=company_code, fyp=fiscal_year_period
         )
         base_params: dict[str, Any] = {"filter": scope_filter}
         preaggregated = False

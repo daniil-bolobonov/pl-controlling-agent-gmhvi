@@ -1,0 +1,136 @@
+{
+  "name": "Invoice_Approval",
+  "nodes": [
+    {
+      "id": "n8n-1",
+      "name": "StartEvent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api-trigger",
+        "responseMode": "onReceived"
+      },
+      "webhookId": "6854eeab-f66b-45f6-b614-407dcd3cdecb"
+    },
+    {
+      "id": "n8n-2",
+      "name": "Invoices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $vars.ag_destination_baseUrl }}/invoices",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": []
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "SBPA destination: ag_destination"
+        }
+      }
+    },
+    {
+      "id": "n8n-3",
+      "name": "Invoice Handling",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "subProcess1",
+          "mode": "id",
+          "cachedResultName": "subProcess1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "amount": "={{ $('Invoices').item.json.result.invoices[loop.counter].amount }}",
+            "subpname": "={{ $('Invoices').item.json.result.invoices[loop.counter].id }}",
+            "status": "={{ $('Invoices').item.json.result.invoices[loop.counter].status }}"
+          },
+          "schema": [
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "type": "number",
+              "defaultMatch": false,
+              "display": true,
+              "required": false,
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "subpname",
+              "displayName": "subpname",
+              "type": "number",
+              "defaultMatch": false,
+              "display": true,
+              "required": false,
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "defaultMatch": false,
+              "display": true,
+              "required": false,
+              "canBeUsedToMatch": false
+            }
+          ],
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "mode": "each",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "StartEvent": {
+      "main": [
+        [
+          {
+            "node": "Invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoices": {
+      "main": [
+        [
+          {
+            "node": "Invoice Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

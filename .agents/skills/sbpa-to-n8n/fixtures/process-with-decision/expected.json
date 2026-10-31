@@ -1,0 +1,21 @@
+{
+  "description": "SBPA process with a single RuleTask (Business Rules decision service) that cannot be converted. The migrator elides the decision node and emits only the StartEvent → Initialize Custom Data scaffold, recording a rule-task-unsupported report entry.",
+  "workflows": ["singleDecisionProcess"],
+  "trigger": {
+    "processIdentifier": "singleDecisionProcess",
+    "webhookPath": "trigger"
+  },
+  "expectReport": {
+    "kinds": ["rule-task-unsupported"]
+  },
+  "cases": [
+    {
+      "name": "default",
+      "note": "RuleTask (myDecision) is unsupported and elided. The workflow runs StartEvent → Initialize Custom Data only and finishes successfully.",
+      "payload": { "trueorfalse": false },
+      "execution": { "status": "success" },
+      "expectHttp": [],
+      "expectMail": []
+    }
+  ]
+}

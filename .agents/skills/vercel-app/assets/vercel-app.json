@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vercel-app Asset",
+  "description": "Schema for the vercel-app asset format consumed by the Joule Studio runtime deployer. v0-generated frontend apps are persisted as `vercel-app` assets. Files synced from v0 land at the root of `assets/<asset-name>/` (e.g. `assets/<asset-name>/app/page.tsx`, `assets/<asset-name>/package.json`); `container.buildPath` is therefore always `.`.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "type", "container"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "asset.sap/v1",
+      "description": "API version. Must be 'asset.sap/v1'."
+    },
+    "kind": {
+      "type": "string",
+      "const": "Asset",
+      "description": "Resource type. Must be 'Asset' (capital A)."
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Identifying name in kebab-case. Modifying this after deployment causes breaking changes (URLs of the deployed asset).",
+          "pattern": "^[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?$",
+          "maxLength": 63
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version of this asset.",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        }
+      }
+    },
+    "type": {
+      "type": "string",
+      "const": "vercel-app",
+      "description": "Asset type discriminator. Must be 'vercel-app'."
+    },
+    "container": {
+      "type": "object",
+      "required": ["buildPath"],
+      "additionalProperties": false,
+      "description": "Container configuration the deployer uses to build and run the Vercel app.",
+      "properties": {
+        "buildPath": {
+          "type": "string",
+          "const": ".",
+          "description": "Path to the buildable application root, relative to the asset directory. Always `.` for vercel-app — v0-synced files (package.json, app/, components/, …) live directly under `assets/<asset-name>/`, not in a `src/` subdirectory."
+        },
+        "port": {
+          "type": "integer",
+          "description": "Port the app listens on inside the container.",
+          "default": 5000,
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

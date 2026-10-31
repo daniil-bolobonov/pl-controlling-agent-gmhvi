@@ -1,0 +1,47 @@
+{
+  "description": "Custom variable scenarios covered by this fixture",
+  "trigger": "api",
+  "scenarios": [
+    {
+      "id": "cv-init-from-start",
+      "description": "Custom vars initialized from StartEvent mappings.out. Each field is seeded into $execution.customData only if not already present (idempotent re-entry).",
+      "details": "StartEvent maps: amount → input.amount (formula), approval → input.approval (formula). Initialize Custom Data node emits: if (!(\"amount\" in cd)) set(...); if (!(\"approval\" in cd)) set(...);"
+    },
+    {
+      "id": "cv-script-flat-read",
+      "description": "ScriptTask reads a flat custom variable via $.context.custom.approval. Rewritten to: custom.approval where custom is snapshotted from $execution.customData.getAll().",
+      "details": "No 'Read Custom Data' node is injected before ScriptTask — it reads directly from $execution.customData. The snapshot pattern: const custom = Object.assign({}, $execution.customData.getAll());"
+    },
+    {
+      "id": "cv-script-flat-write",
+      "description": "ScriptTask writes a flat custom variable: custom.approval = 'approve'. Persisted back by iterating Object.entries(custom) and calling $execution.customData.set(k, v) for each top-level key.",
+      "details": "No 'Update Custom Data' node is injected after ScriptTask — it writes back inline via the generated for-loop at the end of the code node body."
+    },
+    {
+      "id": "cv-script-nested-read",
+      "description": "ScriptTask nested object read: $.context.custom.productInfo.productName. Regex captures the full dotted tail 'productInfo.productName', rewritten to custom.productInfo.productName. Resolves correctly because custom.productInfo is the full object from getAll().",
+      "details": "Shown in the commented-out block inside Script Task. Pattern works for any depth: custom.a.b.c.d."
+    },
+    {
+      "id": "cv-script-nested-write",
+      "description": "ScriptTask nested object write: custom.product = { productDetails: ..., workflowStep: ... }. The top-level key 'product' is set as a full JSON object in $execution.customData.",
+      "details": "Shown in the commented-out block inside Script Task. The write-back loop persists custom.product as a whole object, preserving nested structure."
+    },
+    {
+      "id": "cv-no-reader-before-script",
+      "description": "ScriptTask that reads $.context.custom.* does NOT get a 'Read Custom Data: <Name>' node injected before it. nodeReadsCustomVar() returns false for ScriptTask and GenericSkillTask(ScriptTask).",
+      "details": "Connection chain is: Initialize Custom Data → Script Task (direct). No reader node between them."
+    },
+    {
+      "id": "cv-reader-before-endevent",
+      "description": "EndEvent that reads context.custom.approval in its mappings.out DOES get a 'Read Custom Data: EndEvent' node injected before it. Reader loads $execution.customData.getAll() into $json.custom.",
+      "details": "EndEvent value: ={{ $('Read Custom Data: EndEvent').item.json.custom.approval }}. Connection chain: Wait 1 minute → Read Custom Data: EndEvent → EndEvent."
+    },
+    {
+      "id": "cv-timer-between-script-and-end",
+      "description": "Timer wait node (IntermediateCatchEvent with TimerEventDefinition) sits between ScriptTask and EndEvent. Custom data written by ScriptTask to $execution.customData persists across the wait boundary and is readable by the EndEvent reader.",
+      "details": "Chain: Script Task → Wait 1 minute → Read Custom Data: EndEvent → EndEvent."
+    }
+  ],
+  "expectReport": []
+}

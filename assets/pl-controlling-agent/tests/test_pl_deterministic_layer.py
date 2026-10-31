@@ -554,7 +554,12 @@ class TestMcpToolParamSeam:
 
     @pytest.mark.asyncio
     async def test_filter_contains_all_scoping_values(self):
-        """'filter' string must scope to company code, fiscal year, period, and GL range."""
+        """'filter' string must scope via FiscalYearPeriod (YYYYPPP), CompanyCode, and GL range.
+
+        IMPORTANT: A_JournalEntryItemBasic has NO standalone FiscalYear property (confirmed
+        from EDMX). The correct combined field is FiscalYearPeriod (MaxLength=8, format YYYYPPP).
+        e.g. fiscal_year='2024', fiscal_period='010' -> FiscalYearPeriod eq '2024010'.
+        """
         from pl_fetch_tool import _make_fetch_aggregate_tool
         received = []
 
@@ -567,11 +572,12 @@ class TestMcpToolParamSeam:
 
         assert received, "Fetcher was never called"
         f = received[0].get("filter", "")
-        assert "1710"     in f, f"CompanyCode missing from filter: {f}"
-        assert "2024"     in f, f"FiscalYear missing from filter: {f}"
-        assert "010"      in f, f"FiscalPeriod missing from filter: {f}"
-        assert "40000000" in f, f"GL lower bound missing from filter: {f}"
-        assert "79999999" in f, f"GL upper bound missing from filter: {f}"
+        assert "1710"           in f, f"CompanyCode missing from filter: {f}"
+        assert "FiscalYearPeriod" in f, f"FiscalYearPeriod field missing from filter (must NOT use FiscalYear): {f}"
+        assert "2024010"        in f, f"FiscalYearPeriod value '2024010' missing from filter: {f}"
+        assert "FiscalYear eq"  not in f, f"FiscalYear must NOT appear as standalone field (invalid in EDMX): {f}"
+        assert "40000000"       in f, f"GL lower bound missing from filter: {f}"
+        assert "79999999"       in f, f"GL upper bound missing from filter: {f}"
 
     @pytest.mark.asyncio
     async def test_top_and_skip_present_and_no_dollar_prefix(self):

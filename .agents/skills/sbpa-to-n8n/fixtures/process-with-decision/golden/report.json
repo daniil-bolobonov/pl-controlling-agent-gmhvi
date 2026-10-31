@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "rule-task-unsupported",
+    "sbpaId": "decision_myDecision_1",
+    "message": "RuleTask \"myDecision\" is not converted. It calls a Business Rules decision service, which must be represented by the SAP AI Agent custom node (CUSTOM.sapAgent). That node is not yet supported by the converter, so the task has been left out of the generated workflow — rebuild the decision logic with CUSTOM.sapAgent after import.",
+    "process": "singleDecisionProcess"
+  }
+]

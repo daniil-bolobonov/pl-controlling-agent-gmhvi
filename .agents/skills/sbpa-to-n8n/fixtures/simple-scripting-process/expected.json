@@ -1,0 +1,29 @@
+{
+  "trigger": {
+    "processIdentifier": "simpleScriptingProcess",
+    "webhookPath": "startprocess"
+  },
+  "expectReport": { "maxItems": 0 },
+  "cases": [
+    {
+      "name": "script-runs-and-mutates-local-custom",
+      "note": "First fixture exercising SBPA ScriptTask → n8n code node. StartEvent (webhook) → Initialize Custom Data (code) → Script Task (code) → EndEvent (set). The script walks two parallel arrays from the trigger payload (`firstnames`, `lastnames`) and pushes concatenations into `custom.names`. Verifies (1) the `$.context.startEvent.<field>` → `$json.body.<field>` rewrite (webhook trigger wraps the payload in `body`), (2) the `$.context.custom.<field>` → local `custom.<field>` rewrite, and (3) that Initialize Custom Data seeds `custom.names` as `[]` from the DataObject's declared JSON Schema — without that seeding the script would crash on the first `.push()` (see graph.js:buildInitSetNode / seedLiteralFromSchema). Known limitation: the EndEvent output emits `names: []` rather than the concatenated list, because SBPA's `context.custom.<X>` resolver routes reads to `$('Initialize Custom Data').item.json.<X>` — reading Init's pristine state, not the ScriptTask's mutated `$json.custom`. The mutation is real (the ScriptTask returns `{ ...$json, custom }`) but nothing downstream reads that path yet. Ratchet EndEvent's `names` assertion to `[\"AdaLovelace\", \"AlanTuring\", \"GraceHopper\"]` once the resolver learns to route custom reads through the propagated `$json.custom.<X>` (or once ScriptTasks write their mutated custom back into the Initialize Custom Data node's slot, which n8n can't do retroactively).",
+      "payload": {
+        "firstnames": ["Ada", "Alan", "Grace"],
+        "lastnames": ["Lovelace", "Turing", "Hopper"]
+      },
+      "execution": { "status": "success" },
+      "expectHttp": [],
+      "expectMail": [],
+      "expectResult": {
+        "node": "Script Task",
+        "matches": {
+          "custom": {
+            "names": ["AdaLovelace", "AlanTuring", "GraceHopper"]
+          }
+        }
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,78 @@
+{
+  "trigger": {
+    "processIdentifier": "simpleMappingAndExpressionProcess",
+    "webhookPath": "startprocess"
+  },
+  "expectReport": {
+    "maxItems": 0
+  },
+  "cases": [
+    {
+      "name": "all-field-types-flow-through",
+      "note": "Exercises the schema-driven Set-node field typing. StartEvent (webhook) \u2192 EndEvent (Set) with six typed fields \u2014 one per SBPA JSON-Schema type: string, number, array-of-string, array-of-number, object, array-of-object. The Map() formula shaping the last one becomes an n8n .map() expression. `astring` is the literal `\"asdf\"` per the SBPA mapping; every other field flows through from the payload. `expectResult` deep-subset-matches the EndEvent's output \u2014 if the schema-typing feature ever regresses (e.g. type: 'object' on a scalar), n8n's coercion would corrupt these values and the match would fail.",
+      "payload": {
+        "astring": "hello",
+        "anumber": 42,
+        "astringlist": [
+          "a",
+          "b",
+          "c"
+        ],
+        "anumberlist": [
+          1,
+          2,
+          3
+        ],
+        "acomplextype": {
+          "aNumber": 7,
+          "aString": "seven"
+        },
+        "acomplextypelist": [
+          {
+            "aNumber": 1,
+            "aString": "one"
+          },
+          {
+            "aNumber": 2,
+            "aString": "two"
+          }
+        ]
+      },
+      "execution": {
+        "status": "success"
+      },
+      "expectHttp": [],
+      "expectMail": [],
+      "expectResult": {
+        "matches": {
+          "astring": "asdf",
+          "anumber": 42,
+          "astringlist": [
+            "a",
+            "b",
+            "c"
+          ],
+          "anumberlist": [
+            1,
+            2,
+            3
+          ],
+          "acomplextype": {
+            "aNumber": 7,
+            "aString": "seven"
+          },
+          "acomplextypelist": [
+            {
+              "aNumber": 1,
+              "aString": "one"
+            },
+            {
+              "aNumber": 2,
+              "aString": "two"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

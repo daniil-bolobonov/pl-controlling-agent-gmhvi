@@ -1,0 +1,246 @@
+{
+  "name": "SimpleParallelActionProcess",
+  "nodes": [
+    {
+      "id": "n8n-1",
+      "name": "StartEvent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "start-simple-parallel-action-process",
+        "responseMode": "onReceived"
+      },
+      "webhookId": "23dd6880-a4af-433f-8f4a-e7c28207308b"
+    },
+    {
+      "id": "n8n-2",
+      "name": "HelloAction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $vars.hello_baseUrl }}/foobar",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input1",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input2",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input3",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input4",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input5",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input6",
+              "value": "={{ \"test\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "SBPA destination: hello"
+        }
+      }
+    },
+    {
+      "id": "n8n-3",
+      "name": "HelloAction 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        180
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $vars.hello_baseUrl }}/foobar",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input1",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input2",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input3",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input4",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input5",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input6",
+              "value": "={{ \"test\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "SBPA destination: hello"
+        }
+      }
+    },
+    {
+      "id": "n8n-4",
+      "name": "HelloAction 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $vars.hello_baseUrl }}/foobar",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input1",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input2",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input3",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input4",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input5",
+              "value": "={{ \"test\" }}"
+            },
+            {
+              "name": "input6",
+              "value": "={{ \"test\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "SBPA destination: hello"
+        }
+      }
+    },
+    {
+      "id": "n8n-5",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "mode": "chooseBranch",
+        "chooseBranchMode": "waitForAll",
+        "output": "empty"
+      }
+    }
+  ],
+  "connections": {
+    "StartEvent": {
+      "main": [
+        [
+          {
+            "node": "HelloAction 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HelloAction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "HelloAction 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HelloAction": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HelloAction 1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

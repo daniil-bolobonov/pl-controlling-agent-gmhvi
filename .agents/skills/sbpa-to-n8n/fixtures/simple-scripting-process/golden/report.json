@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "custom-var-unsupported-type",
+    "sbpaId": "script_1",
+    "message": "custom variable field \"names\" has type \"array\" which is not supported by $execution.customData (string values only).",
+    "process": "simpleScriptingProcess"
+  }
+]
