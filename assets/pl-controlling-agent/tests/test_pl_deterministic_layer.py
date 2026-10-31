@@ -270,63 +270,6 @@ class TestAggregateEdgeCases:
 
 
 # ---------------------------------------------------------------------------
-# _build_apply_expr()
-# ---------------------------------------------------------------------------
-
-class TestBuildApplyExpr:
-
-    def test_filter_is_embedded_before_groupby(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        # filter(...) must appear BEFORE groupby(...)
-        filter_pos  = expr.index("filter(")
-        groupby_pos = expr.index("groupby(")
-        assert filter_pos < groupby_pos, (
-            "filter() must precede groupby() in the $apply expression"
-        )
-
-    def test_expr_contains_company_code(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        assert "1710" in expr
-
-    def test_expr_contains_fiscal_year_and_period(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        assert "2024" in expr
-        assert "010"  in expr
-
-    def test_expr_contains_gl_range(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        assert "40000000" in expr
-        assert "79999999" in expr
-
-    def test_expr_contains_groupby_with_aggregate(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        assert "groupby(" in expr
-        assert "aggregate(" in expr
-        assert "AmountInCompanyCodeCurrency with sum" in expr
-
-    def test_expr_contains_gl_account_in_groupby(self):
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("1710", "2024", "010")
-        # GLAccount must be in the groupby dimension list
-        groupby_part = expr[expr.index("groupby("):]
-        assert "GLAccount" in groupby_part
-
-    def test_no_separate_filter_param_needed(self):
-        """The expression should be self-contained — caller must NOT add $filter."""
-        from pl_fetch_tool import _build_apply_expr
-        expr = _build_apply_expr("9999", "2025", "003")
-        # Verify all three scoping fields are inside the expression itself
-        assert "CompanyCode eq '9999'" in expr
-        assert "FiscalYear eq '2025'"  in expr
-        assert "FiscalPeriod eq '003'" in expr
-
-
-# ---------------------------------------------------------------------------
 # _fetch_all_pages() — pagination loop with mocked fetcher
 # ---------------------------------------------------------------------------
 
@@ -425,105 +368,149 @@ class TestFetchAllPages:
         rows = await _fetch_all_pages(mock_fetcher, {})
         assert len(rows) == 5
 
+    @pytest.mark.asyncio
+    async def test_empty_body_response_does_not_crash(self):
+        """Regression: empty string response must not raise JSONDecodeError."""
+        from pl_fetch_tool import _fetch_all_pages
+
+        async def mock_fetcher(**kwargs):
+            return ""  # exactly the crash seen in trace ddf8dbf464007f02
+
+        rows = await _fetch_all_pages(mock_fetcher, {})
+        assert rows == []  # treated as empty page, loop stops gracefully
+
 
 # ---------------------------------------------------------------------------
 # _fetch_with_apply() — $apply path and fallback
 # ---------------------------------------------------------------------------
 
-class TestFetchWithApply:
+class TestParseResponse:
+    """Unit tests for the _parse_response helper — the exact crash seen in the trace."""
+
+    def test_empty_string_returns_none(self):
+        """The crash was json.loads('') — must return None not raise."""
+        from pl_fetch_tool import _parse_response
+        assert _parse_response("") is None
+
+    def test_none_returns_none(self):
+        from pl_fetch_tool import _parse_response
+        assert _parse_response(None) is None
+
+    def test_invalid_json_returns_none(self):
+        from pl_fetch_tool import _parse_response
+        assert _parse_response("not json {{{") is None
+
+    def test_odata_v4_value_envelope(self):
+        from pl_fetch_tool import _parse_response
+        rows = _parse_response(json.dumps({"value": [{"GLAccount": "41000000"}]}))
+        assert rows == [{"GLAccount": "41000000"}]
+
+    def test_odata_v2_d_results_envelope(self):
+        from pl_fetch_tool import _parse_response
+        rows = _parse_response(json.dumps({"d": {"results": [{"GLAccount": "41000000"}]}}))
+        assert rows == [{"GLAccount": "41000000"}]
+
+    def test_bare_list(self):
+        from pl_fetch_tool import _parse_response
+        rows = _parse_response(json.dumps([{"GLAccount": "41000000"}]))
+        assert rows == [{"GLAccount": "41000000"}]
+
+    def test_unexpected_shape_returns_none(self):
+        from pl_fetch_tool import _parse_response
+        assert _parse_response(json.dumps({"something_else": True})) is None
+
+    def test_already_parsed_list_passthrough(self):
+        from pl_fetch_tool import _parse_response
+        data = [{"GLAccount": "41000000"}]
+        assert _parse_response(data) == data
+
+
+class TestFetchStrategy:
+    """Confirm $apply is removed and fetch_strategy always reports client-pagination."""
 
     @pytest.mark.asyncio
-    async def test_apply_success_returns_rows(self):
-        """When $apply succeeds the fetcher is called once and rows returned."""
-        from pl_fetch_tool import _fetch_with_apply
-        calls = []
+    async def test_no_apply_param_ever_sent(self):
+        """fetch_and_aggregate_pl must NEVER send $apply — OData V2 does not support it."""
+        from pl_fetch_tool import _make_fetch_aggregate_tool
+        received_params_list = []
 
         async def mock_fetcher(**kwargs):
-            calls.append(kwargs)
-            return json.dumps({"value": [_make_raw_item("41000000", "-500.00")]})
+            received_params_list.append(dict(kwargs))
+            return json.dumps({"d": {"results": []}})
 
-        rows = await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert rows is not None
-        assert len(rows) == 1
-        assert len(calls) == 1
+        tool = _make_fetch_aggregate_tool(mock_fetcher)
+        await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+
+        for params in received_params_list:
+            assert "$apply" not in params, (
+                f"$apply must never be sent to an OData V2 endpoint, but got params: {params}"
+            )
 
     @pytest.mark.asyncio
-    async def test_apply_passes_apply_expr_not_filter(self):
-        """$apply path must NOT send a separate $filter param."""
-        from pl_fetch_tool import _fetch_with_apply
-        received_params = {}
+    async def test_fetch_strategy_always_client_pagination(self):
+        """fetch_strategy in the result must always be 'client-pagination (N rows)'."""
+        from pl_fetch_tool import _make_fetch_aggregate_tool
 
         async def mock_fetcher(**kwargs):
-            received_params.update(kwargs)
-            return json.dumps({"value": []})
+            rows = [_make_raw_item("41000000", "-1000.00")] * 5
+            return json.dumps({"d": {"results": rows}})
 
-        await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert "$apply" in received_params
-        assert "$filter" not in received_params, (
-            "$filter must NOT be sent alongside $apply — filter is inside the pipeline"
+        tool = _make_fetch_aggregate_tool(mock_fetcher)
+        raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+        result = json.loads(raw)
+        assert result["fetch_strategy"].startswith("client-pagination"), (
+            f"fetch_strategy should start with 'client-pagination', got: {result['fetch_strategy']}"
         )
 
     @pytest.mark.asyncio
-    async def test_apply_expr_contains_scoping_fields(self):
-        """The $apply value passed to fetcher must embed company code, year, period."""
-        from pl_fetch_tool import _fetch_with_apply
-        received_params = {}
+    async def test_fetch_strategy_reports_row_count(self):
+        """fetch_strategy must include the actual row count fetched."""
+        from pl_fetch_tool import _make_fetch_aggregate_tool
 
         async def mock_fetcher(**kwargs):
-            received_params.update(kwargs)
-            return json.dumps({"value": []})
+            rows = [_make_raw_item("41000000", "-200.00")] * 7
+            return json.dumps({"d": {"results": rows}})
 
-        await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        apply_val = received_params.get("$apply", "")
-        assert "1710" in apply_val
-        assert "2024" in apply_val
-        assert "010"  in apply_val
-        assert "40000000" in apply_val
-        assert "79999999" in apply_val
+        tool = _make_fetch_aggregate_tool(mock_fetcher)
+        raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+        result = json.loads(raw)
+        assert "7" in result["fetch_strategy"]
 
     @pytest.mark.asyncio
-    async def test_apply_exception_returns_none(self):
-        """Any exception from the fetcher must cause fallback (return None)."""
-        from pl_fetch_tool import _fetch_with_apply
+    async def test_filter_param_sent_with_pagination(self):
+        """$filter must be sent on the pagination path to scope to the correct period and GL range."""
+        from pl_fetch_tool import _make_fetch_aggregate_tool
+        received_params_list = []
 
         async def mock_fetcher(**kwargs):
-            raise RuntimeError("$apply not supported")
+            received_params_list.append(dict(kwargs))
+            return json.dumps({"d": {"results": []}})
 
-        rows = await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert rows is None
+        tool = _make_fetch_aggregate_tool(mock_fetcher)
+        await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+
+        assert received_params_list, "Fetcher was never called"
+        first = received_params_list[0]
+        assert "$filter" in first
+        assert "1710" in first["$filter"]
+        assert "2024" in first["$filter"]
+        assert "010"  in first["$filter"]
+        assert "40000000" in first["$filter"]
+        assert "79999999" in first["$filter"]
 
     @pytest.mark.asyncio
-    async def test_apply_unexpected_shape_returns_none(self):
-        """A response with no recognisable envelope must cause fallback."""
-        from pl_fetch_tool import _fetch_with_apply
+    async def test_fetch_error_returns_zero_rows_with_warning(self):
+        """When every page fetch throws, _fetch_all_pages returns [] gracefully.
+        _run still returns a valid result with 0 rows and a NO DATA warning."""
+        from pl_fetch_tool import _make_fetch_aggregate_tool
 
         async def mock_fetcher(**kwargs):
-            # Neither 'value' nor 'd.results' nor a list
-            return json.dumps({"something_unexpected": True})
+            raise RuntimeError("connection refused")
 
-        rows = await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert rows is None
-
-    @pytest.mark.asyncio
-    async def test_apply_odata_v2_envelope_unwrapped(self):
-        """OData v2 {d: {results: []}} envelope must be unwrapped on $apply path."""
-        from pl_fetch_tool import _fetch_with_apply
-
-        async def mock_fetcher(**kwargs):
-            return json.dumps({"d": {"results": [_make_raw_item("41000000", "-300.00")]}})
-
-        rows = await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert rows is not None
-        assert len(rows) == 1
-
-    @pytest.mark.asyncio
-    async def test_apply_list_response_unwrapped(self):
-        """A bare list response (no envelope) must also be accepted."""
-        from pl_fetch_tool import _fetch_with_apply
-
-        async def mock_fetcher(**kwargs):
-            return json.dumps([_make_raw_item("41000000", "-300.00")])
-
-        rows = await _fetch_with_apply(mock_fetcher, "1710", "2024", "010")
-        assert rows is not None
-        assert len(rows) == 1
+        tool = _make_fetch_aggregate_tool(mock_fetcher)
+        raw = await tool.arun({"company_code": "1710", "fiscal_year": "2024", "fiscal_period": "010"})
+        result = json.loads(raw)
+        # fetch_strategy reports 0 rows (not "failed") because exception is caught in pagination
+        assert result["fetch_strategy"] == "client-pagination (0 rows)"
+        # _aggregate fires NO DATA WARNING for zero postings
+        assert any("NO DATA" in w for w in result["warnings"])

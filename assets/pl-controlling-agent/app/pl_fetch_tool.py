@@ -3,15 +3,11 @@
 Owns the entire retrieve-aggregate pipeline so the LLM never drives the
 pagination loop and completeness never depends on model behaviour.
 
-Flow:
-  1. Try $apply=groupby(...,aggregate(...)) — server-side aggregation,
-     single call, no pagination, no context-size risk.
-  2. If the server rejects $apply (400/501/not-supported), fall back to a
-     $skip/$top=500 pagination loop that accumulates ALL pages in Python
-     and passes them to _aggregate() in one deterministic pass.
+The journal-entry API is OData V2 with no ApplySupported capability.
+$apply is therefore not attempted — pagination is the sole fetch path:
+  $skip/$top=500 loop until the page size drops below PAGE_SIZE (last page).
 
-The tool returns the same JSON structure as aggregate_pl_journal_entries so
-the LLM can read pl_lines, warnings, and materiality_order directly.
+All pages are passed to _aggregate() in one deterministic pass.
 """
 
 from __future__ import annotations
@@ -27,7 +23,7 @@ from pl_aggregation_tool import _aggregate
 
 logger = logging.getLogger(__name__)
 
-# Page size for the fallback pagination loop.
+# Page size for the pagination loop.
 # 500 rows * ~400 chars/row ≈ 200 KB per page — well within the 500 KB cap.
 _PAGE_SIZE = 500
 
@@ -38,66 +34,39 @@ _FIELDS = (
     "AccountingDocument,FiscalYear,FiscalPeriod"
 )
 
-def _build_apply_expr(company_code: str, fiscal_year: str, fiscal_period: str) -> str:
-    """
-    Build an OData v4 $apply expression that embeds the period and GL-range
-    filter INSIDE the pipeline so the filter is applied before groupby.
-
-    OData v4 syntax: $apply=filter(...)/groupby((...),aggregate(...))
-    This ensures the server scopes to exactly the requested period and
-    income-statement accounts before aggregating — $filter alongside $apply
-    may be ignored by some OData v4 implementations.
-    """
-    gl_filter = (
-        f"filter("
-        f"CompanyCode eq '{company_code}' "
-        f"and FiscalYear eq '{fiscal_year}' "
-        f"and FiscalPeriod eq '{fiscal_period}' "
-        f"and GLAccount ge '40000000' and GLAccount le '79999999'"
-        f")"
-    )
-    groupby = (
-        "groupby("
-        "(GLAccount,ProfitCenter,FunctionalArea,CostCenter,CompanyCodeCurrency),"
-        "aggregate(AmountInCompanyCodeCurrency with sum)"
-        ")"
-    )
-    return f"{gl_filter}/{groupby}"
-
 
 # ---------------------------------------------------------------------------
-# Internal fetch helpers — called from the LangChain tool coroutine
+# Response parsing helper
 # ---------------------------------------------------------------------------
 
-async def _fetch_with_apply(
-    call_tool_fn, company_code: str, fiscal_year: str, fiscal_period: str
-) -> list[dict] | None:
+def _parse_response(raw: Any) -> list[dict] | None:
     """
-    Attempt server-side aggregation via $apply with the filter embedded inside
-    the pipeline (OData v4: filter(...)/groupby(...)) so the period and GL-range
-    scope is guaranteed regardless of whether the server honours a separate $filter.
-    Returns rows on success, None if $apply is rejected or unsupported.
+    Parse a raw MCP tool response into a list of row dicts.
+    Returns None if the response is empty, unparseable, or has an unexpected shape.
+    Never raises — all errors are logged and result in None.
     """
-    apply_expr = _build_apply_expr(company_code, fiscal_year, fiscal_period)
-    # No separate $filter — the filter is inside $apply to ensure correct scoping.
-    params: dict[str, Any] = {"$apply": apply_expr}
-    try:
-        raw = await call_tool_fn(**params)
-        data = json.loads(raw) if isinstance(raw, str) else raw
-        # Unwrap OData envelope — handle both v4 {value:[]} and v2 {d:{results:[]}}
-        if isinstance(data, list):
-            rows = data
-        else:
-            rows = data.get("value") or data.get("d", {}).get("results") or None
-        if rows is None:
-            logger.warning("$apply response has unexpected shape — falling back to pagination")
-            return None
-        logger.info("$apply succeeded: %d pre-aggregated rows", len(rows))
-        return rows
-    except Exception as exc:
-        logger.info("$apply not supported or failed (%s) — falling back to pagination", exc)
+    if not raw:
+        logger.warning("Empty response from MCP tool")
         return None
+    try:
+        data = json.loads(raw) if isinstance(raw, str) else raw
+    except (json.JSONDecodeError, ValueError) as exc:
+        logger.warning("Failed to parse MCP tool response as JSON (%s) — raw[:200]: %s", exc, str(raw)[:200])
+        return None
+    if isinstance(data, list):
+        return data
+    if not isinstance(data, dict):
+        logger.warning("Unexpected response type %s — falling back", type(data))
+        return None
+    rows = data.get("value") or data.get("d", {}).get("results")
+    if rows is None:
+        logger.warning("Response has no 'value' or 'd.results' key — shape: %s", list(data.keys())[:10])
+    return rows  # may be None — caller decides what to do
 
+
+# ---------------------------------------------------------------------------
+# Pagination loop
+# ---------------------------------------------------------------------------
 
 async def _fetch_all_pages(call_tool_fn, base_params: dict) -> list[dict]:
     """Pagination loop: $top=PAGE_SIZE, $skip=0,500,1000,... until exhausted."""
@@ -109,12 +78,10 @@ async def _fetch_all_pages(call_tool_fn, base_params: dict) -> list[dict]:
         params = {**base_params, "$top": _PAGE_SIZE, "$skip": skip, "$select": _FIELDS}
         try:
             raw = await call_tool_fn(**params)
+            rows = _parse_response(raw) or []
         except Exception as exc:
             logger.error("Pagination fetch failed at $skip=%d: %s", skip, exc)
             break
-
-        data = json.loads(raw) if isinstance(raw, str) else raw
-        rows = data.get("value") or data.get("d", {}).get("results") or []
 
         if not rows:
             break
@@ -159,8 +126,6 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
         fiscal_period: str,
         label: str = "",
     ) -> str:
-        # Base params for the pagination fallback path — explicit $filter is safe
-        # here because pagination does NOT use $apply, so $filter is honoured normally.
         base_params: dict[str, Any] = {
             "CompanyCode": company_code,
             "FiscalYear": fiscal_year,
@@ -173,43 +138,48 @@ def _make_fetch_aggregate_tool(journal_entry_tool_fn) -> StructuredTool:
             ),
         }
 
-        # --- Preferred path: server-side $apply (filter embedded inside pipeline) ---
-        rows = await _fetch_with_apply(
-            journal_entry_tool_fn, company_code, fiscal_year, fiscal_period
-        )
-        preaggregated = rows is not None
-
-        if not preaggregated:
-            # --- Fallback path: client-side pagination loop ---
+        try:
             rows = await _fetch_all_pages(journal_entry_tool_fn, base_params)
+            result = _aggregate(rows, preaggregated=False)
+            result["label"] = label or f"{fiscal_period}/{fiscal_year} CompanyCode={company_code}"
+            result["fetch_strategy"] = f"client-pagination ({len(rows)} rows)"
 
-        result = _aggregate(rows, preaggregated=preaggregated)
-        result["label"] = label or f"{fiscal_period}/{fiscal_year} CompanyCode={company_code}"
-        result["fetch_strategy"] = "server-$apply" if preaggregated else f"client-pagination ({len(rows)} rows)"
+            # Materiality order: GL accounts sorted by |normalized_sum| descending
+            gl_sorted = sorted(
+                result["totals_by_gl"].items(),
+                key=lambda kv: abs(float(kv[1]["normalized_sum"])),
+                reverse=True,
+            )
+            result["materiality_order"] = [gl for gl, _ in gl_sorted]
 
-        # Materiality order: GL accounts sorted by |normalized_sum| descending
-        gl_sorted = sorted(
-            result["totals_by_gl"].items(),
-            key=lambda kv: abs(float(kv[1]["normalized_sum"])),
-            reverse=True,
-        )
-        result["materiality_order"] = [gl for gl, _ in gl_sorted]
+            return json.dumps(result, indent=2)
 
-        return json.dumps(result, indent=2)
+        except Exception as exc:
+            logger.exception(
+                "fetch_and_aggregate_pl failed for %s/%s/%s", company_code, fiscal_year, fiscal_period
+            )
+            return json.dumps({
+                "error": str(exc),
+                "fetch_strategy": "client-pagination (failed)",
+                "label": label or f"{fiscal_period}/{fiscal_year} CompanyCode={company_code}",
+                "pl_lines": None,
+                "warnings": [
+                    f"FETCH ERROR: {exc} — could not retrieve P&L data. "
+                    "Check SAP connectivity and retry."
+                ],
+            }, indent=2)
 
     return StructuredTool(
         name="fetch_and_aggregate_pl",
         description=(
             "Fetch ALL P&L journal entry items for a given company code, fiscal year, and period "
             "and aggregate them deterministically into P&L totals. "
-            "This tool owns the full retrieve-aggregate pipeline: "
-            "it first tries server-side $apply aggregation (single call, no pagination), "
-            "and falls back to a complete $skip/$top pagination loop if $apply is not supported. "
-            "ALWAYS use this tool instead of calling the journal entry API directly — "
-            "it guarantees completeness regardless of data volume. "
+            "Uses a $skip/$top=500 pagination loop until all pages are retrieved — "
+            "completeness is guaranteed regardless of data volume. "
+            "ALWAYS use this tool instead of calling the journal entry API directly. "
             "Returns pl_lines (revenue, cogs, gm1, overhead, gm2, other_op, ebit), "
             "materiality_order (GL accounts sorted by absolute amount, largest first), "
-            "warnings, and fetch_strategy. "
+            "fetch_strategy (always 'client-pagination (N rows)'), and warnings. "
             "Use pl_lines values directly in the report — do not re-derive them."
         ),
         args_schema=_FetchAggregateInput,

@@ -48,9 +48,8 @@ Call `list_a_glaccountinchartofaccounts` filtered by CompanyCode. Keep only acco
 Call `fetch_and_aggregate_pl` with CompanyCode, FiscalYear, FiscalPeriod, and a label.
 Do this once for each period needed (current, prior month, prior year).
 NEVER call the journal entry API directly -- fetch_and_aggregate_pl owns the full pipeline:
-- It tries $apply server-side aggregation first (one call, complete totals, no pagination).
-- If $apply is rejected it runs a $skip/$top=500 pagination loop until exhausted.
-- It passes all data to the deterministic aggregator and returns verified pl_lines.
+- It runs a $skip/$top=500 pagination loop until all pages are exhausted.
+- It passes all pages to the deterministic aggregator and returns verified pl_lines.
 
 From the result read:
 - pl_lines: revenue, cogs, gm1, overhead, gm2, other_op, ebit (already sign-normalized)
