@@ -8,101 +8,115 @@
             "value": [
               {
                 "AccountingDocument": "1000012345",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0080100000",
-                "ProfitCenter": "PC_EMEA",
+                "GLAccount": "41000000",
+                "ProfitCenter": "US10_PLM",
                 "FunctionalArea": "FA_SALES",
                 "CostCenter": "CC_1000",
-                "AmountInCompanyCodeCurrency": 1250000.00,
-                "CompanyCodeCurrency": "EUR",
+                "AmountInCompanyCodeCurrency": -1253847.63,
+                "CompanyCodeCurrency": "USD",
                 "PostingDate": "2024-10-31",
-                "DocumentItemText": "Revenue October 2024 - Product A"
+                "DocumentItemText": "Rev Domestic Prod Oct 2024 - PLM"
               },
               {
                 "AccountingDocument": "1000012346",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0080200000",
-                "ProfitCenter": "PC_APAC",
+                "GLAccount": "41000000",
+                "ProfitCenter": "US10_PLE",
                 "FunctionalArea": "FA_SALES",
                 "CostCenter": "CC_1000",
-                "AmountInCompanyCodeCurrency": 430000.00,
-                "CompanyCodeCurrency": "EUR",
+                "AmountInCompanyCodeCurrency": -834291.17,
+                "CompanyCodeCurrency": "USD",
                 "PostingDate": "2024-10-31",
-                "DocumentItemText": "Revenue October 2024 - Product B"
+                "DocumentItemText": "Rev Domestic Prod Oct 2024 - PLE"
               },
               {
                 "AccountingDocument": "1000012347",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0050100000",
-                "ProfitCenter": "PC_EMEA",
-                "FunctionalArea": "FA_PROD",
-                "CostCenter": "CC_2000",
-                "AmountInCompanyCodeCurrency": -620000.00,
-                "CompanyCodeCurrency": "EUR",
-                "PostingDate": "2024-10-15",
-                "DocumentItemText": "COGS - Material consumption Product A"
+                "GLAccount": "44420000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 583.80,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Revenue adjustment Oct 2024"
               },
               {
                 "AccountingDocument": "1000012348",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0060100000",
-                "ProfitCenter": "PC_EMEA",
-                "FunctionalArea": "FA_ADMIN",
-                "CostCenter": "CC_3000",
-                "AmountInCompanyCodeCurrency": -145000.00,
-                "CompanyCodeCurrency": "EUR",
-                "PostingDate": "2024-10-31",
-                "DocumentItemText": "Overhead - Salaries October"
+                "GLAccount": "50301000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_PROD",
+                "CostCenter": "CC_2000",
+                "AmountInCompanyCodeCurrency": 748293.44,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-15",
+                "DocumentItemText": "COGS Direct Material Oct 2024"
               },
               {
                 "AccountingDocument": "1000012349",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0060200000",
-                "ProfitCenter": "PC_EMEA",
-                "FunctionalArea": "FA_ADMIN",
-                "CostCenter": "CC_3000",
-                "AmountInCompanyCodeCurrency": -98000.00,
-                "CompanyCodeCurrency": "EUR",
-                "PostingDate": "2024-10-31",
-                "DocumentItemText": "Overhead - Maintenance one-time correction"
+                "GLAccount": "50304000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_PROD",
+                "CostCenter": "CC_2000",
+                "AmountInCompanyCodeCurrency": 112847.91,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-15",
+                "DocumentItemText": "COGS Personnel Time Oct 2024"
               },
               {
                 "AccountingDocument": "1000012350",
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "FiscalYear": "2024",
-                "FiscalPeriod": "009",
-                "GLAccount": "0080100000",
-                "ProfitCenter": "PC_EMEA",
-                "FunctionalArea": "FA_SALES",
-                "CostCenter": "CC_1000",
-                "AmountInCompanyCodeCurrency": 1100000.00,
-                "CompanyCodeCurrency": "EUR",
-                "PostingDate": "2024-09-30",
-                "DocumentItemText": "Revenue September 2024 - Product A"
+                "FiscalPeriod": "010",
+                "GLAccount": "61100000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": 203847.55,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Payroll Salaries Oct 2024"
               },
               {
                 "AccountingDocument": "1000012351",
-                "CompanyCode": "1010",
-                "FiscalYear": "2023",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
                 "FiscalPeriod": "010",
-                "GLAccount": "0080100000",
-                "ProfitCenter": "PC_EMEA",
-                "FunctionalArea": "FA_SALES",
-                "CostCenter": "CC_1000",
-                "AmountInCompanyCodeCurrency": 980000.00,
-                "CompanyCodeCurrency": "EUR",
-                "PostingDate": "2023-10-31",
-                "DocumentItemText": "Revenue October 2023 - Product A"
+                "GLAccount": "63001000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": 47293.18,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Electricity and Utilities Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012352",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "71100000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_FIN",
+                "CostCenter": "CC_4000",
+                "AmountInCompanyCodeCurrency": 3847.22,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Interest Expense Oct 2024"
               }
             ]
           }
@@ -111,18 +125,18 @@
           "response": {
             "value": [
               {
-                "GLAccount": "0080100000",
+                "GLAccount": "41000000",
                 "FiscalPeriod": "010",
                 "FiscalYear": "2024",
-                "SumAmountInCompanyCodeCurrency": 1250000.00,
-                "CompanyCodeCurrency": "EUR"
+                "SumAmountInCompanyCodeCurrency": -2088138.80,
+                "CompanyCodeCurrency": "USD"
               },
               {
-                "GLAccount": "0050100000",
+                "GLAccount": "50301000",
                 "FiscalPeriod": "010",
                 "FiscalYear": "2024",
-                "SumAmountInCompanyCodeCurrency": -620000.00,
-                "CompanyCodeCurrency": "EUR"
+                "SumAmountInCompanyCodeCurrency": 748293.44,
+                "CompanyCodeCurrency": "USD"
               }
             ]
           }
@@ -163,7 +177,7 @@
           "response": {
             "value": [
               {
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "GLAccount": "0060200000",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
@@ -177,7 +191,7 @@
                 "CostCenter": "CC_3000"
               },
               {
-                "CompanyCode": "1010",
+                "CompanyCode": "1710",
                 "GLAccount": "0060200000",
                 "FiscalYear": "2024",
                 "FiscalPeriod": "010",
@@ -207,9 +221,9 @@
         "list_profitcenter_for_sap_self": {
           "response": {
             "value": [
-              { "ProfitCenter": "PC_EMEA", "ProfitCenterName": "EMEA Region", "CompanyCode": "1010", "ResponsiblePerson": "J. Mueller" },
-              { "ProfitCenter": "PC_APAC", "ProfitCenterName": "APAC Region", "CompanyCode": "1010", "ResponsiblePerson": "K. Tanaka" },
-              { "ProfitCenter": "PC_AMER", "ProfitCenterName": "Americas Region", "CompanyCode": "1010", "ResponsiblePerson": "M. Johnson" }
+              { "ProfitCenter": "PC_EMEA", "ProfitCenterName": "EMEA Region", "CompanyCode": "1710", "ResponsiblePerson": "J. Mueller" },
+              { "ProfitCenter": "PC_APAC", "ProfitCenterName": "APAC Region", "CompanyCode": "1710", "ResponsiblePerson": "K. Tanaka" },
+              { "ProfitCenter": "PC_AMER", "ProfitCenterName": "Americas Region", "CompanyCode": "1710", "ResponsiblePerson": "M. Johnson" }
             ]
           }
         },
@@ -217,7 +231,7 @@
           "response": {
             "ProfitCenter": "PC_EMEA",
             "ProfitCenterName": "EMEA Region",
-            "CompanyCode": "1010",
+            "CompanyCode": "1710",
             "ResponsiblePerson": "J. Mueller"
           }
         }
@@ -248,10 +262,10 @@
         "list_a_costcenter_2_for_sap_self": {
           "response": {
             "value": [
-              { "CostCenter": "CC_1000", "CostCenterName": "Sales Department", "CompanyCode": "1010", "CostCenterCategory": "V" },
-              { "CostCenter": "CC_2000", "CostCenterName": "Production Department", "CompanyCode": "1010", "CostCenterCategory": "P" },
-              { "CostCenter": "CC_3000", "CostCenterName": "Administration", "CompanyCode": "1010", "CostCenterCategory": "G" },
-              { "CostCenter": "CC_4000", "CostCenterName": "R&D Department", "CompanyCode": "1010", "CostCenterCategory": "F" }
+              { "CostCenter": "CC_1000", "CostCenterName": "Sales Department", "CompanyCode": "1710", "CostCenterCategory": "V" },
+              { "CostCenter": "CC_2000", "CostCenterName": "Production Department", "CompanyCode": "1710", "CostCenterCategory": "P" },
+              { "CostCenter": "CC_3000", "CostCenterName": "Administration", "CompanyCode": "1710", "CostCenterCategory": "G" },
+              { "CostCenter": "CC_4000", "CostCenterName": "R&D Department", "CompanyCode": "1710", "CostCenterCategory": "F" }
             ]
           }
         },
@@ -259,7 +273,7 @@
           "response": {
             "CostCenter": "CC_1000",
             "CostCenterName": "Sales Department",
-            "CompanyCode": "1010",
+            "CompanyCode": "1710",
             "CostCenterCategory": "V"
           }
         }
