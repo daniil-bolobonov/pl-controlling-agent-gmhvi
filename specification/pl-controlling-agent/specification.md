@@ -28,11 +28,11 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
   - **description**: Step-by-step instructions for autonomous monthly P&L analysis — period parsing, range-based P&L aggregation (no hierarchy traversal), multi-period comparison, materiality-gated drill-down, GM1/GM2/EBIT explanation, and management report formatting
   - **Body**: Cover these steps in order:
     1. Parse target period and company code from the user prompt
-    2. Call `fetch_and_aggregate_pl(company_code, fiscal_year, fiscal_period)` — this fetches all `API_GLACCOUNTLINEITEM` rows for `Ledger='0L'` and GLAccount 40000000–79999999 via top=500/skip pagination and aggregates deterministically into P&L lines by account-number range: Revenue (40M–49M), COGS (50M–59M, GM1=Revenue−COGS), Overhead (60M–69M, GM2=GM1−Overhead), Other Op (70M–79M), EBIT=GM2−OtherOp. No hierarchy traversal.
-    3. Retrieve GL account line items for the target period via `fetch_and_aggregate_pl` (Ledger='0L', FiscalYear, FiscalPeriod, GLAccount 40000000–79999999); aggregate by P&L line
-    4. Retrieve GL account line items for comparison periods (prior month, prior year) via the same tool; compute absolute and percentage deviations per P&L line
+    2. Retrieve G/L account hierarchy and assemble the P&L structure (Sales → Cost of Sales → GM1 → Overhead Absorption → GM2 → further cost lines → EBIT); map each G/L account to its P&L line
+    3. Retrieve journal entry items for the target period; aggregate by P&L line
+    4. Retrieve journal entry items for comparison periods (prior month, prior year); compute absolute and percentage deviations per P&L line
     5. Apply materiality filter: select all lines where the absolute or percentage deviation exceeds the threshold; proceed with drill-down for those lines only
-    6. For each material line: retrieve individual GL account line items with document attributes via `API_GLACCOUNTLINEITEM` (drill-down path); rank by contribution magnitude; identify dominant postings
+    6. For each material line: retrieve G/L account-level detail, then individual journal entry items with document attributes; identify dominant postings
     7. Explain GM1 (direct cost) drivers: separate variable cost postings from fixed cost postings by G/L account category
     8. Explain GM2 / overhead absorption: identify overhead allocation postings (cost element category 43 or overhead cost orders); compute over-/under-absorption as difference between absorbed overhead and actual overhead
     9. Enrich revenue and sales postings: retrieve customer name + country from Business Partner API and product description from Product Master API for all revenue/sales journal entry items
@@ -64,7 +64,7 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
   - Core instruction: load the `pl-analysis` skill when the user names a target period; proceed autonomously through all analysis steps without waiting for user prompts between steps
   - Data integrity rule: NEVER produce a figure that was not retrieved from a tool call in the current session; if data is unavailable, state so explicitly; never estimate or interpolate
   - Read-only constraint: the agent never writes, posts, creates, or modifies any SAP document; it is strictly read-only
-  - Pagination rule: always use `fetch_and_aggregate_pl` for P&L line item retrieval — it handles the full top=500/skip pagination loop internally and returns deterministic aggregated totals; never call the GL account line item API directly or manually page through results
+  - Pagination rule: always set `$top` to a maximum of 100 on every tool call that accepts a page-size parameter; inform the user when pagination is applied and offer to retrieve more pages
   - Comparison period rule: if a comparison period returns no data (e.g., system recently live), state "no data available for [period]" explicitly in the report — never show zero or omit the column silently
   - Materiality rule: ask the user for the materiality threshold if not provided before starting the drill-down phase; accept both absolute (e.g., "€50,000") and percentage (e.g., "5%") formats
   - Error handling: relay tool errors verbatim; do not suggest workarounds unless asked
@@ -80,17 +80,14 @@ Create the following runtime skill files under `assets/pl-controlling-agent/app/
   - No hierarchy API call required. `API_GLACCOUNTINCHARTOFACCOUNTS_SRV` is used only for account description enrichment (display names) and drill-down labelling — not for P&L structure determination.
   - **Assumption to validate:** these ranges match this company’s chart of accounts. If not, ranges in `pl_aggregation_tool.py` must be updated before go-live.
 
-### GL Account Line Item Retrieval and Aggregation (REQ-01, REQ-02, REQ-03)
+### Journal Entry Retrieval and Aggregation (REQ-01, REQ-02, REQ-03)
 
-> ⚠️ **Coverage limitation:** `API_GLACCOUNTLINEITEM` returns **primary GL postings only**. Secondary postings (cost assessments, activity allocations, accruals, overhead absorption settlements) are excluded. This may limit completeness of GM2/absorption reconciliation. Full coverage requires `C_JournalEntryItemBrowser` (internal CDS view, not a published OData API — not accessible via Agent Gateway). This is an open gap; flag in the report when overhead absorption lines appear incomplete.
-
-- [ ] Implement retrieval of GL account line items for the target period using `API_GLACCOUNTLINEITEM` via `fetch_and_aggregate_pl`:
-  - Filter: `Ledger eq '0L' and CompanyCode eq '{cc}' and GLAccount ge '40000000' and GLAccount le '79999999' and FiscalYear eq '{fy}' and FiscalPeriod eq '{fp}'`
-  - Select fields: `GLAccount`, `AmountInCompanyCodeCurrency`, `CompanyCodeCurrency`, `ProfitCenter`, `FunctionalArea`, `CostCenter`, `AccountingDocument`, `FiscalYear`, `FiscalPeriod`, `Ledger`
-  - Use `fetch_and_aggregate_pl` tool (deterministic Python aggregation — never LLM arithmetic) to retrieve all pages via top=500/skip loop and aggregate into P&L totals
+- [ ] Implement retrieval of journal entry items for the target period using `API_JOURNALENTRYITEMBASIC_SRV`:
+  - Filter by: `CompanyCode`, `FiscalYear`, `FiscalPeriod` (target period)
+  - Select fields: `CompanyCode`, `FiscalYear`, `FiscalPeriod`, `GLAccount`, `ProfitCenter`, `FunctionalArea`, `CostCenter`, `AmountInCompanyCodeCurrency`, `CompanyCodeCurrency`, `AccountingDocumentItem`, `AccountingDocument`, `PostingDate`, `DocumentReferenceID`, `AssignmentReference`, `DocumentItemText`
+  - Aggregate by P&L line using the G/L hierarchy mapping
   - Apply the same retrieval for prior month and prior year comparison periods
   - Compute absolute and percentage deviations per P&L line per comparison period
-  - Note: `API_JOURNALENTRYITEMBASIC_SRV` is no longer used for P&L line retrieval — it lacks a standalone `FiscalYear` filter field (only `FiscalYearPeriod` YYYYPPP exists), which caused 0-row results; `API_GLACCOUNTLINEITEM` has proper `FiscalYear` and `FiscalPeriod` fields
 
 ### Deviation Table Generation (REQ-03)
 
@@ -167,8 +164,9 @@ All API interactions go through MCP tools generated from the specs below. **Neve
 
 | API Name | ORD ID | Spec File |
 |---|---|---|
-| GL Account Line Items - Read *(P&L aggregation + drill-down)* | `sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1` | `api-specs/API_GLACCOUNTLINEITEM.edmx` |
+| Journal Entry Item - Read | `sap.s4:apiResource:API_JOURNALENTRYITEMBASIC_SRV:v1` | `api-specs/API_JOURNALENTRYITEMBASIC_SRV.edmx` |
 | GL Account - Read | `sap.s4:apiResource:API_GLACCOUNTINCHARTOFACCOUNTS_SRV:v1` | `api-specs/API_GLACCOUNTINCHARTOFACCOUNTS_SRV.edmx` |
+| GL Account Line Items - Read | `sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1` | `api-specs/API_GLACCOUNTLINEITEM.edmx` |
 | Profit Center | `sap.s4:apiResource:CE_PROFITCENTER_0001:v1` | `api-specs/CE_PROFITCENTER_0001.edmx` |
 | Functional Area - Read | `sap.s4:apiResource:API_FUNCTIONALAREA_SRV:v1` | `api-specs/API_FUNCTIONALAREA_SRV.edmx` |
 | Cost Center | `sap.s4:apiResource:CE_COSTCENTER_0001:v1` | `api-specs/CE_COSTCENTER_0001.edmx` |
@@ -178,18 +176,21 @@ All API interactions go through MCP tools generated from the specs below. **Neve
 ### MCP Tool Scope
 
 ```
-MCP API: sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1
+MCP API: sap.s4:apiResource:API_JOURNALENTRYITEMBASIC_SRV:v1
 MCP tool scope: read-only
-Resources in scope: GLAccountLineItem
-Filter fields (confirmed from EDMX): Ledger, CompanyCode, FiscalYear, FiscalPeriod, GLAccount
-Usage: (1) P&L aggregation via fetch_and_aggregate_pl (Ledger='0L', full pagination);
-       (2) document-level drill-down for root-cause analysis
+Resources in scope: A_JournalEntryItem
 ```
 
 ```
 MCP API: sap.s4:apiResource:API_GLACCOUNTINCHARTOFACCOUNTS_SRV:v1
 MCP tool scope: read-only
 Resources in scope: A_GLAccountInChartOfAccounts, A_GLAccountText
+```
+
+```
+MCP API: sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1
+MCP tool scope: read-only
+Resources in scope: A_GLAccountLineItem
 ```
 
 ```

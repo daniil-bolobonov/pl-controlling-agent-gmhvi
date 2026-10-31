@@ -1,6 +1,148 @@
 {
   "metadata": { "version": "1.0.0" },
   "servers": {
+    "s4-journalentryitembasic": {
+      "tools": {
+        "list_a_journalentryitembasic_for_api_journalentryitembasic_srv": {
+          "response": {
+            "value": [
+              {
+                "AccountingDocument": "1000012345",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "41000000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": -1253847.63,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Rev Domestic Prod Oct 2024 - PLM"
+              },
+              {
+                "AccountingDocument": "1000012346",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "41000000",
+                "ProfitCenter": "US10_PLE",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": -834291.17,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Rev Domestic Prod Oct 2024 - PLE"
+              },
+              {
+                "AccountingDocument": "1000012347",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "44420000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_SALES",
+                "CostCenter": "CC_1000",
+                "AmountInCompanyCodeCurrency": 583.80,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Revenue adjustment Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012348",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "50301000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_PROD",
+                "CostCenter": "CC_2000",
+                "AmountInCompanyCodeCurrency": 748293.44,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-15",
+                "DocumentItemText": "COGS Direct Material Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012349",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "50304000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_PROD",
+                "CostCenter": "CC_2000",
+                "AmountInCompanyCodeCurrency": 112847.91,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-15",
+                "DocumentItemText": "COGS Personnel Time Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012350",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "61100000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": 203847.55,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Payroll Salaries Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012351",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "63001000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_ADMIN",
+                "CostCenter": "CC_3000",
+                "AmountInCompanyCodeCurrency": 47293.18,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Electricity and Utilities Oct 2024"
+              },
+              {
+                "AccountingDocument": "1000012352",
+                "CompanyCode": "1710",
+                "FiscalYear": "2024",
+                "FiscalPeriod": "010",
+                "GLAccount": "71100000",
+                "ProfitCenter": "US10_PLM",
+                "FunctionalArea": "FA_FIN",
+                "CostCenter": "CC_4000",
+                "AmountInCompanyCodeCurrency": 3847.22,
+                "CompanyCodeCurrency": "USD",
+                "PostingDate": "2024-10-31",
+                "DocumentItemText": "Interest Expense Oct 2024"
+              }
+            ]
+          }
+        },
+        "aggregate_a_journalentryitembasic": {
+          "response": {
+            "value": [
+              {
+                "GLAccount": "41000000",
+                "FiscalPeriod": "010",
+                "FiscalYear": "2024",
+                "SumAmountInCompanyCodeCurrency": -2088138.80,
+                "CompanyCodeCurrency": "USD"
+              },
+              {
+                "GLAccount": "50301000",
+                "FiscalPeriod": "010",
+                "FiscalYear": "2024",
+                "SumAmountInCompanyCodeCurrency": 748293.44,
+                "CompanyCodeCurrency": "USD"
+              }
+            ]
+          }
+        }
+      }
+    },
     "s4-glaccountinchartofaccounts": {
       "tools": {
         "list_a_glaccountinchartofaccounts": {

@@ -18,6 +18,9 @@ container:
   port: 5000
 
 requires:
+  - name: sap-s4-journalentryitembasic-srv-mcp-server
+    kind: mcp-server
+    ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-journalentryitembasic-srv-mcp-server:v1
   - name: sap-s4-glaccountinchartofaccounts-mcp-server
     kind: mcp-server
     ordId: customer.build:apiResource:pl-controlling-agent-baa66.sap-s4-glaccountinchartofaccounts-mcp-server:v1

@@ -8,6 +8,7 @@ metadata:
 
 assets:
   - ref: ./assets/pl-controlling-agent/asset.yaml
+  - ref: ./assets/sap-s4-journalentryitembasic-srv-mcp-server/asset.yaml
   - ref: ./assets/sap-s4-glaccountinchartofaccounts-mcp-server/asset.yaml
   - ref: ./assets/sap-s4-glaccountlineitem-mcp-server/asset.yaml
   - ref: ./assets/sap-s4-profitcenter-mcp-server/asset.yaml

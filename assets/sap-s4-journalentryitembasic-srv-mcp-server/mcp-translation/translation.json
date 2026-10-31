@@ -1,0 +1,174 @@
+{
+  "mcpTranslationVersion": "0.8",
+  "target": {
+    "ordId": "sap.s4:apiResource:API_JOURNALENTRYITEMBASIC_SRV:v1",
+    "type": "edmx"
+  },
+  "serverInfo": {
+    "name": "sap.mcp/api_journalentryitembasic_srv",
+    "title": "api_journalentryitembasic_srv",
+    "version": "1.0.0",
+    "description": "MCP server for the api_journalentryitembasic_srv service."
+  },
+  "tools": [
+    {
+      "name": "list_a_journalentryitembasic_for_api_journalentryitembasic_srv",
+      "title": "list_A_JournalEntryItemBasic_for_api_journalentryitembasic_srv",
+      "description": "Retrieve a list of entities from the A_JournalEntryItemBasic collection in the api_journalentryitembasic_srv service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_api_journalentryitembasic_srv tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "A_JournalEntryItemBasic",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "aggregate_a_journalentryitembasic",
+      "title": "aggregate_A_JournalEntryItemBasic_for_api_journalentryitembasic_srv",
+      "description": "Perform data aggregation on A_JournalEntryItemBasic in the api_journalentryitembasic_srv service using the $apply query parameter. Supports grouping, filtering, and aggregating data.",
+      "odataType": {
+        "entitySet": {
+          "name": "A_JournalEntryItemBasic",
+          "crudOperation": "aggregate",
+          "parameters": [
+            {
+              "name": "apply"
+            },
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  ]
+}

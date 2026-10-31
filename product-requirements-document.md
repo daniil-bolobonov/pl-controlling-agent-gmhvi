@@ -295,10 +295,9 @@ A Python-based AI agent (A2A protocol) deployed on SAP Business Technology Platf
 
 **Integration Points:**
 
-> ⚠️ **API coverage note:** `API_GLACCOUNTLINEITEM` returns **primary GL postings only**. Secondary postings (cost assessments, activity allocations, accruals, overhead absorption settlement) are not included. This means GM2/overhead-absorption reconciliation may be incomplete. Full coverage would require `C_JournalEntryItemBrowser` (internal CDS view, not a published OData API). This is an open architectural gap; see Open Questions.
-
-- **GL Account Line Items API** (`API_GLACCOUNTLINEITEM:v1`): single API serving two purposes — (1) full P&L aggregation via `fetch_and_aggregate_pl` (filter: `Ledger eq '0L'`, standalone `FiscalYear`, `FiscalPeriod`, GLAccount range 40000000–79999999; top=500/skip pagination, deterministic Python aggregation); (2) document-level drill-down to individual postings for root-cause analysis. Chosen over `API_JOURNALENTRYITEMBASIC_SRV` which lacks a standalone `FiscalYear` filter field — read-only, high-volume
+- **Journal Entry Item API** (`API_JOURNALENTRYITEMBASIC_SRV:v1`): retrieves all journal entry items for the target period and comparison periods with CO dimensions (Profit Center, Functional Area, Cost Center, G/L Account) — read-only, high-volume
 - **G/L Account Master Data API** (`API_GLACCOUNTINCHARTOFACCOUNTS_SRV:v1`): retrieves G/L account master data and hierarchy used to construct the P&L structure — read-only
+- **GL Account Line Items API** (`API_GLACCOUNTLINEITEM:v1`): retrieves document-level line items for drill-down to supporting document attributes — read-only
 - **Profit Center API** (`CE_PROFITCENTER_0001:v1`): retrieves Profit Center master data and hierarchy for segmented reporting — read-only
 - **Functional Area API** (`API_FUNCTIONALAREA_SRV:v1`): retrieves Functional Area master data for P&L segmentation — read-only
 - **Cost Center API** (`CE_COSTCENTER_0001:v1`): retrieves Cost Center master data and hierarchy for overhead absorption analysis — read-only
@@ -355,8 +354,8 @@ All five key business milestones (see Milestones section) must be instrumented w
 
 **Tools or connectors invoked:**
 
-- `get_gl_account_line_items` (via `fetch_and_aggregate_pl`): retrieves GL account line items for a given company code, fiscal year, fiscal period, ledger, and G/L account range — deterministic Python aggregation, never LLM arithmetic; read-only
-- `fetch_and_aggregate_pl`: fetches all GL account line items for a company code, fiscal year, and period via `API_GLACCOUNTLINEITEM` (Ledger='0L', GLAccount 40000000–79999999, top=500/skip pagination) and aggregates into P&L totals deterministically in Python — read-only
+- `get_journal_entry_items`: retrieves journal entry items for a given company code, fiscal period, and G/L account range — read-only
+- `get_gl_account_hierarchy`: retrieves the G/L account hierarchy for a given chart of accounts — read-only
 - `get_gl_line_items`: retrieves G/L line items at document level for drill-down — read-only
 - `get_profit_centers`: retrieves Profit Center master data and hierarchy — read-only
 - `get_functional_areas`: retrieves Functional Area master data — read-only
@@ -492,8 +491,9 @@ All five key business milestones (see Milestones section) must be instrumented w
 
 ### References
 
-- SAP GL Account Line Items API (P&L aggregation + drill-down): `sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1`
+- SAP Journal Entry Item API: `sap.s4:apiResource:API_JOURNALENTRYITEMBASIC_SRV:v1`
 - SAP G/L Account API: `sap.s4:apiResource:API_GLACCOUNTINCHARTOFACCOUNTS_SRV:v1`
+- SAP GL Line Items API: `sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1`
 - SAP Profit Center API: `sap.s4:apiResource:CE_PROFITCENTER_0001:v1`
 - SAP Functional Area API: `sap.s4:apiResource:API_FUNCTIONALAREA_SRV:v1`
 - SAP Cost Center API: `sap.s4:apiResource:CE_COSTCENTER_0001:v1`

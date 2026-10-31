@@ -114,9 +114,7 @@ async def test_mcp_tools_loaded_in_production_path(add_agent_to_path):
     assert len(tools) > 0
     tool_names = [t.name for t in tools]
     # Verify key tools from all 8 MCP servers are present
-    assert any("list_glaccountlineitem" in n for n in tool_names), (
-        f"No list_glaccountlineitem tool found. Available: {tool_names}"
-    )
+    assert "list_a_journalentryitembasic_for_api_journalentryitembasic_srv" in tool_names
     assert "list_a_glaccountinchartofaccounts" in tool_names
     assert "list_a_businesspartner_for_api_business_partner" in tool_names
     assert "list_a_product_for_api_product_srv" in tool_names

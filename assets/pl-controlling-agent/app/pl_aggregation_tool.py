@@ -224,7 +224,7 @@ class _AggregateInput(BaseModel):
     journal_entry_items: list[dict[str, Any]] = Field(
         description=(
             "Raw journal entry items exactly as returned by the SAP "
-            "list_glaccountlineitem API (API_GLACCOUNTLINEITEM). Each item must contain at minimum "
+            "list_a_journalentryitembasic API. Each item must contain at minimum "
             "'GLAccount' and 'AmountInCompanyCodeCurrency' fields. "
             "Pass ALL pages of results — do not summarize or pre-aggregate."
         )
