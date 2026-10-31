@@ -61,25 +61,25 @@ class AgentExecutor(A2AAgentExecutor):
         except Exception as e:
             logger.error(f"Failed to load tools from Agent Gateway: {e}")
 
-        # Build fetch_and_aggregate_pl bound to the real journal entry list MCP tool.
-        # Sole fetch path: top=500/skip pagination loop (no $apply — the connected
-        # OData V2 service has no ApplySupported annotation; $apply is silently ignored).
-        je_list_tool = next(
-            (t for t in tools if "list_a_journalentryitembasic" in t.name.lower()),
+        # Build fetch_and_aggregate_pl bound to API_GLACCOUNTLINEITEM list MCP tool.
+        # Sole fetch path: top=500/skip pagination loop.
+        # Tool: list_glaccountlineitem_* (sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1)
+        gl_list_tool = next(
+            (t for t in tools if "list_glaccountlineitem" in t.name.lower()),
             None,
         )
 
-        if je_list_tool is not None:
-            async def _je_list_caller(**kwargs):
-                result = await je_list_tool.arun(kwargs)
+        if gl_list_tool is not None:
+            async def _gl_list_caller(**kwargs):
+                result = await gl_list_tool.arun(kwargs)
                 if isinstance(result, Exception):
                     raise result
                 return result
 
-            fetch_tool = _make_fetch_aggregate_tool(list_tool_fn=_je_list_caller)
+            fetch_tool = _make_fetch_aggregate_tool(list_tool_fn=_gl_list_caller)
             tools = [*tools, *self.skill_tools, fetch_tool]
         else:
-            logger.warning("Journal entry list MCP tool not found — fetch_and_aggregate_pl unavailable")
+            logger.warning("GL account line item MCP tool not found — fetch_and_aggregate_pl unavailable")
             tools = [*tools, *self.skill_tools]
 
         # Wrap all tools with prompt injection scanning for uniform protection

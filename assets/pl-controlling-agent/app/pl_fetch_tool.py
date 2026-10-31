@@ -3,18 +3,20 @@
 Owns the entire retrieve-aggregate pipeline so the LLM never drives the
 pagination loop and completeness never depends on model behaviour.
 
-Uses list_a_journalentryitembasic_* via a top=500/skip pagination loop
-as the sole fetch path.  Server-side $apply aggregation is NOT attempted:
-the connected OData V2 service has no ApplySupported annotation and $apply
-is silently ignored, so a partial page would be mistaken for complete totals.
+Uses API_GLACCOUNTLINEITEM (list_glaccountlineitem_*) via a top=500/skip
+pagination loop as the sole fetch path.
+
+Entity: GLAccountLineItem (sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1)
+Filter fields confirmed from EDMX (all Edm.String, all filterable):
+  Ledger        MaxLength=2   -- always '0L' (leading ledger)
+  CompanyCode   MaxLength=4
+  FiscalYear    MaxLength=4   -- standalone field (unlike A_JournalEntryItemBasic)
+  FiscalPeriod  MaxLength=3   -- zero-padded, e.g. '010'
+  GLAccount     MaxLength=10
 
 IMPORTANT -- parameter names match the MCP tool schema exactly (NO leading '$'):
   list tool: 'filter', 'top', 'skip', 'select'
 The '$'-prefixed variants are silently dropped by the MCP layer.
-
-FiscalYear is NOT a property on A_JournalEntryItemBasic (confirmed from EDMX).
-Use FiscalYearPeriod (MaxLength=8, format YYYYPPP, e.g. '2026010' for Oct 2026).
-Including FiscalYear in $filter or $select causes the service to return 0 rows.
 """
 
 from __future__ import annotations
@@ -35,13 +37,11 @@ logger = logging.getLogger(__name__)
 _PAGE_SIZE = 500
 
 # Fields to request -- minimal set needed for aggregation + drill-down context.
-# NOTE: FiscalYear is NOT a property on A_JournalEntryItemBasic (confirmed from EDMX).
-# The valid combined field is FiscalYearPeriod (format YYYYPPP, e.g. '2026010').
-# Including FiscalYear in $select causes OData services to reject the request -> 0 rows.
+# All confirmed as valid selectable properties on GLAccountLineItemType (EDMX).
 _FIELDS = (
     "GLAccount,AmountInCompanyCodeCurrency,CompanyCodeCurrency,"
     "ProfitCenter,FunctionalArea,CostCenter,"
-    "AccountingDocument,FiscalYearPeriod,FiscalPeriod"
+    "AccountingDocument,FiscalYear,FiscalPeriod,Ledger"
 )
 
 
@@ -88,7 +88,7 @@ async def _fetch_all_pages(call_tool_fn, base_params: dict) -> list[dict]:
     """Pagination loop: top=PAGE_SIZE, skip=0,500,1000,... until exhausted.
 
     Parameter names do NOT have a leading '$' -- this matches the MCP tool
-    schema for list_a_journalentryitembasic_* which expects 'filter', 'top',
+    schema for list_glaccountlineitem_* which expects 'filter', 'top',
     'skip', 'select' without the OData '$' prefix.
     """
     all_rows: list[dict] = []
@@ -137,23 +137,25 @@ class _FetchAggregateInput(BaseModel):
 
 
 def _make_fetch_aggregate_tool(list_tool_fn) -> StructuredTool:
-    """Factory: returns a LangChain tool bound to the real journal-entry MCP caller.
+    """Factory: returns a LangChain tool bound to the GL account line item MCP caller.
 
-    list_tool_fn: async callable for list_a_journalentryitembasic_* (pagination).
+    list_tool_fn: async callable for list_glaccountlineitem_* (pagination).
                   Accepts: filter, top, skip, select (no $ prefix).
+                  Source API: sap.s4:apiResource:API_GLACCOUNTLINEITEM:v1
 
-    $apply / server-side aggregation is NOT attempted -- the connected OData V2
-    service has no ApplySupported annotation; $apply is silently ignored and would
-    return a partial page mistaken for complete server totals.
+    Filter confirmed from EDMX (GLAccountLineItemType):
+      Ledger eq '0L'             -- leading ledger, always required
+      CompanyCode eq '{cc}'
+      FiscalYear eq '{fy}'       -- standalone Edm.String MaxLength=4
+      FiscalPeriod eq '{fp}'     -- zero-padded Edm.String MaxLength=3
+      GLAccount ge/le '{range}'  -- P&L range 40000000-79999999
     """
-    # FiscalYear is NOT a property on A_JournalEntryItemBasic (confirmed from EDMX).
-    # The correct combined field is FiscalYearPeriod (MaxLength=8, format YYYYPPP,
-    # e.g. '2026010' for October 2026).  FiscalPeriod alone is also a valid field
-    # but without FiscalYear it would match across all years -- always use FiscalYearPeriod.
     _scope_filter = (
-        "CompanyCode eq '{cc}' "
-        "and FiscalYearPeriod eq '{fyp}' "
-        "and GLAccount ge '40000000' and GLAccount le '79999999'"
+        "Ledger eq '0L' "
+        "and CompanyCode eq '{cc}' "
+        "and GLAccount ge '40000000' and GLAccount le '79999999' "
+        "and FiscalYear eq '{fy}' "
+        "and FiscalPeriod eq '{fp}'"
     )
 
     async def _run(
@@ -162,9 +164,9 @@ def _make_fetch_aggregate_tool(list_tool_fn) -> StructuredTool:
         fiscal_period: str,
         label: str = "",
     ) -> str:
-        # FiscalYearPeriod = YYYYPPP, e.g. fiscal_year='2026', fiscal_period='010' -> '2026010'
-        fiscal_year_period = f"{fiscal_year}{fiscal_period}"
-        scope_filter = _scope_filter.format(cc=company_code, fyp=fiscal_year_period)
+        scope_filter = _scope_filter.format(
+            cc=company_code, fy=fiscal_year, fp=fiscal_period
+        )
         base_params: dict[str, Any] = {"filter": scope_filter}
 
         try:
@@ -205,7 +207,8 @@ def _make_fetch_aggregate_tool(list_tool_fn) -> StructuredTool:
         name="fetch_and_aggregate_pl",
         description=(
             "Fetch ALL P&L journal entry items for a given company code, fiscal year, and period "
-            "and aggregate them deterministically into P&L totals using a top=500/skip pagination loop. "
+            "from API_GLACCOUNTLINEITEM and aggregate them deterministically into P&L totals "
+            "using a top=500/skip pagination loop (Ledger='0L', GL range 40000000-79999999). "
             "ALWAYS use this tool instead of calling the journal entry API directly. "
             "Returns pl_lines (revenue, cogs, gm1, overhead, gm2, other_op, ebit), "
             "materiality_order (GL accounts sorted by absolute amount, largest first), "
