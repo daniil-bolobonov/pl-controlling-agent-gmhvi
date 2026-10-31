@@ -85,11 +85,10 @@ async def _fetch_with_apply(
         raw = await call_tool_fn(**params)
         data = json.loads(raw) if isinstance(raw, str) else raw
         # Unwrap OData envelope — handle both v4 {value:[]} and v2 {d:{results:[]}}
-        rows = (
-            data.get("value")
-            or data.get("d", {}).get("results")
-            or (data if isinstance(data, list) else None)
-        )
+        if isinstance(data, list):
+            rows = data
+        else:
+            rows = data.get("value") or data.get("d", {}).get("results") or None
         if rows is None:
             logger.warning("$apply response has unexpected shape — falling back to pagination")
             return None
