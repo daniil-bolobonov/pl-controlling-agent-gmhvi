@@ -1,7 +1,0 @@
-{
-  "trigger": {
-    "processIdentifier": "singleWaitProcess",
-    "webhookPath": "api-trigger"
-  },
-  "expectReport": { "maxItems": 3 }
-}

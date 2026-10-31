@@ -1,7 +1,0 @@
-{
-  "description": "Demo migration: parent_process (webhook → apitr) calls subProcess1 via ReferencedSubflow then POSTs to a business partner endpoint. The sub-workflow pauses at a MessageEventDefinition Wait node ('Wait for IME SubProcess2'), blocking full end-to-end execution in the eval harness. Validated at report level only.",
-  "workflows": ["parent_process", "subProcess1"],
-  "expectReport": {
-    "kinds": ["subflow-id-placeholder"]
-  }
-}

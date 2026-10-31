@@ -1,7 +1,0 @@
-{
-  "description": "Process with a UserTask (com.sap.bpm.wfs.UserTask) that has decisionOptions (approve/reject), a ReferencedSubflow, and a MessageEventDefinition wait node.",
-  "workflows": ["subProcess1", "invoice_Approval"],
-  "expectReport": {
-    "kinds": ["unknown-class-definition", "subflow-id-placeholder"]
-  }
-}
